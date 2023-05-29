@@ -15,7 +15,7 @@ dashboard:
         --global-property supportingFiles \
         --additional-properties generateInterfaces=true
 
-	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum
+	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum pkg/dashboard/model_server_variable.go
 
 
 
