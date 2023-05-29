@@ -1,11 +1,25 @@
 dashboard:
-	 docker run --rm -v "${PWD}:/local" swaggerapi/swagger-codegen-cli-v3 generate \
-        -i /local/swagger.yml \
-        --additional-properties=packageName=dashboard \
-        -l go \
-        -o /local/dashboard
+		docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
+         --generator-name go \
+        --input-spec /local/swagger.yml \
+        --output /local/pkg/dashboard/ \
+        --skip-overwrite \
+        --git-host github.com \
+        --git-user-id TykTechnologies \
+         --git-repo-id dashboard-sdk/pkg/dashboard \
+         --package-name dashboard \
+         --api-name-suffix API \
+        --global-property skipFormModel=true \
+        --global-property apis,apiTests=false,apiDocs=false \
+        --global-property models,modelTests=false,modelDocs=false \
+        --global-property supportingFiles \
+        --additional-properties generateInterfaces=true
 
 
+
+validate-swagger:
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v6.2.0 validate \
+		-i /local/swagger.yml
 
 
 
