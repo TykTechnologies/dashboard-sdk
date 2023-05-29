@@ -1,5 +1,5 @@
 dashboard:
-		docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
          --generator-name go \
         --input-spec /local/swagger.yml \
         --output /local/pkg/dashboard/ \
@@ -14,6 +14,8 @@ dashboard:
         --global-property models,modelTests=false,modelDocs=false \
         --global-property supportingFiles \
         --additional-properties generateInterfaces=true
+
+	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum
 
 
 
