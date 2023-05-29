@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	BaseUrl           = "https://lazy-mechanic-adm.aws-euw2.cloud-ara.tyk.io"
+	BaseUrl           = ""
 	xTykAuthorization = "084e8c34e79447cc7b72cd189e1513dc"
 )
 
