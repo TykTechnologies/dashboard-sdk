@@ -18,7 +18,7 @@ dashboard:
         --reserved-words-mappings _id=MID,interface=customInterface
 
 	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum pkg/dashboard/model_server_variable.go
-	python3 file_replace.py
+	sudo python3 file_replace.py
 	gofmt -s -w .
 
 
