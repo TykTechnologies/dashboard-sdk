@@ -10,12 +10,15 @@ dashboard:
          --package-name dashboard \
          --api-name-suffix API \
         --global-property skipFormModel=true \
+        --global-property skipFormModel=true \
         --global-property apis,apiTests=false,apiDocs=false \
         --global-property models,modelTests=false,modelDocs=false \
         --global-property supportingFiles \
         --additional-properties generateInterfaces=true
 
 	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum pkg/dashboard/model_server_variable.go
+	python3 file_replace.py
+	gofmt -s -w .
 
 
 
