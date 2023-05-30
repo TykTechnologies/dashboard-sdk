@@ -19,7 +19,7 @@ dashboard:
 
 	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum pkg/dashboard/model_server_variable.go
 	sudo python3 file_replace.py
-	gofmt -s -w .
+	sudo gofmt -s -w .
 
 
 
