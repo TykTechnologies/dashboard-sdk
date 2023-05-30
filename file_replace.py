@@ -11,4 +11,4 @@ def replace(path, search_exp, replace_exp):
     fout.close()
 
 
-replace("pkg/dashboard/model_policy.go", 'Id *string `json:"_id,omitempty"`', 'MID *string `json:"_id,omitempty"`')
+replace("pkg/dashboard/model_policy.go", 'MID *string `json:"MID,omitempty"`', 'MID *string `json:"_id,omitempty"`')

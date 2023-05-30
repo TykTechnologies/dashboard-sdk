@@ -3344,7 +3344,7 @@ components:
       x-go-package: github.com/TykTechnologies/tyk/apidef
     Policy:
       properties:
-        _id:
+        MID:
           $ref: '#/components/schemas/ObjectId'
           type: object
           x-go-name: "MID"
