@@ -24,13 +24,13 @@ import (
 type OASAPIsAPI interface {
 
 	/*
-		CreateApiOAS Create OAS API
+			CreateApiOAS Create OAS API
 
-		Create an API Definition in Tyk OAS API format.
-	Note that the response includes the newly created Tyk OAS API Definition containing the unique identifier for the API (`id`). You can provide a value for `id` in the request body, otherwise Tyk will automatically generate a value.
+			Create an API Definition in Tyk OAS API format.
+		Note that the response includes the newly created Tyk OAS API Definition containing the unique identifier for the API (`id`). You can provide a value for `id` in the request body, otherwise Tyk will automatically generate a value.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiCreateApiOASRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiCreateApiOASRequest
 	*/
 	CreateApiOAS(ctx context.Context) ApiCreateApiOASRequest
 

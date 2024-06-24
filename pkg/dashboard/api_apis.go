@@ -154,14 +154,14 @@ type APIsAPI interface {
 	GetApisExecute(r ApiGetApisRequest) (*ApiDefinitions, *http.Response, error)
 
 	/*
-		PostApis Create API Definition
+			PostApis Create API Definition
 
-		Create an API Definition in Tyk Classic API format.
-	  Note that the response includes the newly created Tyk Classic API Definition containing the unique identifier for the API (`api_id`). You can provide a value for the `api_id` in the request body, otherwise Tyk will automatically generate a value.
-	        The `id` field within the Tyk Classic API Definition is a proprietary field used by Tyk to identify the API within the database and cannot be chosen or modified by the user.
+			Create an API Definition in Tyk Classic API format.
+		  Note that the response includes the newly created Tyk Classic API Definition containing the unique identifier for the API (`api_id`). You can provide a value for the `api_id` in the request body, otherwise Tyk will automatically generate a value.
+		        The `id` field within the Tyk Classic API Definition is a proprietary field used by Tyk to identify the API within the database and cannot be chosen or modified by the user.
 
-		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-		@return ApiPostApisRequest
+			@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+			@return ApiPostApisRequest
 	*/
 	PostApis(ctx context.Context) ApiPostApisRequest
 
