@@ -11,7 +11,7 @@ dashboard:
          --api-name-suffix API \
         --global-property skipFormModel=true \
         --global-property skipFormModel=true \
-        --global-property apis,apiTests=true,apiDocs=false \
+        --global-property apis,apiTests=false,apiDocs=true \
         --global-property models,modelTests=false,modelDocs=false \
         --global-property supportingFiles \
         --additional-properties generateInterfaces=true \

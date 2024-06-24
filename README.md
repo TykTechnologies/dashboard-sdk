@@ -14,4 +14,4 @@ To run the sdk please run
 
 ## Documentation
 
-For documentation [check here.](https://github.com/TykTechnologies/dashboard-sdk/blob/main/dashboard/README.md)
+For documentation [check here.](https://github.com/TykTechnologies/dashboard-sdk/blob/main/pkg/dashboard/README.md)
