@@ -12,7 +12,7 @@ dashboard:
         --global-property skipFormModel=true \
         --global-property skipFormModel=true \
         --global-property apis,apiTests=true,apiDocs=true \
-        --global-property models,modelTests=false,modelDocs=false \
+        --global-property models,modelTests=true,modelDocs=false \
         --global-property supportingFiles \
         --additional-properties generateInterfaces=true \
         --reserved-words-mappings _id=MID,interface=customInterface
@@ -27,7 +27,7 @@ validate-swagger:
 	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v6.2.0 validate \
 	  -i /local/swagger.yml
 tests:
-	go test ./... -count=1 -v -cover
+	go test ./... -count=1  -cover
 
 
 

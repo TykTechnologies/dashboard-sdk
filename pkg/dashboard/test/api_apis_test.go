@@ -11,19 +11,23 @@ package dashboard
 
 import (
 	"context"
-	openapiclient "github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
+	"fmt"
+	"log"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
+
+	openapiclient "github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
 )
 
 func Test_dashboard_APIsAPIService(t *testing.T) {
-
 	configuration := openapiclient.NewConfiguration()
+	token := fmt.Sprintf("Bearer %s", "d19fc75cd3aa497f6cb042f72e47ce8c")
+	configuration.AddDefaultHeader("Authorization", token)
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test APIsAPIService DeleteApi", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var apiId string
@@ -33,11 +37,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetAPIExample", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var location string
@@ -47,11 +49,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetAPIExamples", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.APIsAPI.GetAPIExamples(context.Background()).Execute()
@@ -59,11 +59,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetAPIGroups", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.APIsAPI.GetAPIGroups(context.Background()).Execute()
@@ -71,23 +69,22 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetAllApiCategories", func(t *testing.T) {
-
-		t.Skip("skip test") // remove to run test
+		///t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.APIsAPI.GetAllApiCategories(context.Background()).Execute()
-
+		log.Println("hurray")
+		log.Println(httpRes)
+		log.Println(err)
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
+		assert.IsType(t, &openapiclient.AllCategoriesResponse{}, resp)
 	})
 
 	t.Run("Test APIsAPIService GetApi", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var apiId string
@@ -97,11 +94,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetApiAccessRights", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var apiId string
@@ -111,11 +106,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetApiUrl", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var apiId string
@@ -125,11 +118,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService GetApis", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.APIsAPI.GetApis(context.Background()).Execute()
@@ -137,11 +128,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService PostApis", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.APIsAPI.PostApis(context.Background()).Execute()
@@ -149,11 +138,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService PutApi", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var apiId string
@@ -163,11 +150,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService SearchApis", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.APIsAPI.SearchApis(context.Background()).Execute()
@@ -175,11 +160,9 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test APIsAPIService UpdateApiAccessRights", func(t *testing.T) {
-
 		t.Skip("skip test") // remove to run test
 
 		var apiId string
@@ -189,7 +172,5 @@ func Test_dashboard_APIsAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
-
 }
