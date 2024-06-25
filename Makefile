@@ -12,7 +12,7 @@ dashboard:
         --global-property skipFormModel=true \
         --global-property skipFormModel=true \
         --global-property apis,apiTests=true,apiDocs=true \
-        --global-property models,modelTests=true,modelDocs=false \
+        --global-property models,modelTests=true,modelDocs=true \
         --global-property supportingFiles \
         --additional-properties generateInterfaces=true \
         --reserved-words-mappings _id=MID,interface=customInterface
