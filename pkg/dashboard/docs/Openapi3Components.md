@@ -1,0 +1,264 @@
+# Openapi3Components
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**Callbacks** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**Examples** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**Headers** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**Links** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**Parameters** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**RequestBodies** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**Responses** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**Schemas** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+**SecuritySchemes** | Pointer to **map[string]map[string]interface{}** |  | [optional] 
+
+## Methods
+
+### NewOpenapi3Components
+
+`func NewOpenapi3Components() *Openapi3Components`
+
+NewOpenapi3Components instantiates a new Openapi3Components object
+This constructor will assign default values to properties that have it defined,
+and makes sure properties required by API are set, but the set of arguments
+will change when the set of required properties is changed
+
+### NewOpenapi3ComponentsWithDefaults
+
+`func NewOpenapi3ComponentsWithDefaults() *Openapi3Components`
+
+NewOpenapi3ComponentsWithDefaults instantiates a new Openapi3Components object
+This constructor will only assign default values to properties that have it defined,
+but it doesn't guarantee that properties required by API are set
+
+### GetCallbacks
+
+`func (o *Openapi3Components) GetCallbacks() map[string]map[string]interface{}`
+
+GetCallbacks returns the Callbacks field if non-nil, zero value otherwise.
+
+### GetCallbacksOk
+
+`func (o *Openapi3Components) GetCallbacksOk() (*map[string]map[string]interface{}, bool)`
+
+GetCallbacksOk returns a tuple with the Callbacks field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCallbacks
+
+`func (o *Openapi3Components) SetCallbacks(v map[string]map[string]interface{})`
+
+SetCallbacks sets Callbacks field to given value.
+
+### HasCallbacks
+
+`func (o *Openapi3Components) HasCallbacks() bool`
+
+HasCallbacks returns a boolean if a field has been set.
+
+### GetExamples
+
+`func (o *Openapi3Components) GetExamples() map[string]map[string]interface{}`
+
+GetExamples returns the Examples field if non-nil, zero value otherwise.
+
+### GetExamplesOk
+
+`func (o *Openapi3Components) GetExamplesOk() (*map[string]map[string]interface{}, bool)`
+
+GetExamplesOk returns a tuple with the Examples field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetExamples
+
+`func (o *Openapi3Components) SetExamples(v map[string]map[string]interface{})`
+
+SetExamples sets Examples field to given value.
+
+### HasExamples
+
+`func (o *Openapi3Components) HasExamples() bool`
+
+HasExamples returns a boolean if a field has been set.
+
+### GetHeaders
+
+`func (o *Openapi3Components) GetHeaders() map[string]map[string]interface{}`
+
+GetHeaders returns the Headers field if non-nil, zero value otherwise.
+
+### GetHeadersOk
+
+`func (o *Openapi3Components) GetHeadersOk() (*map[string]map[string]interface{}, bool)`
+
+GetHeadersOk returns a tuple with the Headers field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetHeaders
+
+`func (o *Openapi3Components) SetHeaders(v map[string]map[string]interface{})`
+
+SetHeaders sets Headers field to given value.
+
+### HasHeaders
+
+`func (o *Openapi3Components) HasHeaders() bool`
+
+HasHeaders returns a boolean if a field has been set.
+
+### GetLinks
+
+`func (o *Openapi3Components) GetLinks() map[string]map[string]interface{}`
+
+GetLinks returns the Links field if non-nil, zero value otherwise.
+
+### GetLinksOk
+
+`func (o *Openapi3Components) GetLinksOk() (*map[string]map[string]interface{}, bool)`
+
+GetLinksOk returns a tuple with the Links field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLinks
+
+`func (o *Openapi3Components) SetLinks(v map[string]map[string]interface{})`
+
+SetLinks sets Links field to given value.
+
+### HasLinks
+
+`func (o *Openapi3Components) HasLinks() bool`
+
+HasLinks returns a boolean if a field has been set.
+
+### GetParameters
+
+`func (o *Openapi3Components) GetParameters() map[string]map[string]interface{}`
+
+GetParameters returns the Parameters field if non-nil, zero value otherwise.
+
+### GetParametersOk
+
+`func (o *Openapi3Components) GetParametersOk() (*map[string]map[string]interface{}, bool)`
+
+GetParametersOk returns a tuple with the Parameters field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetParameters
+
+`func (o *Openapi3Components) SetParameters(v map[string]map[string]interface{})`
+
+SetParameters sets Parameters field to given value.
+
+### HasParameters
+
+`func (o *Openapi3Components) HasParameters() bool`
+
+HasParameters returns a boolean if a field has been set.
+
+### GetRequestBodies
+
+`func (o *Openapi3Components) GetRequestBodies() map[string]map[string]interface{}`
+
+GetRequestBodies returns the RequestBodies field if non-nil, zero value otherwise.
+
+### GetRequestBodiesOk
+
+`func (o *Openapi3Components) GetRequestBodiesOk() (*map[string]map[string]interface{}, bool)`
+
+GetRequestBodiesOk returns a tuple with the RequestBodies field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRequestBodies
+
+`func (o *Openapi3Components) SetRequestBodies(v map[string]map[string]interface{})`
+
+SetRequestBodies sets RequestBodies field to given value.
+
+### HasRequestBodies
+
+`func (o *Openapi3Components) HasRequestBodies() bool`
+
+HasRequestBodies returns a boolean if a field has been set.
+
+### GetResponses
+
+`func (o *Openapi3Components) GetResponses() map[string]map[string]interface{}`
+
+GetResponses returns the Responses field if non-nil, zero value otherwise.
+
+### GetResponsesOk
+
+`func (o *Openapi3Components) GetResponsesOk() (*map[string]map[string]interface{}, bool)`
+
+GetResponsesOk returns a tuple with the Responses field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetResponses
+
+`func (o *Openapi3Components) SetResponses(v map[string]map[string]interface{})`
+
+SetResponses sets Responses field to given value.
+
+### HasResponses
+
+`func (o *Openapi3Components) HasResponses() bool`
+
+HasResponses returns a boolean if a field has been set.
+
+### GetSchemas
+
+`func (o *Openapi3Components) GetSchemas() map[string]map[string]interface{}`
+
+GetSchemas returns the Schemas field if non-nil, zero value otherwise.
+
+### GetSchemasOk
+
+`func (o *Openapi3Components) GetSchemasOk() (*map[string]map[string]interface{}, bool)`
+
+GetSchemasOk returns a tuple with the Schemas field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSchemas
+
+`func (o *Openapi3Components) SetSchemas(v map[string]map[string]interface{})`
+
+SetSchemas sets Schemas field to given value.
+
+### HasSchemas
+
+`func (o *Openapi3Components) HasSchemas() bool`
+
+HasSchemas returns a boolean if a field has been set.
+
+### GetSecuritySchemes
+
+`func (o *Openapi3Components) GetSecuritySchemes() map[string]map[string]interface{}`
+
+GetSecuritySchemes returns the SecuritySchemes field if non-nil, zero value otherwise.
+
+### GetSecuritySchemesOk
+
+`func (o *Openapi3Components) GetSecuritySchemesOk() (*map[string]map[string]interface{}, bool)`
+
+GetSecuritySchemesOk returns a tuple with the SecuritySchemes field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSecuritySchemes
+
+`func (o *Openapi3Components) SetSecuritySchemes(v map[string]map[string]interface{})`
+
+SetSecuritySchemes sets SecuritySchemes field to given value.
+
+### HasSecuritySchemes
+
+`func (o *Openapi3Components) HasSecuritySchemes() bool`
+
+HasSecuritySchemes returns a boolean if a field has been set.
+
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
