@@ -41,7 +41,7 @@ servers:
 - url: https://{tenant}
   variables:
     tenant:
-      default: localhost:8000
+      default: localhost:3000
       description: Your dashboard host
 security:
 - bearerAuth: []
