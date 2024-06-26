@@ -9,15 +9,17 @@ dashboard:
          --git-repo-id dashboard-sdk/pkg/dashboard \
          --package-name dashboard \
          --api-name-suffix API \
+         --minimal-update \
+         --dry-run\
         --global-property skipFormModel=true \
         --global-property skipFormModel=true \
         --global-property apis,apiTests=true,apiDocs=true \
         --global-property models,modelTests=true,modelDocs=true \
         --global-property supportingFiles \
-        --additional-properties generateInterfaces=true \
+        -c /local/config.json\
         --reserved-words-mappings _id=MID,interface=customInterface
 
-	sudo rm -rf pkg/dashboard/go.mod pkg/dashboard/go.sum pkg/dashboard/model_server_variable.go
+	sudo rm -rf pkg/dashboard/model_server_variable.go
 	sudo python3 file_replace.py
 	sudo gofmt -s -w .
 

@@ -94,7 +94,7 @@ func NewConfiguration() *Configuration {
 		Debug:         false,
 		Servers: ServerConfigurations{
 			{
-				URL:         "https://{tenant}",
+				URL:         "http://{tenant}",
 				Description: "No description provided",
 				Variables: map[string]ServerVariable{
 					"tenant": {

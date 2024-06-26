@@ -209,8 +209,6 @@ docs/WebHookHandlerConf.md
 docs/WebHooks.md
 docs/WebhooksAPI.md
 git_push.sh
-go.mod
-go.sum
 model_access_definition.go
 model_access_management_payload.go
 model_access_spec.go
