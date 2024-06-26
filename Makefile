@@ -10,7 +10,6 @@ dashboard:
          --package-name dashboard \
          --api-name-suffix API \
          --minimal-update \
-         --dry-run\
         --global-property skipFormModel=true \
         --global-property skipFormModel=true \
         --global-property apis,apiTests=true,apiDocs=true \
