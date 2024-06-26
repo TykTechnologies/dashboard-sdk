@@ -6,7 +6,7 @@ dashboard:
         --skip-overwrite \
         --git-host github.com \
         --git-user-id TykTechnologies \
-         --git-repo-id dashboard-sdk/pkg/dashboard \
+         --git-repo-id dashboard-sdk \
          --package-name dashboard \
          --api-name-suffix API \
          --minimal-update \
