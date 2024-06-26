@@ -41,7 +41,7 @@ servers:
 - url: https://{tenant}
   variables:
     tenant:
-      default: localhost:3000
+      default: localhost:8080
       description: Your dashboard host
 security:
 - bearerAuth: []
@@ -1666,11 +1666,10 @@ paths:
       requestBody:
         content:
           application/json:
-            examples:
-              oasExample:
-                $ref: '#/components/examples/oasExample'
             schema:
-              $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+              allOf:
+              - $ref: '#/components/schemas/XTykApiGateway'
+              - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
       responses:
         "200":
           content:
@@ -10343,7 +10342,7 @@ components:
       type: object
     Asset:
       properties:
-        mid:
+        _id:
           description: a unique identifier assigned by Tyk when the template is registered
             in the Dashboard database
           example: 664c9b735715ec3f798bbcd2
@@ -10817,6 +10816,418 @@ components:
         $ref: '#/components/schemas/OAuthClientToken'
       nullable: true
       type: array
+    OasAllowance:
+      properties:
+        enabled:
+          type: boolean
+        ignoreCase:
+          type: boolean
+      type: object
+    OasAuthSource:
+      properties:
+        enabled:
+          type: boolean
+        name:
+          type: string
+      type: object
+    OasAuthSources:
+      properties:
+        cookie:
+          $ref: '#/components/schemas/OasAuthSource'
+        header:
+          $ref: '#/components/schemas/OasAuthSource'
+        query:
+          $ref: '#/components/schemas/OasAuthSource'
+      type: object
+    OasAuthentication:
+      properties:
+        baseIdentityProvider:
+          type: string
+        custom:
+          $ref: '#/components/schemas/OasCustomPluginAuthentication'
+        enabled:
+          type: boolean
+        hmac:
+          $ref: '#/components/schemas/OasHMAC'
+        oidc:
+          $ref: '#/components/schemas/OasOIDC'
+        securitySchemes:
+          $ref: '#/components/schemas/OasSecuritySchemes'
+        stripAuthorizationData:
+          type: boolean
+      type: object
+    OasAuthenticationPlugin:
+      properties:
+        enabled:
+          type: boolean
+        functionName:
+          type: string
+        idExtractor:
+          $ref: '#/components/schemas/OasIDExtractor'
+        path:
+          type: string
+        rawBodyOnly:
+          type: boolean
+      type: object
+    OasCORS:
+      properties:
+        allowCredentials:
+          type: boolean
+        allowedHeaders:
+          items:
+            type: string
+          type: array
+        allowedMethods:
+          items:
+            type: string
+          type: array
+        allowedOrigins:
+          items:
+            type: string
+          type: array
+        debug:
+          type: boolean
+        enabled:
+          type: boolean
+        exposedHeaders:
+          items:
+            type: string
+          type: array
+        maxAge:
+          type: integer
+        optionsPassthrough:
+          type: boolean
+      type: object
+    OasCache:
+      properties:
+        cacheAllSafeRequests:
+          type: boolean
+        cacheByHeaders:
+          items:
+            type: string
+          type: array
+        cacheResponseCodes:
+          items:
+            type: integer
+          type: array
+        controlTTLHeaderName:
+          type: string
+        enableUpstreamCacheControl:
+          type: boolean
+        enabled:
+          type: boolean
+        timeout:
+          type: integer
+      type: object
+    OasCachePlugin:
+      properties:
+        cacheByRegex:
+          type: string
+        cacheResponseCodes:
+          items:
+            type: integer
+          type: array
+        enabled:
+          type: boolean
+        timeout:
+          type: integer
+      type: object
+    OasCertificatePinning:
+      properties:
+        domainToPublicKeysMapping:
+          $ref: '#/components/schemas/OasPinnedPublicKeys'
+        enabled:
+          type: boolean
+      type: object
+    OasCircuitBreaker:
+      properties:
+        coolDownPeriod:
+          type: integer
+        enabled:
+          type: boolean
+        halfOpenStateEnabled:
+          type: boolean
+        sampleSize:
+          type: integer
+        threshold:
+          type: number
+      type: object
+    OasClientCertificates:
+      properties:
+        allowlist:
+          items:
+            type: string
+          nullable: true
+          type: array
+        enabled:
+          type: boolean
+      type: object
+    OasClientToPolicy:
+      properties:
+        clientId:
+          type: string
+        policyId:
+          type: string
+      type: object
+    OasContextVariables:
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    OasCustomPlugin:
+      properties:
+        enabled:
+          type: boolean
+        functionName:
+          type: string
+        path:
+          type: string
+        rawBodyOnly:
+          type: boolean
+        requireSession:
+          type: boolean
+      type: object
+    OasCustomPluginAuthentication:
+      properties:
+        AuthSources:
+          $ref: '#/components/schemas/OasAuthSources'
+        config:
+          $ref: '#/components/schemas/OasAuthenticationPlugin'
+        enabled:
+          type: boolean
+      type: object
+    OasCustomPlugins:
+      items:
+        $ref: '#/components/schemas/OasCustomPlugin'
+      type: array
+    OasDetailedActivityLogs:
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    OasDetailedTracing:
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    OasDomain:
+      properties:
+        certificates:
+          items:
+            type: string
+          type: array
+        enabled:
+          type: boolean
+        name:
+          type: string
+      type: object
+    OasDomainToCertificate:
+      properties:
+        certificate:
+          type: string
+        domain:
+          type: string
+      type: object
+    OasEndpointPostPlugin:
+      properties:
+        enabled:
+          type: boolean
+        functionName:
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+      type: object
+    OasEndpointPostPlugins:
+      items:
+        $ref: '#/components/schemas/OasEndpointPostPlugin'
+      type: array
+    OasEnforceTimeout:
+      properties:
+        enabled:
+          type: boolean
+        value:
+          type: integer
+      type: object
+    OasEventHandler:
+      properties:
+        enabled:
+          type: boolean
+        id:
+          type: string
+        name:
+          type: string
+        trigger:
+          type: string
+        type:
+          type: string
+      type: object
+    OasEventHandlers:
+      items:
+        $ref: '#/components/schemas/OasEventHandler'
+      type: array
+    OasFromOASExamples:
+      properties:
+        code:
+          type: integer
+        contentType:
+          type: string
+        enabled:
+          type: boolean
+        exampleName:
+          type: string
+      type: object
+    OasGatewayTags:
+      properties:
+        enabled:
+          type: boolean
+        tags:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    OasGlobal:
+      properties:
+        cache:
+          $ref: '#/components/schemas/OasCache'
+        contextVariables:
+          $ref: '#/components/schemas/OasContextVariables'
+        cors:
+          $ref: '#/components/schemas/OasCORS'
+        pluginConfig:
+          $ref: '#/components/schemas/OasPluginConfig'
+        postAuthenticationPlugin:
+          $ref: '#/components/schemas/OasPostAuthenticationPlugin'
+        postAuthenticationPlugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+        postPlugin:
+          $ref: '#/components/schemas/OasPostPlugin'
+        postPlugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+        prePlugin:
+          $ref: '#/components/schemas/OasPrePlugin'
+        prePlugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+        responsePlugin:
+          $ref: '#/components/schemas/OasResponsePlugin'
+        responsePlugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+        trafficLogs:
+          $ref: '#/components/schemas/OasTrafficLogs'
+        transformRequestHeaders:
+          $ref: '#/components/schemas/OasTransformHeaders'
+        transformResponseHeaders:
+          $ref: '#/components/schemas/OasTransformHeaders'
+      type: object
+    OasHMAC:
+      properties:
+        AuthSources:
+          $ref: '#/components/schemas/OasAuthSources'
+        allowedAlgorithms:
+          items:
+            type: string
+          type: array
+        allowedClockSkew:
+          type: number
+        enabled:
+          type: boolean
+      type: object
+    OasHeader:
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      type: object
+    OasHeaders:
+      items:
+        $ref: '#/components/schemas/OasHeader'
+      type: array
+    OasIDExtractor:
+      properties:
+        config:
+          $ref: '#/components/schemas/OasIDExtractorConfig'
+        enabled:
+          type: boolean
+        source:
+          type: string
+        with:
+          type: string
+      type: object
+    OasIDExtractorConfig:
+      properties:
+        formParamName:
+          type: string
+        headerName:
+          type: string
+        regexp:
+          type: string
+        regexpMatchIndex:
+          type: integer
+        xPathExp:
+          type: string
+      type: object
+    OasInfo:
+      properties:
+        dbId:
+          type: string
+        expiration:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        orgId:
+          type: string
+        state:
+          $ref: '#/components/schemas/OasState'
+        versioning:
+          $ref: '#/components/schemas/OasVersioning'
+      type: object
+    OasInternal:
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    OasListenPath:
+      properties:
+        strip:
+          type: boolean
+        value:
+          type: string
+      type: object
+    OasMiddleware:
+      properties:
+        global:
+          $ref: '#/components/schemas/OasGlobal'
+        operations:
+          $ref: '#/components/schemas/OasOperations'
+      type: object
+    OasMockResponse:
+      properties:
+        body:
+          type: string
+        code:
+          type: integer
+        enabled:
+          type: boolean
+        fromOASExamples:
+          $ref: '#/components/schemas/OasFromOASExamples'
+        headers:
+          $ref: '#/components/schemas/OasHeaders'
+      type: object
+    OasMutualTLS:
+      properties:
+        domainToCertificateMapping:
+          items:
+            $ref: '#/components/schemas/OasDomainToCertificate'
+          nullable: true
+          type: array
+        enabled:
+          type: boolean
+      type: object
     OasOAS:
       properties:
         components:
@@ -10835,6 +11246,388 @@ components:
           $ref: '#/components/schemas/Openapi3Servers'
         tags:
           $ref: '#/components/schemas/Openapi3Tags'
+      type: object
+    OasOIDC:
+      properties:
+        AuthSources:
+          $ref: '#/components/schemas/OasAuthSources'
+        enabled:
+          type: boolean
+        providers:
+          items:
+            $ref: '#/components/schemas/OasProvider'
+          type: array
+        scopes:
+          $ref: '#/components/schemas/OasScopes'
+        segregateByClientId:
+          type: boolean
+      type: object
+    OasOperation:
+      properties:
+        allow:
+          $ref: '#/components/schemas/OasAllowance'
+        block:
+          $ref: '#/components/schemas/OasAllowance'
+        cache:
+          $ref: '#/components/schemas/OasCachePlugin'
+        circuitBreaker:
+          $ref: '#/components/schemas/OasCircuitBreaker'
+        doNotTrackEndpoint:
+          $ref: '#/components/schemas/OasTrackEndpoint'
+        enforceTimeout:
+          $ref: '#/components/schemas/OasEnforceTimeout'
+        ignoreAuthentication:
+          $ref: '#/components/schemas/OasAllowance'
+        internal:
+          $ref: '#/components/schemas/OasInternal'
+        mockResponse:
+          $ref: '#/components/schemas/OasMockResponse'
+        postPlugins:
+          $ref: '#/components/schemas/OasEndpointPostPlugins'
+        requestSizeLimit:
+          $ref: '#/components/schemas/OasRequestSizeLimit'
+        trackEndpoint:
+          $ref: '#/components/schemas/OasTrackEndpoint'
+        transformRequestBody:
+          $ref: '#/components/schemas/OasTransformBody'
+        transformRequestHeaders:
+          $ref: '#/components/schemas/OasTransformHeaders'
+        transformRequestMethod:
+          $ref: '#/components/schemas/OasTransformRequestMethod'
+        transformResponseBody:
+          $ref: '#/components/schemas/OasTransformBody'
+        transformResponseHeaders:
+          $ref: '#/components/schemas/OasTransformHeaders'
+        urlRewrite:
+          $ref: '#/components/schemas/OasURLRewrite'
+        validateRequest:
+          $ref: '#/components/schemas/OasValidateRequest'
+        virtualEndpoint:
+          $ref: '#/components/schemas/OasVirtualEndpoint'
+      type: object
+    OasOperations:
+      additionalProperties:
+        $ref: '#/components/schemas/OasOperation'
+      type: object
+    OasPinnedPublicKey:
+      properties:
+        domain:
+          type: string
+        publicKeys:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    OasPinnedPublicKeys:
+      items:
+        $ref: '#/components/schemas/OasPinnedPublicKey'
+      nullable: true
+      type: array
+    OasPluginBundle:
+      properties:
+        enabled:
+          type: boolean
+        path:
+          type: string
+      type: object
+    OasPluginConfig:
+      properties:
+        bundle:
+          $ref: '#/components/schemas/OasPluginBundle'
+        data:
+          $ref: '#/components/schemas/OasPluginConfigData'
+        driver:
+          type: string
+      type: object
+    OasPluginConfigData:
+      properties:
+        enabled:
+          type: boolean
+        value:
+          additionalProperties: {}
+          nullable: true
+          type: object
+      type: object
+    OasPostAuthenticationPlugin:
+      properties:
+        plugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+      type: object
+    OasPostPlugin:
+      properties:
+        plugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+      type: object
+    OasPrePlugin:
+      properties:
+        plugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+      type: object
+    OasProvider:
+      properties:
+        clientToPolicyMapping:
+          items:
+            $ref: '#/components/schemas/OasClientToPolicy'
+          type: array
+        issuer:
+          type: string
+      type: object
+    OasRateLimit:
+      properties:
+        enabled:
+          type: boolean
+        per:
+          type: integer
+        rate:
+          type: integer
+      type: object
+    OasRequestSizeLimit:
+      properties:
+        enabled:
+          type: boolean
+        value:
+          type: integer
+      type: object
+    OasResponsePlugin:
+      properties:
+        plugins:
+          $ref: '#/components/schemas/OasCustomPlugins'
+      type: object
+    OasScopeToPolicy:
+      properties:
+        policyId:
+          type: string
+        scope:
+          type: string
+      type: object
+    OasScopes:
+      properties:
+        claimName:
+          type: string
+        scopeToPolicyMapping:
+          items:
+            $ref: '#/components/schemas/OasScopeToPolicy'
+          type: array
+      type: object
+    OasSecuritySchemes:
+      additionalProperties: {}
+      type: object
+    OasServer:
+      properties:
+        authentication:
+          $ref: '#/components/schemas/OasAuthentication'
+        clientCertificates:
+          $ref: '#/components/schemas/OasClientCertificates'
+        customDomain:
+          $ref: '#/components/schemas/OasDomain'
+        detailedActivityLogs:
+          $ref: '#/components/schemas/OasDetailedActivityLogs'
+        detailedTracing:
+          $ref: '#/components/schemas/OasDetailedTracing'
+        eventHandlers:
+          $ref: '#/components/schemas/OasEventHandlers'
+        gatewayTags:
+          $ref: '#/components/schemas/OasGatewayTags'
+        listenPath:
+          $ref: '#/components/schemas/OasListenPath'
+      type: object
+    OasServiceDiscovery:
+      properties:
+        cache:
+          $ref: '#/components/schemas/OasServiceDiscoveryCache'
+        cacheTimeout:
+          type: integer
+        dataPath:
+          type: string
+        enabled:
+          type: boolean
+        endpointReturnsList:
+          type: boolean
+        parentDataPath:
+          type: string
+        portDataPath:
+          type: string
+        queryEndpoint:
+          type: string
+        targetPath:
+          type: string
+        useNestedQuery:
+          type: boolean
+        useTargetList:
+          type: boolean
+      type: object
+    OasServiceDiscoveryCache:
+      properties:
+        enabled:
+          type: boolean
+        timeout:
+          type: integer
+      type: object
+    OasState:
+      properties:
+        active:
+          type: boolean
+        internal:
+          type: boolean
+      type: object
+    OasTest:
+      properties:
+        serviceDiscovery:
+          $ref: '#/components/schemas/OasServiceDiscovery'
+      type: object
+    OasTrackEndpoint:
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    OasTrafficLogs:
+      properties:
+        enabled:
+          type: boolean
+      type: object
+    OasTransformBody:
+      properties:
+        body:
+          type: string
+        enabled:
+          type: boolean
+        format:
+          type: string
+        path:
+          type: string
+      type: object
+    OasTransformHeaders:
+      properties:
+        add:
+          $ref: '#/components/schemas/OasHeaders'
+        enabled:
+          type: boolean
+        remove:
+          items:
+            type: string
+          type: array
+      type: object
+    OasTransformRequestMethod:
+      properties:
+        enabled:
+          type: boolean
+        toMethod:
+          type: string
+      type: object
+    OasURLRewrite:
+      properties:
+        enabled:
+          type: boolean
+        pattern:
+          type: string
+        rewriteTo:
+          type: string
+        triggers:
+          items:
+            $ref: '#/components/schemas/OasURLRewriteTrigger'
+          type: array
+      type: object
+    OasURLRewriteRule:
+      properties:
+        in:
+          type: string
+        name:
+          type: string
+        negate:
+          type: boolean
+        pattern:
+          type: string
+      type: object
+    OasURLRewriteTrigger:
+      properties:
+        condition:
+          type: string
+        rewriteTo:
+          type: string
+        rules:
+          items:
+            $ref: '#/components/schemas/OasURLRewriteRule'
+          type: array
+      type: object
+    OasUpstream:
+      properties:
+        certificatePinning:
+          $ref: '#/components/schemas/OasCertificatePinning'
+        mutualTLS:
+          $ref: '#/components/schemas/OasMutualTLS'
+        rateLimit:
+          $ref: '#/components/schemas/OasRateLimit'
+        serviceDiscovery:
+          $ref: '#/components/schemas/OasServiceDiscovery'
+        test:
+          $ref: '#/components/schemas/OasTest'
+        url:
+          type: string
+      type: object
+    OasValidateRequest:
+      properties:
+        enabled:
+          type: boolean
+        errorResponseCode:
+          type: integer
+      type: object
+    OasVersionToID:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    OasVersioning:
+      properties:
+        default:
+          type: string
+        enabled:
+          type: boolean
+        fallbackToDefault:
+          type: boolean
+        key:
+          type: string
+        location:
+          type: string
+        name:
+          type: string
+        stripVersioningData:
+          type: boolean
+        versions:
+          items:
+            $ref: '#/components/schemas/OasVersionToID'
+          nullable: true
+          type: array
+      type: object
+    OasVirtualEndpoint:
+      properties:
+        body:
+          type: string
+        enabled:
+          type: boolean
+        functionName:
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+        proxyOnError:
+          type: boolean
+        requireSession:
+          type: boolean
+      type: object
+    OasXTykAPIGateway:
+      properties:
+        info:
+          $ref: '#/components/schemas/OasInfo'
+        middleware:
+          $ref: '#/components/schemas/OasMiddleware'
+        server:
+          $ref: '#/components/schemas/OasServer'
+        upstream:
+          $ref: '#/components/schemas/OasUpstream'
       type: object
     Openapi3CallbackRef:
       type: object
@@ -11072,7 +11865,7 @@ components:
       type: object
     Policy:
       properties:
-        mid:
+        _id:
           type: string
         access_rights:
           additionalProperties:
@@ -11660,6 +12453,11 @@ components:
           type: array
         pages:
           type: integer
+      type: object
+    XTykApiGateway:
+      properties:
+        x-tyk-api-gateway:
+          $ref: '#/components/schemas/OasXTykAPIGateway'
       type: object
   securitySchemes:
     bearerAuth:
