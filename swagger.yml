@@ -1666,10 +1666,54 @@ paths:
       requestBody:
         content:
           application/json:
+            example:
+              components:
+                securitySchemes:
+                  bearerAuth:
+                    description: The API Access Credentials
+                    scheme: bearer
+                    type: http
+              info:
+                description: This is a sample OAS.
+                title: OAS Sample
+                version: 1.0.0
+              openapi: 3.0.3
+              paths:
+                /api/sample/users:
+                  get:
+                    operationId: getUsers
+                    responses:
+                      "200":
+                        content:
+                          application/json:
+                            schema:
+                              items:
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                              type: array
+                        description: fetched users
+                    summary: Get users
+                    tags:
+                    - users
+              security:
+              - bearerAuth: []
+              servers:
+              - url: https://localhost:8080
+              x-tyk-api-gateway:
+                info:
+                  name: user
+                  state:
+                    active: true
+                server:
+                  listenPath:
+                    strip: true
+                    value: /user-test/
+                upstream:
+                  url: https://localhost:8080
             schema:
-              allOf:
-              - $ref: '#/components/schemas/XTykApiGateway'
-              - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+              $ref: '#/components/schemas/TykOAS'
       responses:
         "200":
           content:
@@ -12246,6 +12290,27 @@ components:
           example: -1
           type: integer
       type: object
+    TykOAS:
+      properties:
+        components:
+          $ref: '#/components/schemas/Openapi3Components'
+        externalDocs:
+          $ref: '#/components/schemas/Openapi3ExternalDocs'
+        info:
+          $ref: '#/components/schemas/Openapi3Info'
+        openapi:
+          type: string
+        paths:
+          $ref: '#/components/schemas/Openapi3Paths'
+        security:
+          $ref: '#/components/schemas/Openapi3SecurityRequirements'
+        servers:
+          $ref: '#/components/schemas/Openapi3Servers'
+        tags:
+          $ref: '#/components/schemas/Openapi3Tags'
+        x-tyk-api-gateway:
+          $ref: '#/components/schemas/OasXTykAPIGateway'
+      type: object
     URLVals:
       properties:
         ApiURL:
@@ -12453,11 +12518,6 @@ components:
           type: array
         pages:
           type: integer
-      type: object
-    XTykApiGateway:
-      properties:
-        x-tyk-api-gateway:
-          $ref: '#/components/schemas/OasXTykAPIGateway'
       type: object
   securitySchemes:
     bearerAuth:
