@@ -31,17 +31,17 @@ jobs:
           ls -a
           docker build -t internal/tyk-gateway -f ./dev.Dockerfile ./tyk-repo
 
-      # Install docker-compose using apt-get
+      # Install Docker Compose version 2.29.2
       - name: Install docker-compose
         run: |
-          sudo apt-get update
-          sudo apt-get install docker-compose-plugin
-          docker compose version
+          sudo curl -L "https://github.com/docker/compose/releases/download/2.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
       # Start services using docker-compose.yml
       - name: Run docker-compose
         run: |
-          docker compose up -d  # Use the Docker CLI's compose plugin
+          docker-compose up -d  # Use docker-compose to start the services
 
       # Check if the services are up and running
       - name: Wait for the gateway to be ready
@@ -59,4 +59,4 @@ jobs:
       - name: Shutdown docker-compose
         if: always()
         run: |
-          docker compose down
+          docker-compose down
