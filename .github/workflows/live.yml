@@ -8,11 +8,6 @@ jobs:
   run-test-with-live-gateway:
     runs-on: ubuntu-latest
     name: Example
-    services:
-      # Setup Docker service in GitHub Actions to run containers
-      docker:
-        image: docker:20.10.7
-        options: --privileged
 
     steps:
       # Checkout the current repository code
@@ -36,10 +31,17 @@ jobs:
           ls -a
           docker build -t internal/tyk-gateway -f ./dev.Dockerfile ./tyk-repo
 
+      # Install docker-compose using apt-get
+      - name: Install docker-compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose-plugin
+          docker compose version
+
       # Start services using docker-compose.yml
       - name: Run docker-compose
         run: |
-          docker-compose up -d  # Start the services in detached mode
+          docker compose up -d  # Use the Docker CLI's compose plugin
 
       # Check if the services are up and running
       - name: Wait for the gateway to be ready
@@ -57,4 +59,4 @@ jobs:
       - name: Shutdown docker-compose
         if: always()
         run: |
-          docker-compose down
+          docker compose down
