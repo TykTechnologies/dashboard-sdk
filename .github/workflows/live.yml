@@ -42,11 +42,22 @@ jobs:
       - name: Run docker-compose
         run: |
           docker compose up -d  # Use docker-compose to start the services
+          sleep 10
+          docker compose logs
 
       # Check if the services are up and running
       - name: Wait for the gateway to be ready
         run: |
-          sleep 10 # Give some time for the services to start
+          for i in {1..30}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/reload)
+            if [ "$response" -eq 200 ]; then
+              echo "Gateway is up and running!"
+              break
+            else
+              echo "Gateway not ready yet. HTTP status code: $response"
+              sleep 30  # Wait for 30 seconds before retrying
+            fi
+          done
 
       # Send request to the Tyk gateway service
       - name: Send request to gateway
@@ -59,4 +70,4 @@ jobs:
       - name: Shutdown docker-compose
         if: always()
         run: |
-          docker-compose down
+          docker compose down
