@@ -8,6 +8,12 @@ jobs:
   run-test-with-live-gateway:
     runs-on: ubuntu-latest
     name: Example
+    services:
+      # Setup Docker service in GitHub Actions to run containers
+      docker:
+        image: docker:20.10.7
+        options: --privileged
+
     steps:
       # Checkout the current repository code
       - name: Checkout current repository
@@ -28,11 +34,27 @@ jobs:
       - name: Build Tyk Docker image
         run: |
           ls -a
-          docker build -t  internal/tyk-gateway -f ./dev.Dockerfile ./tyk-repo
+          docker build -t internal/tyk-gateway -f ./dev.Dockerfile ./tyk-repo
 
+      # Start services using docker-compose.yml
+      - name: Run docker-compose
+        run: |
+          docker-compose up -d  # Start the services in detached mode
+
+      # Check if the services are up and running
+      - name: Wait for the gateway to be ready
+        run: |
+          sleep 10 # Give some time for the services to start
+
+      # Send request to the Tyk gateway service
       - name: Send request to gateway
         run: |
           curl -X POST http://localhost:8080/reload \
             -H "Content-Type: application/json" \
             -d '{"key": "value"}'
 
+      # Optionally shut down docker-compose services after the tests
+      - name: Shutdown docker-compose
+        if: always()
+        run: |
+          docker-compose down
