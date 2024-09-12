@@ -14,7 +14,7 @@ jobs:
       - name: Checkout current repository
         uses: actions/checkout@v4
 
-      # Checkout the TykTechnologies/tyk repository into a subfolder
+      # Checkout the TykTechnologies/tyk repository into a sub-folder
       - name: Checkout Tyk repository
         uses: actions/checkout@v4
         with:
