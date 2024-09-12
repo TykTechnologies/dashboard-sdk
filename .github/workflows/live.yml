@@ -27,6 +27,7 @@ jobs:
       # Build Docker image using the current repo's dev.dockerfile
       - name: Build Tyk Docker image
         run: |
+          ls -a
           docker build -t  internal/tyk-gateway -f ./dev.dockerfile ./tyk-repo
 
       - name: Send request to gateway
