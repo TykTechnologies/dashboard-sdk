@@ -8,16 +8,26 @@ jobs:
     runs-on: ubuntu-latest
     name: Example
     steps:
-
       # Checkout your code
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: TykTechnologies/tyk
+
+      # Set up Go
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.21.11'
+
+      # Generate dashboard SDKs and commit them
       - name: Generate dashboard sdks and commit them
         run: |
           go run main.go
+
+      # Send request to gateway
+      - name: Send request to gateway
+        run: |
+          curl -X POST http://localhost:8080/reload \
+            -H "Content-Type: application/json" \
+            -d '{"key": "value"}'
