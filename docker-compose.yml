@@ -1,0 +1,29 @@
+name: tyk-dev
+services:
+
+  tyk:
+    image: internal/tyk-gateway
+    networks: [ tyk ]
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+      - ./tyk.conf:/usr/local/bin/tyk.conf
+    depends_on:
+      tyk-redis:
+        condition: service_healthy  # Wait for Redis to be healthy
+
+  tyk-redis:
+    image: redis:6.2.7-alpine
+    networks:
+      - tyk
+    ports:
+      - 9079:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]  # Use redis-cli to check Redis status
+      interval: 10s                      # Check every 10 seconds
+      timeout: 5s                        # Timeout if no response within 5 seconds
+      retries: 5                         # Retry up to 5 times before considering Redis unhealthy
+
+networks:
+  tyk:

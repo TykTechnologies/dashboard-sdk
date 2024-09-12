@@ -3,31 +3,35 @@ on:
   push:
     branches:
       - re-run
+
 jobs:
   run-test-with-live-gateway:
     runs-on: ubuntu-latest
     name: Example
     steps:
-      # Checkout your code
-      - name: Checkout
+      # Checkout the current repository code
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+
+      # Checkout the TykTechnologies/tyk repository into a subfolder
+      - name: Checkout Tyk repository
         uses: actions/checkout@v4
         with:
           repository: TykTechnologies/tyk
+          path: tyk-repo # Clone Tyk repo into a subfolder
 
-      # Set up Go
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.21.11'
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      # Generate dashboard SDKs and commit them
-      - name: Generate dashboard sdks and commit them
+      # Build Docker image using the current repo's dev.dockerfile
+      - name: Build Tyk Docker image
         run: |
-          go run main.go
+          docker build -t  internal/tyk-gateway -f ./dev.dockerfile ./tyk-repo
 
-      # Send request to gateway
       - name: Send request to gateway
         run: |
           curl -X POST http://localhost:8080/reload \
             -H "Content-Type: application/json" \
             -d '{"key": "value"}'
+
