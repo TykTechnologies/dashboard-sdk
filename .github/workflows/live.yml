@@ -1,0 +1,23 @@
+name: Run Live Gateway And Dashboard
+on:
+  push:
+    branches:
+      - re-run
+jobs:
+  run-test-with-live-gateway:
+    runs-on: ubuntu-latest
+    name: Example
+    steps:
+
+      # Checkout your code
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: TykTechnologies/tyk
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21.11'
+      - name: Generate dashboard sdks and commit them
+        run: |
+          go run main.go
