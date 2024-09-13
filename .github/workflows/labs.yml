@@ -7,7 +7,6 @@ jobs:
   run-test-with-live-gateway:
     runs-on: ubuntu-latest
     name: Example
-
     steps:
       # Checkout the current repository code
       - name: Set up Python 3.7
@@ -27,5 +26,5 @@ jobs:
         with:
           mask-password: 'true'
       - name: Run smoke tests
-        shell: bash
-        env:
+        run:
+          ls -a
