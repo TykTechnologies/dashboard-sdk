@@ -68,6 +68,9 @@ jobs:
       - name: make request to the dashboard
         run: |
           curl -X GET http://localhost:3000/api/apis
+      - name: check value of api
+        run: |
+          echo "USER_API_SECRET: $USER_API_SECRET"
 
       - name: Clean up
         run: |
