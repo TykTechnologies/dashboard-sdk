@@ -44,8 +44,20 @@ jobs:
           repository: tyklabs/tyk-pro
           path: tyk-pro
 
+      # Install go-stask
+      - name: Install go-stask
+        uses: arduino/setup-task@v1
+        with:
+          version: '3.39.0'
+
       # Run smoke tests
       - name: Run smoke tests
+        env:
+          pull_policy: 'always'
+          GH_TOKEN: ${{ secrets.ORG_GH_TOKEN }}
+          TYK_DB_LICENSEKEY: ${{ secrets.DASH_LICENSE }}
+          TYK_MDCB_LICENSE: ${{ secrets.MDCB_LICENSE }}
         run: |
           aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 754489498669.dkr.ecr.eu-central-1.amazonaws.com
           ls -a
+          task --version
