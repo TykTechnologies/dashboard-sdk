@@ -51,7 +51,7 @@ jobs:
           version: '3.39.0'
 
       # Run smoke tests
-      - name: Run smoke tests
+      - name: Run Dashboard containers
         env:
           pull_policy: 'always'
           GH_TOKEN: ${{ secrets.ORG_GH_TOKEN }}
