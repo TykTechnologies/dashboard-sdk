@@ -60,18 +60,17 @@ jobs:
         run: |
           cd tyk-pro
           aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 754489498669.dkr.ecr.eu-central-1.amazonaws.com
-          ls -a
           task --version
           task login
-          task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
+          output=$(task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128)
+          echo "$output"
           user_api_secret=$(echo "$output" | grep 'USER_API_SECRET' | awk -F '=' '{print $2}')
           echo "USER_API_SECRET=${user_api_secret}"
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
-    
 
-      - name: Print GITHUB_OUTPUT Content
+      - name: Use USER_API_SECRET
         run: |
-          echo "Contents of GITHUB_OUTPUT:"
+          echo "The USER_API_SECRET is: $USER_API_SECRET"
           cat $GITHUB_ENV
 
       - name: make request to the dashboard
