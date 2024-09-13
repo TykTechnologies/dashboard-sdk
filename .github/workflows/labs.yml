@@ -71,6 +71,7 @@ jobs:
       - name: check value of api
         run: |
           echo "USER_API_SECRET: $USER_API_SECRET"
+          echo "USER_API_SECRET: $USER_API_SECRET"
 
       - name: Clean up
         run: |
