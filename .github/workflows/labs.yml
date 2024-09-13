@@ -1,8 +1,14 @@
 name: Run Live Gateway And Dashboard
+
 on:
   push:
     branches:
       - re-run
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   run-test-with-live-gateway:
     runs-on: ubuntu-latest
@@ -13,8 +19,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
+
       - name: Checkout current repository
         uses: actions/checkout@v4
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::754489498669:role/ecr_rw_tyk
@@ -25,6 +33,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
         with:
           mask-password: 'true'
+
       - name: Run smoke tests
-        run:
+        run: |
           ls -a
