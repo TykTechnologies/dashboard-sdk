@@ -1,0 +1,4002 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: support@tyk.io
+    name: Tyk Technologies
+    url: https://tyk.io/contact
+  description: |2
+
+    ## <a name="introduction"></a> Introduction
+
+    The Tyk Dashboard API offers granular, programmatic access to a centralised database of resources that your Tyk nodes can pull from. This API has a dynamic user administrative structure which means the secret key that is used to communicate with your Tyk nodes can be kept secret and access to the wider management functions can be handled on a user-by-user and organisation-by-organisation basis.
+
+    A common question around using a database-backed configuration is how to programmatically add API definitions to your Tyk nodes, the Dashboard API allows much more fine-grained, secure and multi-user access to your Tyk cluster, and should be used to manage a database-backed Tyk node.
+
+    The Tyk Dashboard API works seamlessly with the Tyk Dashboard (and the two come bundled together).
+
+    ## <a name="security-hierarchy"></a> Security Hierarchy
+
+    The Dashboard API provides a more structured security layer to managing Tyk nodes.
+
+    ### Organisations, APIs and Users
+
+    With the Dashboard API and a database-backed Tyk setup, (and to an extent with file-based API setups - if diligence is used in naming and creating definitions), the following security model is applied to the management of Upstream APIs:
+
+    * **Organisations**: All APIs are *owned* by an organisation, this is designated by the 'OrgID' parameter in the API Definition.
+    * **Users**: All users created in the Dashboard belong to an organisation (unless an exception is made for super-administrative access).
+    * **APIs**: All APIs belong to an Organisation and only Users that belong to that organisation can see the analytics for those APIs and manage their configurations.
+    * **API Keys**: API Keys are designated by organisation, this means an API key that has full access rights will not be allowed to access the APIs of another organisation on the same system, but can have full access to all APIs within the organisation.
+    * **Access Rights**: Access rights are stored with the key, this enables a key to give access to multiple APIs, this is defined by the session object in the core Tyk API.
+
+    In order to use the Dashboard API, you'll need to get the 'Tyk Dashboard API Access Credentials' secret from your user profile on the Dashboard UI.
+
+    The secret you set should then be sent along as a header with each Dashboard API Request in order for it to be successful:
+
+
+    authorization: <your-secret>
+  license:
+    name: Mozilla Public License Version 2.0
+    url: https://github.com/TykTechnologies/tyk/blob/master/LICENSE.md
+  title: Tyk Dashboard API
+  version: 5.5.0
+servers:
+- url: https://{tenant}
+  variables:
+    tenant:
+      default: localhost:8080
+      description: Your dashboard host
+security:
+- bearerAuth: []
+tags:
+- description: Use the endpoints in this tag to manage OAuth flow.
+  externalDocs:
+    description: OAuth Documentation
+    url: https://tyk.io/docs/basic-config-and-security/security/authentication-authorization/oauth-2-0/
+  name: Oauth
+- description: Use the endpoints under this tags to update,add ,delete and fetch the
+    classic APIs.
+  name: APIs
+paths:
+  /api/apis:
+    get:
+      description: Get List of APIs.By default the returned apis will be sorted by
+        created_at field in descending order but this can be changed via sort query
+        parameter.The apis returned are paginated
+      operationId: getApis
+      parameters:
+      - allowEmptyValue: true
+        deprecated: true
+        description: Return smaller API list payload.
+        example: "1"
+        in: query
+        name: compressed
+        required: false
+        schema:
+          enum:
+          - "1"
+          type: string
+      - description: API Type, internal or external.
+        example: rest
+        in: query
+        name: api_type
+        required: false
+        schema:
+          enum:
+          - tcp
+          - rest
+          - graphql
+          - udg
+          - subgraph
+          - supergraph
+          - internal
+          type: string
+      - description: Comma separated list of categories you want to filter Apis by.
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: Comma separated list of authentication type you want to filter
+          apis by.
+        example: keyless,authToken
+        in: query
+        name: auth_type
+        required: false
+        schema:
+          type: string
+      - allowEmptyValue: true
+        description: For versioned APIs, return only the base versions.If any value
+          is sent in this query parameter only the base version will be returned
+        example: "1"
+        in: query
+        name: base_apis
+        required: false
+        schema:
+          type: string
+      - description: Query string for search/filtering.This will return all apis whose
+          names matches the given pattern
+        example: Rate Limit Path API 1
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+      - description: Use p query parameter to say which page you want returned. Send
+          number less than 0 to return all items.
+        example: 1
+        in: query
+        name: p
+        required: false
+        schema:
+          type: integer
+      - description: |-
+          * 'name' - Sort by name in ascending order.
+          * '-name' - Sort by name in descending order.
+          * 'updated_at' - Sort by updated_at in ascending order.
+          * '-updated_at' - Sort by updated_at in descending order.
+          * 'created_at' - Sort by created_at in ascending order.
+          * '-created_at' - Sort by created_at in descending order.
+        example: name
+        in: query
+        name: sort
+        required: false
+        schema:
+          enum:
+          - name
+          - -name
+          - created_at
+          - -created_at
+          - updated_at
+          - -updated_at
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                paginatedApiExample:
+                  $ref: '#/components/examples/paginatedApiExample'
+              schema:
+                $ref: '#/components/schemas/ApiDefinitionsResponse'
+          description: List of API definitions.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve APIs.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to marshal data for APIs.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get List of APIs
+      tags:
+      - APIs
+    post:
+      description: |-
+        Create an API Definition in Tyk Classic API format.
+          Note that the response includes the newly created Tyk Classic API Definition containing the unique identifier for the APIs (`api_id`). You can provide a value for the `api_id` in the request body, otherwise Tyk will automatically generate a value for you.
+            The `ID` field within the Tyk Classic API Definition is a proprietary field used by Tyk to identify the API within the database and cannot be chosen or modified by the user.
+      operationId: postApis
+      parameters:
+      - description: The base API which the new version will be linked to.
+        example: 663a4ed9b6be920001b191ae
+        in: query
+        name: base_api_id
+        required: false
+        schema:
+          type: string
+      - description: The version name of the base API while creating the first version.
+          This doesn't have to be sent for the next versions but if it is set, it
+          will override base API version name.
+        example: Default
+        in: query
+        name: base_api_version_name
+        required: false
+        schema:
+          type: string
+      - description: The version name of the created version.
+        example: v2
+        in: query
+        name: new_version_name
+        required: false
+        schema:
+          type: string
+      - description: If true, the new version is set as default version.
+        example: true
+        in: query
+        name: set_default
+        required: false
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            example:
+              api_definition:
+                api_id: b84fe1a04e5648927971c0557971565c
+                auth:
+                  auth_header_name: authorization
+                definition:
+                  key: version
+                  location: header
+                name: Tyk Test API
+                org_id: 664a14650619d40001f1f00f
+                proxy:
+                  listen_path: /tyk-api-test/
+                  strip_listen_path: true
+                  target_url: https://httpbin.org
+                use_oauth2: true
+                version_data:
+                  not_versioned: true
+                  versions:
+                    Default:
+                      name: Default
+            schema:
+              $ref: '#/components/schemas/ApiDefinitionWrapper'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                ID: 284acad18f44f3d4e9a0832ccf5fd1
+                Message: API created
+                Meta: 663cd8615715ec1405aafbea
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API created
+        "400":
+          content:
+            application/json:
+              example:
+                Message: version name header should be set with base API ID
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "409":
+          content:
+            application/json:
+              example:
+                Message: Found API with the same ID
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: if API with given API ID  already exist
+      summary: Create API Definition
+      tags:
+      - APIs
+  /api/apis/{apiID}/access:
+    get:
+      description: This will return APIAccessManagementPayload that has two lists
+        containing users and user groups that have access to an API.
+      operationId: getApiAccessRights
+      parameters:
+      - description: The API ID
+        example: b84fe1a04e5648927971c0557971565c
+        in: path
+        name: apiID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                userGroupIds:
+                - 663a4ed6b6be920001b191aa
+                - 663a4ed6b6be920001b191ab
+                userIds:
+                - 663b2a835715ecb6edef24e3
+                - 663a5bbf5715ec8040251f2a
+              schema:
+                $ref: '#/components/schemas/AccessManagementPayload'
+          description: APIAccessManagementPayload represents two lists containing
+            users and user groups that have access to an API
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/{apiID}/access'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API not found
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API with this ID does not exist
+        "500":
+          content:
+            application/json:
+              example:
+                Message: failed to marshal ownership payload
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get API access rights (users and userGroups)
+      tags:
+      - APIs
+    put:
+      description: This will update the user group and users that have access to an
+        API.The userIds and userGroup sent will entirely replace the existing userIds
+        IDs and userGroup ids.
+      operationId: updateApiAccessRights
+      parameters:
+      - description: The API ID
+        example: b84fe1a04e5648927971c0557971565c
+        in: path
+        name: apiID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              userGroupIds:
+              - 663a4ed6b6be920001b191aa
+              - 663a4ed6b6be920001b191ab
+              userIds:
+              - 663a5bbf5715ec8040251f2a
+            schema:
+              $ref: '#/components/schemas/AccessManagementPayload'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API access updated
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API access updated
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/{apiID}/access'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API not found
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API with ID not found
+        "500":
+          content:
+            application/json:
+              example:
+                Message: failed to unmarshal categories payload
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Update API access rights (users and userGroups)
+      tags:
+      - APIs
+  /api/apis/{apiId}:
+    delete:
+      description: Delete an API by ID
+      operationId: deleteApi
+      parameters:
+      - description: ID of API to delete. Can either be internal or public API ID.
+        example: b84fe1a04e5648927971c0557971565c
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API deleted
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not delete the API
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Failed to delete
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/{apiId}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API with given ID not found
+      summary: Delete a single API by ID
+      tags:
+      - APIs
+    get:
+      description: Get an API by ID
+      operationId: getApi
+      parameters:
+      - description: ID of API to get. Can either be internal or public API ID.
+        example: b84fe1a04e5648927971c0557971565c
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                singleAPIDef:
+                  $ref: '#/components/examples/singleAPIDef'
+              schema:
+                $ref: '#/components/schemas/ApiDefinitionWrapper'
+          description: API definition
+          headers:
+            x-tyk-base-api-id:
+              description: ID of the base API if the requested API is a version.
+              schema:
+                type: string
+              style: simple
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/{apiId}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to marshal data for API detail
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get a single API by ID
+      tags:
+      - APIs
+    put:
+      description: Update an API Definition. api_id can be updated for On-Premise
+        installations, but it cannot be updated when the Dashboard resides in Tyk
+        Cloud. Updates to api_id in Tyk Cloud will be ignored.
+      operationId: putApi
+      parameters:
+      - description: ID of API to get. Can either be internal or public API ID.
+        example: b84fe1a04e5648927971c0557971565c
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              api_definition:
+                api_id: b84fe1a04e5648927971c0557971565c
+                auth:
+                  auth_header_name: authorization
+                definition:
+                  key: version
+                  location: header
+                name: Update API name
+                org_id: 664a14650619d40001f1f00f
+                proxy:
+                  listen_path: /updated-tyk-api-test/
+                  strip_listen_path: true
+                  target_url: https://httpbin.org
+                use_oauth2: true
+                version_data:
+                  not_versioned: true
+                  versions:
+                    Default:
+                      name: Default
+            schema:
+              $ref: '#/components/schemas/ApiDefinitionWrapper'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API updated
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API updated
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Invalid `ID` value
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: the ID sent in the body is not same as the ID in the path parameter
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/{apiId}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API definition does not exist
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API with given ID not found
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Error while validating schema
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Update API Definition
+      tags:
+      - APIs
+  /api/apis/{apiId}/url:
+    get:
+      description: This will return your API BasePath(your API listen path) ,Host(your
+        API domain or gateway hostname ) and API URL (full url to your API upstream
+        which is a combination of the protocol the API uses (e.g http)+ host name(e.g
+        tyk.io) and the API listen_path )
+      operationId: getApiUrl
+      parameters:
+      - description: The API ID
+        example: b84fe1a04e5648927971c0557971565c
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                ApiURL: http://localhost:8080/rate-limit-proxy-api/
+                BasePath: /rate-limit-proxy-api/
+                Host: localhost:8080
+              schema:
+                $ref: '#/components/schemas/URLVals'
+          description: Urls returned successfully
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/{apiId}/url'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+      summary: Get API URLs
+      tags:
+      - APIs
+  /api/apis/categories:
+    get:
+      description: Get a list of all the defined API categories and the number(count)
+        of APIs that are in each category.
+      operationId: getAllApiCategories
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                categories:
+                - count: 3
+                  name: tag2
+                - count: 1
+                  name: tag2
+                - count: 1
+                  name: tag3
+              schema:
+                $ref: '#/components/schemas/AllCategoriesResponse'
+          description: API categories
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/categories'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve APIs
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get API Categories
+      tags:
+      - APIs
+  /api/apis/groups:
+    get:
+      description: This will return a map/hashmap with categories as keys and the
+        key values will be a list that contains all the APIIDs that belong to that
+        category.
+      operationId: getAPIGroups
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                '#tag2':
+                - d1dfc6a927a046c54c0ed470f19757cc
+                '#tag3':
+                - d1dfc6a927a046c54c0ed470f19757cc
+                httpbin:
+                - d1dfc6a927a046c54c0ed470f19757cc
+                tag1:
+                - d1dfc6a927a046c54c0ed470f19757cc
+                - 627efb71ebae49df7a853b9769b65fce
+                tag2:
+                - d1dfc6a927a046c54c0ed470f19757cc
+                - 627efb71ebae49df7a853b9769b65fce
+              schema:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                type: object
+          description: A map of groups with APIs IDs in that group.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve APIs.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unable to get groups e.g because database is down
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/groups'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to unmarshal API groups data
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get API Groups.
+      tags:
+      - APIs
+  /api/apis/oauth/{apiId}:
+    get:
+      description: Return all the auth 2 clients that have been registered with you
+        tyk instance
+      operationId: getOathClientsList
+      parameters:
+      - description: The API’s ID.
+        example: e95400eba23c4a2d4622a722be06fe95
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                apps:
+                - client_id: 2a06b398c17f46908de3dffcb71ef87d
+                  client_name: ""
+                  dcr_registration:
+                    access_token: ""
+                    client_uri: ""
+                    provider: ""
+                  description: google client
+                  meta_data:
+                    user_id: 362b3fb9a1d5e4f00017226f5
+                  policy_id: 665d51505715ec2d76022c87
+                  redirect_uri: https://httpbin.org/ip
+                  secret: MmQwNTI5NGQtYjU0YS00NjMyLWIwZjktNTZjY2M1ZjhjYWY0
+                pages: 1
+              schema:
+                $ref: '#/components/schemas/OAuthApps'
+          description: Fetched successfully.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: API Reference not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Not enough permissions or  API not found.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/oauth/{apiId}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve apps list.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to unmarshal key data from Tyk API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: List OAuth clients.
+      tags:
+      - Oauth
+    post:
+      description: Client apps are created dynamically, the only parameter required
+        to create a new client app with Tyk is to specify the redirect URI, this is
+        used as part of the client authentication and cannot be edited later. Please
+        note that if you don't attach a policy to the OAuth client you will need to
+        provide dynamic key rules to client authorization endpoint.
+      operationId: createNewClientApp
+      parameters:
+      - description: The API’s ID.
+        example: e95400eba23c4a2d4622a722be06fe95
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              meta_data:
+                user_id: 362b3fb9a1d5e4f00017226f5
+              policy_id: 665d51505715ec2d76022c87
+              redirect_uri: https://httpbin.org/ip
+            schema:
+              $ref: '#/components/schemas/NewClientRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                client_id: 2a06b398c17f46908de3dffcb71ef87d
+                client_name: ""
+                dcr_registration:
+                  access_token: ""
+                  client_uri: ""
+                  provider: ""
+                description: google client
+                meta_data:
+                  user_id: 362b3fb9a1d5e4f00017226f5
+                policy_id: 665d51505715ec2d76022c87
+                redirect_uri: https://httpbin.org/ip
+                secret: MmQwNTI5NGQtYjU0YS00NjMyLWIwZjktNTZjY2M1ZjhjYWY0
+              schema:
+                $ref: '#/components/schemas/OAuthClient'
+          description: Client created.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: API reference not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Request body malformed.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Request body malformed.
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve policy details.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Create a new OAuth2.0 client.
+      tags:
+      - Oauth
+  /api/apis/oauth/{apiId}/{clientId}:
+    delete:
+      description: You can delete an OAuth client using this endpoint. Please note
+        that tokens issued with the client ID will still be valid until they expire.
+      operationId: deleteOathClient
+      parameters:
+      - description: The API’s ID.
+        example: e95400eba23c4a2d4622a722be06fe95
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      - description: The client ID.
+        example: 2a06b398c17f46908de3dffcb71ef87
+        in: path
+        name: clientId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: OAuth client deleted successfully.
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Deleted successfully.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: API Reference not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: You don't have access to this.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: You have no access.
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve app detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Could not remove app.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Delete OAuth client.
+      tags:
+      - Oauth
+    get:
+      description: Get single  OAuth client details with its client ID.
+      operationId: getOAuthClientDetail
+      parameters:
+      - description: The API’s ID.
+        example: e95400eba23c4a2d4622a722be06fe95
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      - description: The client ID.
+        example: 2a06b398c17f46908de3dffcb71ef87
+        in: path
+        name: clientId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                client_id: 2a06b398c17f46908de3dffcb71ef87d
+                client_name: ""
+                dcr_registration:
+                  access_token: ""
+                  client_uri: ""
+                  provider: ""
+                description: google client
+                meta_data:
+                  user_id: 362b3fb9a1d5e4f00017226f5
+                policy_id: 665d51505715ec2d76022c87
+                redirect_uri: https://httpbin.org/ip
+                secret: MmQwNTI5NGQtYjU0YS00NjMyLWIwZjktNTZjY2M1ZjhjYWY0
+              schema:
+                $ref: '#/components/schemas/OAuthClient'
+          description: Details fetched successfully.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: API reference not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: You don't have access to this.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: You have no access.
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve app detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to unmarshal app data from Tyk API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get single OAuth client details.
+      tags:
+      - Oauth
+  /api/apis/oauth/{apiId}/{clientId}/tokens:
+    get:
+      description: This endpoint allows you to retrieve a list of all current tokens
+        and their expiry date for a provided API ID and OAuth client ID.
+      operationId: getClientTokens
+      parameters:
+      - description: The API’s ID.
+        example: e95400eba23c4a2d4622a722be06fe95
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+      - description: The client ID.
+        example: 2a06b398c17f46908de3dffcb71ef87
+        in: path
+        name: clientId
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - code: 5a7d110be6355b0c071cc339327563cb45174ae387f52f87a80d2496
+                expires: 1.618158407e+09
+              - code: 5a7d110be6355b0c071cc33988884222b0cf436eba7979c6c51d6dbd
+                expires: 1.618158594e+09
+              schema:
+                $ref: '#/components/schemas/OAuthClientTokens'
+          description: OK
+        "400":
+          content:
+            application/json:
+              example:
+                Message: API Reference not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/oauth/{apiId}/{clientId}/tokens'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve tokens.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to unmarshal tokens data from Tyk API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: List OAuth client tokens.
+      tags:
+      - Oauth
+  /api/apis/search:
+    get:
+      description: This will return a list of APIs whose names matches the provided
+        q query parameter.If q is not sent all APIs will be returned.The returned
+        results are paginated.
+      operationId: searchApis
+      parameters:
+      - description: Use p query parameter to say which page you want returned. Send
+          number less than 0 to return all items.
+        example: 1
+        in: query
+        name: p
+        required: false
+        schema:
+          type: integer
+      - description: The name of the APIs you want to search
+        example: Rate Limit Path API 1
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                paginatedApiExample:
+                  $ref: '#/components/examples/paginatedApiExample'
+              schema:
+                $ref: '#/components/schemas/ApiDefinitionsResponse'
+          description: List of API definitions
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve APIs
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/search'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to unmarshal APIs data
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Search List of APIs
+      tags:
+      - APIs
+  /api/examples:
+    get:
+      description: Returns a list of all example API definitions available in "repository.json"
+        file defined in "x-tyk-examples-index" header. If the header is not provided,
+        Tyk will use the default value of this header which is `tyk-examples` repo.
+      operationId: getAPIExamples
+      parameters:
+      - description: URL path to the repository.json in the repository defined in
+          `x-tyk-repo-url.
+        example: https://raw.githubusercontent.com/TykTechnologies/tyk-examples/main/repository.json
+        in: header
+        name: x-tyk-examples-index
+        schema:
+          default: https://raw.githubusercontent.com/TykTechnologies/tyk-examples/main/repository.json
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - location: udg/vat-checker
+                name: VAT number checker UDG
+                shortDescription: Simple REST API wrapped in GQL using Universal Data
+                  Graph that allows user to check validity of a VAT number and display
+                  some details about it.
+              - location: udg/geo-info
+                name: Geo information about the World
+                shortDescription: Countries GQL API extended with information from
+                  geocode.xyz
+              - location: udg/react-conferences
+                name: React conferences in Europe
+                shortDescription: Information about React conferences in Europe. This
+                  Data Graph stitches together two GQL APIs. The flag image is added
+                  by using Trevorblades API as a data source.
+              schema:
+                items:
+                  $ref: '#/components/schemas/ExampleAPIMetadata'
+                type: array
+          description: List of API examples response.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Invalid examples index file or root path.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/examples'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to fetch examples index file.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get a list of example API definitions.
+      tags:
+      - APIs
+  /api/examples/{location}:
+    get:
+      description: Get the details of a single API definition, details include full
+        name, location in the repository, description, features and min tyk version.
+      operationId: getAPIExample
+      parameters:
+      - description: URL that points to the index file (repository.json) or root of
+          a repository housing examples.
+        example: https://raw.githubusercontent.com/TykTechnologies/tyk-examples/main/repository.json
+        in: header
+        name: x-tyk-examples-index
+        schema:
+          default: https://raw.githubusercontent.com/TykTechnologies/tyk-examples/main/repository.json
+          type: string
+      - description: Repository URL to fetch example API definitions from.
+        example: https://github.com/TykTechnologies/tyk-examples.git
+        in: header
+        name: x-tyk-repo-url
+        schema:
+          default: https://github.com/TykTechnologies/tyk-examples.git
+          type: string
+      - description: Location of the tyk example in the repository defined in `x-tyk-repo-url`.
+        example: udg/vat-checker
+        in: path
+        name: location
+        required: true
+        schema:
+          type: string
+      - description: If set to true, the response will contain the content of the
+          Readme file for the specified example, the readme content will be present
+          as the `readme` field.
+        example: false
+        in: query
+        name: readme
+        required: false
+        schema:
+          default: "false"
+          type: boolean
+      - description: If set to true, the response will contain the APIDefinition of
+          the specified example, the definition will be present as the `apiDefinition`
+          field.
+        example: false
+        in: query
+        name: apiDef
+        required: false
+        schema:
+          default: false
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                description: Simple REST API wrapped in GQL using Universal Data Graph
+                  that allows user to check validity of a VAT number and display some
+                  details about it.
+                features:
+                - REST Datasource
+                location: udg/vat-checker
+                min_version: "5.0"
+                name: VAT number checker UDG
+              schema:
+                $ref: '#/components/schemas/DetailedExampleAPIMetadata'
+          description: Details on the fetched example API definition.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Invalid examples index file or root path.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Invalid parameters.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/examples/{location}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Example API definition not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Example API definition not found.
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to fetch example API definitions.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get details of a single example API definition.
+      tags:
+      - APIs
+components:
+  examples:
+    aggregateAnalytics:
+      value:
+        data:
+        - error: 4
+          hits: 31
+          id:
+            alias: ""
+            api_id: 41351a6a94094da05f75146a695a16f6
+            api_name: Keyless
+            code: 404
+            day: 0
+            hour: 0
+            iso_country: ""
+            key: ""
+            month: 0
+            path: /anything
+            url: ""
+            year: 0
+          last_hit: "2024-06-19T07:11:39Z"
+          latency: 0
+          max_latency: 0
+          max_upstream_latency: 0
+          min_latency: 0
+          min_upstream_latency: 0
+          request_time: 174.5
+          success: 27
+          upstream_latency: 0
+        pages: 1
+    oasExample:
+      value:
+        components:
+          securitySchemes:
+            bearerAuth:
+              description: The API Access Credentials
+              scheme: bearer
+              type: http
+        info:
+          description: This is a sample OAS.
+          title: OAS Sample
+          version: 1.0.0
+        openapi: 3.0.3
+        paths:
+          /api/sample/users:
+            get:
+              operationId: getUsersSample
+              responses:
+                "200":
+                  content:
+                    application/json:
+                      schema:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                          type: object
+                        type: array
+                  description: fetched users
+              summary: Get users
+              tags:
+              - users
+        security:
+        - bearerAuth: []
+        servers:
+        - url: https://localhost:8080
+        x-tyk-api-gateway:
+          info:
+            name: user
+            state:
+              active: true
+          server:
+            listenPath:
+              strip: true
+              value: /user-test/
+          upstream:
+            url: https://localhost:8080
+    paginatedApiExample:
+      value:
+        apis:
+        - api_definition:
+            api_id: b84fe1a04e5648927971c0557971565c
+            auth:
+              auth_header_name: authorization
+            definition:
+              key: version
+              location: header
+            name: Tyk Test API
+            org_id: 664a14650619d40001f1f00f
+            proxy:
+              listen_path: /tyk-api-test/
+              strip_listen_path: true
+              target_url: https://httpbin.org
+            use_oauth2: true
+            version_data:
+              not_versioned: true
+              versions:
+                Default:
+                  name: Default
+        pages: 1
+    policiesExample:
+      value:
+        Data:
+        - _id: "363635373039383964393864643030303031646131376631"
+          access_rights:
+            8ddd91f3cda9453442c477b06c4e2da4:
+              allowance_scope: ""
+              allowed_types: []
+              allowed_urls:
+              - methods:
+                - GET
+                url: /users
+              api_id: 8ddd91f3cda9453442c477b06c4e2da4
+              api_name: Itachi API
+              disable_introspection: false
+              field_access_rights: []
+              limit:
+                max_query_depth: 0
+                per: 0
+                quota_max: 0
+                quota_remaining: 0
+                quota_renewal_rate: 0
+                quota_renews: 0
+                rate: 0
+                set_by_policy: false
+                smoothing:
+                  delay: 30
+                  enabled: false
+                  step: 100
+                  threshold: 500
+                  trigger: 0.8
+                throttle_interval: 0
+                throttle_retry_limit: 0
+              restricted_types: []
+              versions:
+              - Default
+          active: true
+          date_created: "2024-05-27T10:24:31.099Z"
+          hmac_enabled: false
+          id: ""
+          is_inactive: false
+          key_expires_in: 2.592e+06
+          last_updated: "1716980105"
+          max_query_depth: -1
+          meta_data:
+            user_type: mobile_user
+          name: Sample policy
+          org_id: 664a14650619d40001f1f00f
+          partitions:
+            acl: true
+            complexity: false
+            per_api: false
+            quota: true
+            rate_limit: true
+          per: 60
+          quota_max: 10000
+          quota_renewal_rate: 3600
+          rate: 1000
+          smoothing:
+            delay: 30
+            enabled: false
+            step: 100
+            threshold: 500
+            trigger: 0.8
+          tags:
+          - security
+          throttle_interval: 10
+          throttle_retry_limit: 10
+        Pages: 1
+    singleAPIDef:
+      value:
+        api_definition:
+          api_id: b84fe1a04e5648927971c0557971565c
+          auth:
+            auth_header_name: authorization
+          definition:
+            key: version
+            location: header
+          id: 66596520c7f5720001b22558
+          name: Tyk Test API
+          org_id: 664a14650619d40001f1f00f
+          proxy:
+            listen_path: /tyk-api-test/
+            strip_listen_path: true
+            target_url: https://httpbin.org
+          use_oauth2: true
+          version_data:
+            not_versioned: true
+            versions:
+              Default:
+                name: Default
+  parameters:
+    AccessType:
+      description: Filter for internal or external API versions.
+      example: internal
+      in: query
+      name: accessType
+      required: false
+      schema:
+        enum:
+        - internal
+        - external
+        type: string
+    AllowList:
+      description: Enable allowList middleware for all endpoints.
+      in: query
+      name: allowList
+      required: false
+      schema:
+        $ref: '#/components/schemas/BooleanQueryParam'
+    Authentication:
+      description: Enable/disable the authentication mechanism in your Tyk Gateway
+        for your OAS API.
+      in: query
+      name: authentication
+      schema:
+        $ref: '#/components/schemas/BooleanQueryParam'
+    CustomDomain:
+      description: Custom domain for the API.
+      example: tyk.io
+      in: query
+      name: customDomain
+      required: false
+      schema:
+        type: string
+    ListenPath:
+      description: Listen path for the API.
+      example: /user-test/
+      in: query
+      name: listenPath
+      required: false
+      schema:
+        type: string
+    MockResponse:
+      description: Enable mockResponse middleware for all endpoints having responses
+        configured.
+      in: query
+      name: mockResponse
+      required: false
+      schema:
+        $ref: '#/components/schemas/BooleanQueryParam'
+    SearchText:
+      description: Search for API version name.
+      example: Sample oas
+      in: query
+      name: searchText
+      required: false
+      schema:
+        type: string
+    TemplateID:
+      description: The Asset ID of template applied while creating or importing an
+        OAS API.
+      example: my-unique-template-id
+      in: query
+      name: templateID
+      schema:
+        type: string
+    UpstreamURL:
+      description: Upstream URL for the API.
+      example: https://localhost:8080
+      in: query
+      name: upstreamURL
+      required: false
+      schema:
+        type: string
+    ValidateRequest:
+      description: Enable validateRequest middleware for all endpoints having a request
+        body with media type application/json.
+      in: query
+      name: validateRequest
+      required: false
+      schema:
+        $ref: '#/components/schemas/BooleanQueryParam'
+    endDate:
+      description: end date
+      example: "2023-07-31"
+      in: query
+      name: end_day
+      schema:
+        format: date
+        type: string
+    startDate:
+      description: start date
+      example: "2023-07-01"
+      in: query
+      name: start_day
+      schema:
+        format: date
+        type: string
+  schemas:
+    APIDefinition:
+      properties:
+        CORS:
+          $ref: '#/components/schemas/CORSConfig'
+        active:
+          type: boolean
+        allowed_ips:
+          items:
+            type: string
+          nullable: true
+          type: array
+        analytics_plugin:
+          $ref: '#/components/schemas/AnalyticsPluginConfig'
+        api_id:
+          type: string
+        auth:
+          $ref: '#/components/schemas/AuthConfig'
+        auth_configs:
+          additionalProperties:
+            $ref: '#/components/schemas/AuthConfig'
+          nullable: true
+          type: object
+        auth_provider:
+          $ref: '#/components/schemas/AuthProviderMeta'
+        base_identity_provided_by:
+          type: string
+        basic_auth:
+          properties:
+            body_password_regexp:
+              type: string
+            body_user_regexp:
+              type: string
+            cache_ttl:
+              type: integer
+            disable_caching:
+              type: boolean
+            extract_from_body:
+              type: boolean
+          type: object
+        blacklisted_ips:
+          items:
+            type: string
+          nullable: true
+          type: array
+        cache_options:
+          $ref: '#/components/schemas/CacheOptions'
+        certificate_pinning_disabled:
+          type: boolean
+        certificates:
+          items:
+            type: string
+          nullable: true
+          type: array
+        client_certificates:
+          items:
+            type: string
+          nullable: true
+          type: array
+        config_data:
+          additionalProperties: {}
+          nullable: true
+          type: object
+        config_data_disabled:
+          type: boolean
+        custom_middleware:
+          $ref: '#/components/schemas/MiddlewareSection'
+        custom_middleware_bundle:
+          type: string
+        custom_middleware_bundle_disabled:
+          type: boolean
+        custom_plugin_auth_enabled:
+          type: boolean
+        definition:
+          $ref: '#/components/schemas/VersionDefinition'
+        detailed_tracing:
+          type: boolean
+        disable_quota:
+          type: boolean
+        disable_rate_limit:
+          type: boolean
+        do_not_track:
+          type: boolean
+        domain:
+          type: string
+        domain_disabled:
+          type: boolean
+        dont_set_quota_on_create:
+          type: boolean
+        enable_batch_request_support:
+          type: boolean
+        enable_context_vars:
+          type: boolean
+        enable_coprocess_auth:
+          type: boolean
+        enable_detailed_recording:
+          type: boolean
+        enable_ip_blacklisting:
+          type: boolean
+        enable_ip_whitelisting:
+          type: boolean
+        enable_jwt:
+          type: boolean
+        enable_proxy_protocol:
+          type: boolean
+        enable_signature_checking:
+          type: boolean
+        event_handlers:
+          $ref: '#/components/schemas/EventHandlerMetaConfig'
+        expiration:
+          type: string
+        expire_analytics_after:
+          format: int64
+          type: integer
+        external_oauth:
+          $ref: '#/components/schemas/ExternalOAuth'
+        global_rate_limit:
+          $ref: '#/components/schemas/GlobalRateLimit'
+        graphql:
+          $ref: '#/components/schemas/GraphQLConfig'
+        hmac_allowed_algorithms:
+          items:
+            type: string
+          nullable: true
+          type: array
+        hmac_allowed_clock_skew:
+          format: double
+          type: number
+        id:
+          type: string
+        idp_client_id_mapping_disabled:
+          type: boolean
+        internal:
+          type: boolean
+        is_oas:
+          type: boolean
+        jwt_client_base_field:
+          type: string
+        jwt_default_policies:
+          items:
+            type: string
+          nullable: true
+          type: array
+        jwt_expires_at_validation_skew:
+          minimum: 0
+          type: integer
+        jwt_identity_base_field:
+          type: string
+        jwt_issued_at_validation_skew:
+          minimum: 0
+          type: integer
+        jwt_not_before_validation_skew:
+          minimum: 0
+          type: integer
+        jwt_policy_field_name:
+          type: string
+        jwt_scope_claim_name:
+          type: string
+        jwt_scope_to_policy_mapping:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        jwt_signing_method:
+          type: string
+        jwt_skip_kid:
+          type: boolean
+        jwt_source:
+          type: string
+        listen_port:
+          type: integer
+        name:
+          type: string
+        notifications:
+          $ref: '#/components/schemas/NotificationsManager'
+        oauth_meta:
+          properties:
+            allowed_access_types:
+              items:
+                type: string
+              nullable: true
+              type: array
+            allowed_authorize_types:
+              items:
+                type: string
+              nullable: true
+              type: array
+            auth_login_redirect:
+              type: string
+          type: object
+        openid_options:
+          $ref: '#/components/schemas/OpenIDOptions'
+        org_id:
+          type: string
+        pinned_public_keys:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        protocol:
+          type: string
+        proxy:
+          $ref: '#/components/schemas/ProxyConfig'
+        request_signing:
+          $ref: '#/components/schemas/RequestSigningMeta'
+        response_processors:
+          items:
+            $ref: '#/components/schemas/ResponseProcessor'
+          nullable: true
+          type: array
+        scopes:
+          $ref: '#/components/schemas/Scopes'
+        session_lifetime:
+          format: int64
+          type: integer
+        session_lifetime_respects_key_expiration:
+          type: boolean
+        session_provider:
+          $ref: '#/components/schemas/SessionProviderMeta'
+        slug:
+          type: string
+        strip_auth_data:
+          type: boolean
+        tag_headers:
+          items:
+            type: string
+          nullable: true
+          type: array
+        tags:
+          items:
+            type: string
+          nullable: true
+          type: array
+        tags_disabled:
+          type: boolean
+        upstream_certificates:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        upstream_certificates_disabled:
+          type: boolean
+        uptime_tests:
+          $ref: '#/components/schemas/UptimeTests'
+        use_basic_auth:
+          type: boolean
+        use_go_plugin_auth:
+          type: boolean
+        use_keyless:
+          type: boolean
+        use_mutual_tls_auth:
+          type: boolean
+        use_oauth2:
+          type: boolean
+        use_openid:
+          type: boolean
+        use_standard_auth:
+          type: boolean
+        version_data:
+          $ref: '#/components/schemas/VersionData'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    AccessManagementPayload:
+      properties:
+        userGroupIds:
+          example:
+          - 663a4ed6b6be920001b191aa
+          - 663a4ed6b6be920001b191ab
+          items:
+            type: string
+          type: array
+        userIds:
+          example:
+          - 663b2a835715ecb6edef24e3
+          - 663a5bbf5715ec8040251f2a
+          items:
+            type: string
+          type: array
+      type: object
+    AllCategoriesResponse:
+      properties:
+        categories:
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+          nullable: true
+          type: array
+      type: object
+    AnalyticsPluginConfig:
+      properties:
+        enable:
+          type: boolean
+        func_name:
+          type: string
+        plugin_path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ApiDefinitionWrapper:
+      properties:
+        api_definition:
+          $ref: '#/components/schemas/APIDefinition'
+        api_model:
+          $ref: '#/components/schemas/ApiModel'
+        categories:
+          $ref: '#/components/schemas/Categories'
+        created_at:
+          format: date-time
+          nullable: true
+          type: string
+        hook_references:
+          items:
+            $ref: '#/components/schemas/HookReference'
+          nullable: true
+          type: array
+        is_site:
+          type: boolean
+        oas:
+          $ref: '#/components/schemas/OAS'
+        sort_by:
+          type: integer
+        updated_at:
+          format: date-time
+          nullable: true
+          type: string
+        user_group_owners:
+          items:
+            type: string
+          nullable: true
+          type: array
+        user_owners:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    ApiDefinitionsResponse:
+      properties:
+        apis:
+          items:
+            $ref: '#/components/schemas/ApiDefinitionWrapper'
+          nullable: true
+          type: array
+        pages:
+          type: integer
+      type: object
+    ApiModel:
+      type: object
+    ApiResponse:
+      properties:
+        ID:
+          type: string
+        Message:
+          type: string
+        Meta: {}
+        Status:
+          type: string
+      type: object
+    AuthConfig:
+      properties:
+        auth_header_name:
+          type: string
+        cookie_name:
+          type: string
+        disable_header:
+          type: boolean
+        name:
+          type: string
+        param_name:
+          type: string
+        signature:
+          $ref: '#/components/schemas/SignatureConfig'
+        use_certificate:
+          type: boolean
+        use_cookie:
+          type: boolean
+        use_param:
+          type: boolean
+        validate_signature:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    AuthProviderMeta:
+      properties:
+        meta:
+          additionalProperties: {}
+          nullable: true
+          type: object
+        name:
+          type: string
+        storage_engine:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    BooleanQueryParam:
+      enum:
+      - true
+      - false
+      example: true
+      type: boolean
+    CORSConfig:
+      properties:
+        allow_credentials:
+          type: boolean
+        allowed_headers:
+          items:
+            type: string
+          nullable: true
+          type: array
+        allowed_methods:
+          items:
+            type: string
+          nullable: true
+          type: array
+        allowed_origins:
+          items:
+            type: string
+          nullable: true
+          type: array
+        debug:
+          type: boolean
+        enable:
+          type: boolean
+        exposed_headers:
+          items:
+            type: string
+          nullable: true
+          type: array
+        max_age:
+          type: integer
+        options_passthrough:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    CacheMeta:
+      properties:
+        cache_key_regex:
+          type: string
+        cache_response_codes:
+          items:
+            type: integer
+          nullable: true
+          type: array
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        timeout:
+          format: int64
+          type: integer
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    CacheOptions:
+      properties:
+        cache_all_safe_requests:
+          type: boolean
+        cache_by_headers:
+          items:
+            type: string
+          nullable: true
+          type: array
+        cache_control_ttl_header:
+          type: string
+        cache_response_codes:
+          items:
+            type: integer
+          nullable: true
+          type: array
+        cache_timeout:
+          format: int64
+          type: integer
+        enable_cache:
+          type: boolean
+        enable_upstream_cache_control:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    CallbackRef:
+      type: object
+    Callbacks:
+      additionalProperties:
+        $ref: '#/components/schemas/CallbackRef'
+      type: object
+    Categories:
+      items:
+        type: string
+      type: array
+    CategoryCount:
+      properties:
+        count:
+          example: 3
+          type: integer
+        name:
+          example: tag1
+          type: string
+      type: object
+    CheckCommand:
+      properties:
+        message:
+          type: string
+        name:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    CircuitBreakerMeta:
+      properties:
+        disable_half_open_state:
+          type: boolean
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        return_to_service_after:
+          type: integer
+        samples:
+          format: int64
+          type: integer
+        threshold_percent:
+          format: double
+          type: number
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Components:
+      nullable: true
+      properties:
+        callbacks:
+          $ref: '#/components/schemas/Callbacks'
+        examples:
+          $ref: '#/components/schemas/Examples'
+        headers:
+          $ref: '#/components/schemas/Headers'
+        links:
+          $ref: '#/components/schemas/Links'
+        parameters:
+          $ref: '#/components/schemas/ParametersMap'
+        requestBodies:
+          $ref: '#/components/schemas/RequestBodies'
+        responses:
+          $ref: '#/components/schemas/Responses'
+        schemas:
+          $ref: '#/components/schemas/Schemas'
+        securitySchemes:
+          $ref: '#/components/schemas/SecuritySchemes'
+      type: object
+    Contact:
+      nullable: true
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+      type: object
+    DatasourceMappingConfiguration:
+      nullable: true
+      properties:
+        disabled:
+          type: boolean
+        path:
+          type: string
+      type: object
+    DatasourceSourceConfig:
+      properties:
+        data_source_config: {}
+        kind:
+          type: string
+      type: object
+    DatasourceTypeFieldConfiguration:
+      properties:
+        data_source:
+          $ref: '#/components/schemas/DatasourceSourceConfig'
+        field_name:
+          type: string
+        mapping:
+          $ref: '#/components/schemas/DatasourceMappingConfiguration'
+        type_name:
+          type: string
+      type: object
+    DcrpRegistration:
+      properties:
+        access_token:
+          type: string
+        client_uri:
+          type: string
+        provider:
+          type: string
+      type: object
+    DetailedExampleAPIMetadata:
+      properties:
+        api_definition:
+          $ref: '#/components/schemas/APIDefinition'
+        description:
+          type: string
+        features:
+          items:
+            type: string
+          nullable: true
+          type: array
+        location:
+          type: string
+        min_version:
+          type: string
+        name:
+          type: string
+        oas:
+          $ref: '#/components/schemas/OAS'
+        readme:
+          type: string
+      type: object
+    EndPointMeta:
+      properties:
+        disabled:
+          type: boolean
+        ignore_case:
+          type: boolean
+        method:
+          type: string
+        method_actions:
+          additionalProperties:
+            $ref: '#/components/schemas/EndpointMethodMeta'
+          type: object
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    EndpointMethodMeta:
+      properties:
+        action:
+          type: string
+        code:
+          type: integer
+        data:
+          type: string
+        headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    EventHandlerMetaConfig:
+      properties:
+        events:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/EventHandlerTriggerConfig'
+            type: array
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    EventHandlerTriggerConfig:
+      properties:
+        handler_meta:
+          additionalProperties: {}
+          nullable: true
+          type: object
+        handler_name:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ExampleAPIMetadata:
+      properties:
+        location:
+          example: udg/vat-checker
+          type: string
+        name:
+          example: VAT number checker UDG
+          type: string
+        shortDescription:
+          example: Simple REST API wrapped in GQL using Universal Data Graph that
+            allows user to check validity of a VAT number and display some details
+            about it.
+          type: string
+      type: object
+    ExampleRef:
+      type: object
+    Examples:
+      additionalProperties:
+        $ref: '#/components/schemas/ExampleRef'
+      type: object
+    ExtendedPathsSet:
+      properties:
+        advance_cache_config:
+          items:
+            $ref: '#/components/schemas/CacheMeta'
+          type: array
+        black_list:
+          items:
+            $ref: '#/components/schemas/EndPointMeta'
+          type: array
+        cache:
+          items:
+            type: string
+          type: array
+        circuit_breakers:
+          items:
+            $ref: '#/components/schemas/CircuitBreakerMeta'
+          type: array
+        do_not_track_endpoints:
+          items:
+            $ref: '#/components/schemas/TrackEndpointMeta'
+          type: array
+        go_plugin:
+          items:
+            $ref: '#/components/schemas/GoPluginMeta'
+          type: array
+        hard_timeouts:
+          items:
+            $ref: '#/components/schemas/HardTimeoutMeta'
+          type: array
+        ignored:
+          items:
+            $ref: '#/components/schemas/EndPointMeta'
+          type: array
+        internal:
+          items:
+            $ref: '#/components/schemas/InternalMeta'
+          type: array
+        method_transforms:
+          items:
+            $ref: '#/components/schemas/MethodTransformMeta'
+          type: array
+        mock_response:
+          items:
+            $ref: '#/components/schemas/MockResponseMeta'
+          type: array
+        persist_graphql:
+          items:
+            $ref: '#/components/schemas/PersistGraphQLMeta'
+          nullable: true
+          type: array
+        rate_limit:
+          items:
+            $ref: '#/components/schemas/RateLimitMeta'
+          nullable: true
+          type: array
+        size_limits:
+          items:
+            $ref: '#/components/schemas/RequestSizeMeta'
+          type: array
+        track_endpoints:
+          items:
+            $ref: '#/components/schemas/TrackEndpointMeta'
+          type: array
+        transform:
+          items:
+            $ref: '#/components/schemas/TemplateMeta'
+          type: array
+        transform_headers:
+          items:
+            $ref: '#/components/schemas/HeaderInjectionMeta'
+          type: array
+        transform_jq:
+          items:
+            $ref: '#/components/schemas/TransformJQMeta'
+          type: array
+        transform_jq_response:
+          items:
+            $ref: '#/components/schemas/TransformJQMeta'
+          type: array
+        transform_response:
+          items:
+            $ref: '#/components/schemas/TemplateMeta'
+          type: array
+        transform_response_headers:
+          items:
+            $ref: '#/components/schemas/HeaderInjectionMeta'
+          type: array
+        url_rewrites:
+          items:
+            $ref: '#/components/schemas/URLRewriteMeta'
+          type: array
+        validate_json:
+          items:
+            $ref: '#/components/schemas/ValidatePathMeta'
+          type: array
+        validate_request:
+          items:
+            $ref: '#/components/schemas/ValidateRequestMeta'
+          type: array
+        virtual:
+          items:
+            $ref: '#/components/schemas/VirtualMeta'
+          type: array
+        white_list:
+          items:
+            $ref: '#/components/schemas/EndPointMeta'
+          type: array
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ExternalDocs:
+      nullable: true
+      properties:
+        description:
+          type: string
+        url:
+          type: string
+      type: object
+    ExternalOAuth:
+      properties:
+        enabled:
+          type: boolean
+        providers:
+          items:
+            $ref: '#/components/schemas/Provider'
+          nullable: true
+          type: array
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GlobalRateLimit:
+      properties:
+        disabled:
+          type: boolean
+        per:
+          format: double
+          type: number
+        rate:
+          format: double
+          type: number
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GoPluginMeta:
+      properties:
+        disabled:
+          type: boolean
+        func_name:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        plugin_path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLConfig:
+      properties:
+        enabled:
+          type: boolean
+        engine:
+          $ref: '#/components/schemas/GraphQLEngineConfig'
+        execution_mode:
+          type: string
+        introspection:
+          $ref: '#/components/schemas/GraphQLIntrospectionConfig'
+        last_schema_update:
+          format: date-time
+          nullable: true
+          type: string
+        playground:
+          $ref: '#/components/schemas/GraphQLPlayground'
+        proxy:
+          $ref: '#/components/schemas/GraphQLProxyConfig'
+        schema:
+          type: string
+        subgraph:
+          $ref: '#/components/schemas/GraphQLSubgraphConfig'
+        supergraph:
+          $ref: '#/components/schemas/GraphQLSupergraphConfig'
+        type_field_configurations:
+          items:
+            $ref: '#/components/schemas/DatasourceTypeFieldConfiguration'
+          nullable: true
+          type: array
+        version:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLEngineConfig:
+      properties:
+        data_sources:
+          items:
+            $ref: '#/components/schemas/GraphQLEngineDataSource'
+          nullable: true
+          type: array
+        field_configs:
+          items:
+            $ref: '#/components/schemas/GraphQLFieldConfig'
+          nullable: true
+          type: array
+        global_headers:
+          items:
+            $ref: '#/components/schemas/UDGGlobalHeader'
+          nullable: true
+          type: array
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLEngineDataSource:
+      properties:
+        config: {}
+        internal:
+          type: boolean
+        kind:
+          type: string
+        name:
+          type: string
+        root_fields:
+          items:
+            $ref: '#/components/schemas/GraphQLTypeFields'
+          nullable: true
+          type: array
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLFieldConfig:
+      properties:
+        disable_default_mapping:
+          type: boolean
+        field_name:
+          type: string
+        path:
+          items:
+            type: string
+          nullable: true
+          type: array
+        type_name:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLIntrospectionConfig:
+      properties:
+        disabled:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLPlayground:
+      properties:
+        enabled:
+          type: boolean
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLProxyConfig:
+      properties:
+        auth_headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        features:
+          $ref: '#/components/schemas/GraphQLProxyFeaturesConfig'
+        request_headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        request_headers_rewrite:
+          additionalProperties:
+            $ref: '#/components/schemas/RequestHeadersRewriteConfig'
+          nullable: true
+          type: object
+        subscription_type:
+          type: string
+        use_response_extensions:
+          $ref: '#/components/schemas/GraphQLResponseExtensions'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLProxyFeaturesConfig:
+      properties:
+        use_immutable_headers:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLResponseExtensions:
+      properties:
+        on_error_forwarding:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLSubgraphConfig:
+      properties:
+        sdl:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLSubgraphEntity:
+      properties:
+        api_id:
+          type: string
+        headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        name:
+          type: string
+        sdl:
+          type: string
+        subscription_type:
+          type: string
+        url:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLSupergraphConfig:
+      properties:
+        disable_query_batching:
+          type: boolean
+        global_headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        merged_sdl:
+          type: string
+        subgraphs:
+          items:
+            $ref: '#/components/schemas/GraphQLSubgraphEntity'
+          nullable: true
+          type: array
+        updated_at:
+          format: date-time
+          nullable: true
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    GraphQLTypeFields:
+      properties:
+        fields:
+          items:
+            type: string
+          nullable: true
+          type: array
+        type:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    HardTimeoutMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        timeout:
+          type: integer
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    HeaderInjectionMeta:
+      properties:
+        act_on:
+          type: boolean
+        add_headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        delete_headers:
+          items:
+            type: string
+          nullable: true
+          type: array
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    HeaderRef:
+      type: object
+    Headers:
+      additionalProperties:
+        $ref: '#/components/schemas/HeaderRef'
+      type: object
+    HookReference:
+      properties:
+        event_name:
+          type: string
+        event_timeout:
+          format: int64
+          type: integer
+        hook:
+          $ref: '#/components/schemas/WebHookHandlerConf'
+      type: object
+    HostCheckObject:
+      properties:
+        body:
+          type: string
+        commands:
+          items:
+            $ref: '#/components/schemas/CheckCommand'
+          nullable: true
+          type: array
+        enable_proxy_protocol:
+          type: boolean
+        headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        method:
+          type: string
+        protocol:
+          type: string
+        timeout:
+          $ref: '#/components/schemas/TimeDuration'
+        url:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Info:
+      nullable: true
+      properties:
+        contact:
+          $ref: '#/components/schemas/Contact'
+        description:
+          type: string
+        license:
+          $ref: '#/components/schemas/License'
+        termsOfService:
+          type: string
+        title:
+          type: string
+        version:
+          type: string
+      type: object
+    InternalMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Introspection:
+      properties:
+        cache:
+          $ref: '#/components/schemas/IntrospectionCache'
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        enabled:
+          type: boolean
+        identity_base_field:
+          type: string
+        url:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    IntrospectionCache:
+      properties:
+        enabled:
+          type: boolean
+        timeout:
+          format: int64
+          type: integer
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    JWTValidation:
+      properties:
+        enabled:
+          type: boolean
+        expires_at_validation_skew:
+          minimum: 0
+          type: integer
+        identity_base_field:
+          type: string
+        issued_at_validation_skew:
+          minimum: 0
+          type: integer
+        not_before_validation_skew:
+          minimum: 0
+          type: integer
+        signing_method:
+          type: string
+        source:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    License:
+      nullable: true
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+      type: object
+    LinkRef:
+      type: object
+    Links:
+      additionalProperties:
+        $ref: '#/components/schemas/LinkRef'
+      type: object
+    MethodTransformMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        to_method:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    MiddlewareDefinition:
+      properties:
+        disabled:
+          type: boolean
+        name:
+          type: string
+        path:
+          type: string
+        raw_body_only:
+          type: boolean
+        require_session:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    MiddlewareIdExtractor:
+      properties:
+        disabled:
+          type: boolean
+        extract_from:
+          type: string
+        extract_with:
+          type: string
+        extractor_config:
+          additionalProperties: {}
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    MiddlewareSection:
+      properties:
+        auth_check:
+          $ref: '#/components/schemas/MiddlewareDefinition'
+        driver:
+          type: string
+        id_extractor:
+          $ref: '#/components/schemas/MiddlewareIdExtractor'
+        post:
+          items:
+            $ref: '#/components/schemas/MiddlewareDefinition'
+          nullable: true
+          type: array
+        post_key_auth:
+          items:
+            $ref: '#/components/schemas/MiddlewareDefinition'
+          nullable: true
+          type: array
+        pre:
+          items:
+            $ref: '#/components/schemas/MiddlewareDefinition'
+          nullable: true
+          type: array
+        response:
+          items:
+            $ref: '#/components/schemas/MiddlewareDefinition'
+          nullable: true
+          type: array
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    MockResponseMeta:
+      properties:
+        body:
+          type: string
+        code:
+          type: integer
+        disabled:
+          type: boolean
+        headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        ignore_case:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    NewClientRequest:
+      properties:
+        api_id:
+          type: string
+        api_model:
+          $ref: '#/components/schemas/ApiModel'
+        client_id:
+          type: string
+        client_name:
+          type: string
+        description:
+          type: string
+        meta_data: {}
+        policy_id:
+          type: string
+        redirect_uri:
+          type: string
+        secret:
+          type: string
+      type: object
+    NotificationsManager:
+      properties:
+        oauth_on_keychange_url:
+          type: string
+        shared_secret:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    OAS:
+      nullable: true
+      properties:
+        components:
+          $ref: '#/components/schemas/Components'
+        externalDocs:
+          $ref: '#/components/schemas/ExternalDocs'
+        info:
+          $ref: '#/components/schemas/Info'
+        openapi:
+          type: string
+        paths:
+          $ref: '#/components/schemas/Paths'
+        security:
+          $ref: '#/components/schemas/SecurityRequirements'
+        servers:
+          $ref: '#/components/schemas/Servers'
+        tags:
+          $ref: '#/components/schemas/Tags'
+      type: object
+    OAuthApps:
+      properties:
+        apps:
+          items:
+            $ref: '#/components/schemas/OAuthClient'
+          nullable: true
+          type: array
+        pages:
+          type: integer
+      type: object
+    OAuthClient:
+      properties:
+        client_id:
+          type: string
+        client_name:
+          type: string
+        dcr_registration:
+          $ref: '#/components/schemas/DcrpRegistration'
+        description:
+          type: string
+        meta_data:
+          additionalProperties:
+            type: string
+          type: object
+        policy_id:
+          type: string
+        redirect_uri:
+          type: string
+        secret:
+          type: string
+      type: object
+    OAuthClientToken:
+      properties:
+        code:
+          type: string
+        expires:
+          format: int64
+          type: integer
+      type: object
+    OAuthClientTokens:
+      items:
+        $ref: '#/components/schemas/OAuthClientToken'
+      nullable: true
+      type: array
+    OIDProviderConfig:
+      properties:
+        client_ids:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        issuer:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    OpenIDOptions:
+      properties:
+        providers:
+          items:
+            $ref: '#/components/schemas/OIDProviderConfig'
+          nullable: true
+          type: array
+        segregate_by_client:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Operation:
+      nullable: true
+      properties:
+        callbacks:
+          $ref: '#/components/schemas/Callbacks'
+        deprecated:
+          type: boolean
+        description:
+          type: string
+        externalDocs:
+          $ref: '#/components/schemas/ExternalDocs'
+        operationId:
+          type: string
+        parameters:
+          $ref: '#/components/schemas/Parameters'
+        requestBody:
+          $ref: '#/components/schemas/RequestBodyRef'
+        responses:
+          $ref: '#/components/schemas/Responses'
+        security:
+          $ref: '#/components/schemas/SecurityRequirements'
+        servers:
+          $ref: '#/components/schemas/Servers'
+        summary:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      type: object
+    ParameterRef:
+      type: object
+    Parameters:
+      items:
+        $ref: '#/components/schemas/ParameterRef'
+      type: array
+    ParametersMap:
+      additionalProperties:
+        $ref: '#/components/schemas/ParameterRef'
+      type: object
+    PathItem:
+      properties:
+        $ref:
+          type: string
+        connect:
+          $ref: '#/components/schemas/Operation'
+        delete:
+          $ref: '#/components/schemas/Operation'
+        description:
+          type: string
+        get:
+          $ref: '#/components/schemas/Operation'
+        head:
+          $ref: '#/components/schemas/Operation'
+        options:
+          $ref: '#/components/schemas/Operation'
+        parameters:
+          $ref: '#/components/schemas/Parameters'
+        patch:
+          $ref: '#/components/schemas/Operation'
+        post:
+          $ref: '#/components/schemas/Operation'
+        put:
+          $ref: '#/components/schemas/Operation'
+        servers:
+          $ref: '#/components/schemas/Servers'
+        summary:
+          type: string
+        trace:
+          $ref: '#/components/schemas/Operation'
+      type: object
+    Paths:
+      additionalProperties:
+        $ref: '#/components/schemas/PathItem'
+      type: object
+    PersistGraphQLMeta:
+      properties:
+        method:
+          type: string
+        operation:
+          type: string
+        path:
+          type: string
+        variables:
+          additionalProperties: {}
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Provider:
+      properties:
+        introspection:
+          $ref: '#/components/schemas/Introspection'
+        jwt:
+          $ref: '#/components/schemas/JWTValidation'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ProxyConfig:
+      properties:
+        check_host_against_uptime_tests:
+          type: boolean
+        disable_strip_slash:
+          type: boolean
+        enable_load_balancing:
+          type: boolean
+        listen_path:
+          type: string
+        preserve_host_header:
+          type: boolean
+        service_discovery:
+          $ref: '#/components/schemas/ServiceDiscoveryConfiguration'
+        strip_listen_path:
+          type: boolean
+        target_list:
+          items:
+            type: string
+          nullable: true
+          type: array
+        target_url:
+          type: string
+        transport:
+          properties:
+            proxy_url:
+              type: string
+            ssl_ciphers:
+              items:
+                type: string
+              nullable: true
+              type: array
+            ssl_force_common_name_check:
+              type: boolean
+            ssl_insecure_skip_verify:
+              type: boolean
+            ssl_max_version:
+              minimum: 0
+              type: integer
+            ssl_min_version:
+              minimum: 0
+              type: integer
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    RateLimitMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        per:
+          format: double
+          type: number
+        rate:
+          format: double
+          type: number
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    RequestBodies:
+      additionalProperties:
+        $ref: '#/components/schemas/RequestBodyRef'
+      type: object
+    RequestBodyRef:
+      type: object
+    RequestHeadersRewriteConfig:
+      properties:
+        remove:
+          type: boolean
+        value:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    RequestSigningMeta:
+      properties:
+        algorithm:
+          type: string
+        certificate_id:
+          type: string
+        header_list:
+          items:
+            type: string
+          nullable: true
+          type: array
+        is_enabled:
+          type: boolean
+        key_id:
+          type: string
+        secret:
+          type: string
+        signature_header:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    RequestSizeMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        size_limit:
+          format: int64
+          type: integer
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ResponseProcessor:
+      properties:
+        name:
+          type: string
+        options: {}
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ResponseRef:
+      type: object
+    Responses:
+      additionalProperties:
+        $ref: '#/components/schemas/ResponseRef'
+      type: object
+    RoutingTrigger:
+      properties:
+        "on":
+          type: string
+        options:
+          $ref: '#/components/schemas/RoutingTriggerOptions'
+        rewrite_to:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    RoutingTriggerOptions:
+      properties:
+        header_matches:
+          additionalProperties:
+            $ref: '#/components/schemas/StringRegexMap'
+          nullable: true
+          type: object
+        path_part_matches:
+          additionalProperties:
+            $ref: '#/components/schemas/StringRegexMap'
+          nullable: true
+          type: object
+        payload_matches:
+          $ref: '#/components/schemas/StringRegexMap'
+        query_val_matches:
+          additionalProperties:
+            $ref: '#/components/schemas/StringRegexMap'
+          nullable: true
+          type: object
+        request_context_matches:
+          additionalProperties:
+            $ref: '#/components/schemas/StringRegexMap'
+          nullable: true
+          type: object
+        session_meta_matches:
+          additionalProperties:
+            $ref: '#/components/schemas/StringRegexMap'
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    SchemaRef:
+      type: object
+    Schemas:
+      additionalProperties:
+        $ref: '#/components/schemas/SchemaRef'
+      type: object
+    ScopeClaim:
+      properties:
+        scope_claim_name:
+          type: string
+        scope_to_policy:
+          additionalProperties:
+            type: string
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Scopes:
+      properties:
+        jwt:
+          $ref: '#/components/schemas/ScopeClaim'
+        oidc:
+          $ref: '#/components/schemas/ScopeClaim'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    SecurityRequirement:
+      additionalProperties:
+        items:
+          type: string
+        type: array
+      type: object
+    SecurityRequirements:
+      items:
+        $ref: '#/components/schemas/SecurityRequirement'
+      nullable: true
+      type: array
+    SecuritySchemeRef:
+      type: object
+    SecuritySchemes:
+      additionalProperties:
+        $ref: '#/components/schemas/SecuritySchemeRef'
+      type: object
+    Server:
+      properties:
+        description:
+          type: string
+        url:
+          type: string
+        variables:
+          additionalProperties:
+            $ref: '#/components/schemas/ServerVariable'
+          type: object
+      type: object
+    ServerVariable:
+      properties:
+        default:
+          type: string
+        description:
+          type: string
+        enum:
+          items:
+            type: string
+          type: array
+      type: object
+    Servers:
+      items:
+        $ref: '#/components/schemas/Server'
+      nullable: true
+      type: array
+    ServiceDiscoveryConfiguration:
+      properties:
+        cache_disabled:
+          type: boolean
+        cache_timeout:
+          format: int64
+          type: integer
+        data_path:
+          type: string
+        endpoint_returns_list:
+          type: boolean
+        parent_data_path:
+          type: string
+        port_data_path:
+          type: string
+        query_endpoint:
+          type: string
+        target_path:
+          type: string
+        use_discovery_service:
+          type: boolean
+        use_nested_query:
+          type: boolean
+        use_target_list:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    SessionProviderMeta:
+      properties:
+        meta:
+          additionalProperties: {}
+          nullable: true
+          type: object
+        name:
+          type: string
+        storage_engine:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    SignatureConfig:
+      properties:
+        algorithm:
+          type: string
+        allowed_clock_skew:
+          format: int64
+          type: integer
+        error_code:
+          type: integer
+        error_message:
+          type: string
+        header:
+          type: string
+        param_name:
+          type: string
+        secret:
+          type: string
+        use_param:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    StringRegexMap:
+      properties:
+        match_rx:
+          type: string
+        reverse:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    Tag:
+      properties:
+        description:
+          type: string
+        externalDocs:
+          $ref: '#/components/schemas/ExternalDocs'
+        name:
+          type: string
+      type: object
+    Tags:
+      items:
+        $ref: '#/components/schemas/Tag'
+      type: array
+    TemplateData:
+      properties:
+        enable_session:
+          type: boolean
+        input_type:
+          type: string
+        template_mode:
+          type: string
+        template_source:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    TemplateMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+        template_data:
+          $ref: '#/components/schemas/TemplateData'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    TimeDuration:
+      format: int64
+      type: integer
+    TrackEndpointMeta:
+      properties:
+        disabled:
+          type: boolean
+        method:
+          type: string
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    TransformJQMeta:
+      properties:
+        filter:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    UDGGlobalHeader:
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    URLRewriteMeta:
+      properties:
+        disabled:
+          type: boolean
+        match_pattern:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        rewrite_to:
+          type: string
+        triggers:
+          items:
+            $ref: '#/components/schemas/RoutingTrigger'
+          nullable: true
+          type: array
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    URLVals:
+      properties:
+        ApiURL:
+          type: string
+        BasePath:
+          type: string
+        Host:
+          type: string
+      type: object
+    UptimeTests:
+      properties:
+        check_list:
+          items:
+            $ref: '#/components/schemas/HostCheckObject'
+          nullable: true
+          type: array
+        config:
+          $ref: '#/components/schemas/UptimeTestsConfig'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    UptimeTestsConfig:
+      properties:
+        expire_utime_after:
+          format: int64
+          type: integer
+        recheck_wait:
+          type: integer
+        service_discovery:
+          $ref: '#/components/schemas/ServiceDiscoveryConfiguration'
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ValidatePathMeta:
+      properties:
+        disabled:
+          type: boolean
+        error_response_code:
+          type: integer
+        method:
+          type: string
+        path:
+          type: string
+        schema:
+          additionalProperties: {}
+          nullable: true
+          type: object
+        schema_b64:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    ValidateRequestMeta:
+      properties:
+        enabled:
+          type: boolean
+        error_response_code:
+          type: integer
+        method:
+          type: string
+        path:
+          type: string
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    VersionData:
+      properties:
+        default_version:
+          type: string
+        not_versioned:
+          type: boolean
+        versions:
+          additionalProperties:
+            $ref: '#/components/schemas/VersionInfo'
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    VersionDefinition:
+      properties:
+        default:
+          type: string
+        enabled:
+          type: boolean
+        fallback_to_default:
+          type: boolean
+        key:
+          type: string
+        location:
+          type: string
+        name:
+          type: string
+        strip_path:
+          type: boolean
+        strip_versioning_data:
+          type: boolean
+        url_versioning_pattern:
+          type: string
+        versions:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    VersionInfo:
+      properties:
+        expires:
+          type: string
+        extended_paths:
+          $ref: '#/components/schemas/ExtendedPathsSet'
+        global_headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        global_headers_disabled:
+          type: boolean
+        global_headers_remove:
+          items:
+            type: string
+          nullable: true
+          type: array
+        global_response_headers:
+          additionalProperties:
+            type: string
+          nullable: true
+          type: object
+        global_response_headers_disabled:
+          type: boolean
+        global_response_headers_remove:
+          items:
+            type: string
+          nullable: true
+          type: array
+        global_size_limit:
+          format: int64
+          type: integer
+        ignore_endpoint_case:
+          type: boolean
+        name:
+          type: string
+        override_target:
+          type: string
+        paths:
+          properties:
+            black_list:
+              items:
+                type: string
+              nullable: true
+              type: array
+            ignored:
+              items:
+                type: string
+              nullable: true
+              type: array
+            white_list:
+              items:
+                type: string
+              nullable: true
+              type: array
+          type: object
+        use_extended_paths:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    VirtualMeta:
+      properties:
+        disabled:
+          type: boolean
+        function_source_type:
+          type: string
+        function_source_uri:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        proxy_on_error:
+          type: boolean
+        response_function_name:
+          type: string
+        use_session:
+          type: boolean
+      type: object
+      x-go-package: github.com/TykTechnologies/tyk/apidef
+    WebHookHandlerConf:
+      properties:
+        api_model:
+          $ref: '#/components/schemas/ApiModel'
+        event_timeout:
+          example: 0
+          format: int64
+          type: integer
+        header_map:
+          additionalProperties:
+            type: string
+          example:
+            secret: superscretkey
+            x-auth: authvalue
+          nullable: true
+          type: object
+        id:
+          example: 664b613f5715ec4c96cbef3e
+          type: string
+        method:
+          example: POST
+          type: string
+        name:
+          example: Expired Keys webhook
+          type: string
+        org_id:
+          example: 5e9d9544a1dcd60001d0ed20
+          type: string
+        target_path:
+          example: https://httpbin.org/expired-keys
+          type: string
+        template_path:
+          example: templates/default_webhook.json
+          type: string
+        webhook_id:
+          example: 1f78e319202b430e92286cff3ca759e3
+          type: string
+      required:
+      - method
+      - target_path
+      type: object
+  securitySchemes:
+    bearerAuth:
+      description: The Tyk Dashboard API Access Credentials
+      scheme: bearer
+      type: http

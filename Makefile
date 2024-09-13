@@ -1,3 +1,4 @@
+
 dashboard:
 	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
          --generator-name go \

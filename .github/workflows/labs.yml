@@ -67,10 +67,9 @@ jobs:
           echo "USER_API_SECRET=${user_api_secret}"
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
 
-      - name: Use USER_API_SECRET
+      - name: Populate the dashboard
         run: |
-          echo "The USER_API_SECRET is: $USER_API_SECRET"
-          cat $GITHUB_ENV
+          cd populate && go run main.go -token $USER_API_SECRET
 
       - name: make request to the dashboard
         run: |

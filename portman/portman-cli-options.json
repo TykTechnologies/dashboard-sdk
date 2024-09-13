@@ -1,0 +1,10 @@
+{
+  "local": "swagger.yml",
+  "baseUrl": "http://localhost:3000",
+  "output": "crm.postman.json",
+  "includeTests": true,
+  "syncPostman": false,
+  "runNewman": true,
+  "envFile": ".env",
+  "portmanConfigFile":"/Users/itachisasuke/projects/dc/git-analytics/tyk-analytics/swagger/portman/portmanconfig.json"
+}
