@@ -67,5 +67,6 @@ jobs:
 
       - name: Clean up
         run: |
+          cd tyk-pro
           task clean FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
           
