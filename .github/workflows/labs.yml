@@ -67,6 +67,7 @@ jobs:
           user_api_secret=$(echo "$output" | grep 'USER_API_SECRET' | awk -F '=' '{print $2}')
           echo "USER_API_SECRET=${user_api_secret}"
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
+          echo "hurraay"
 
       - name: Print GITHUB_OUTPUT Content
         run: |
