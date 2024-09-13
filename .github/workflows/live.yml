@@ -2,7 +2,7 @@ name: Run Live Gateway And Dashboard
 on:
   push:
     branches:
-      - re-run
+      - re-runsss
 
 jobs:
   run-test-with-live-gateway:

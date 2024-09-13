@@ -1,0 +1,32 @@
+name: Run Live Gateway And Dashboard
+on:
+  push:
+    branches:
+      - re-run
+
+jobs:
+  run-test-with-live-gateway:
+    runs-on: ubuntu-latest
+    name: Example
+
+    steps:
+      # Checkout the current repository code
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::754489498669:role/ecr_rw_tyk
+          role-session-name: cipush
+          aws-region: eu-central-1
+
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+      - name: Run smoke tests
+        shell: bash
+        env:
