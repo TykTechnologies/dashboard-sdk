@@ -64,6 +64,7 @@ jobs:
           task --version
           task login
           task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
+          echo "$(cat pytest.env | grep USER_API_SECRET)" >> $GITHUB_OUTPUT
 
       - name: make request to the dashboard
         run: |
