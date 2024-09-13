@@ -63,7 +63,6 @@ jobs:
           task --version
           task login
           output=$(task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128)
-          echo "$output"
           user_api_secret=$(echo "$output" | grep 'USER_API_SECRET' | awk -F '=' '{print $2}')
           echo "USER_API_SECRET=${user_api_secret}"
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
