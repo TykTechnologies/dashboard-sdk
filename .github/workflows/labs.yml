@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - re-run
-
 jobs:
   run-test-with-live-gateway:
     runs-on: ubuntu-latest
