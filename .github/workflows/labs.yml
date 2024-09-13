@@ -63,4 +63,5 @@ jobs:
           ls -a
           task --version
           task login
+          task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
           
