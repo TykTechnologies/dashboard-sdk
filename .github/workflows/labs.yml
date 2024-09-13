@@ -64,4 +64,8 @@ jobs:
           task --version
           task login
           task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
+
+      - name: Clean up
+        run: |
+          task clean FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
           
