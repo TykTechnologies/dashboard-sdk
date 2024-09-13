@@ -14,26 +14,38 @@ jobs:
     runs-on: ubuntu-latest
     name: Example
     steps:
-      # Checkout the current repository code
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-
-      - name: Checkout current repository
-        uses: actions/checkout@v4
-
+      # AWS Configuration
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::754489498669:role/ecr_rw_tyk
           role-session-name: cipush
           aws-region: eu-central-1
 
+      # Amazon ECR login
       - id: ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
           mask-password: 'true'
 
+      # Set up Python
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      # Checkout current repository
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+
+      # Checkout tyk-pro repository
+      - name: Checkout tyk-pro repository
+        uses: actions/checkout@v4
+        with:
+          repository: tyklabs/tyk-pro
+          path: tyk-pro
+
+      # Run smoke tests
       - name: Run smoke tests
         run: |
+          aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 754489498669.dkr.ecr.eu-central-1.amazonaws.com
           ls -a
