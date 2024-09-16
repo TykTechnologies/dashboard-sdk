@@ -6,5 +6,5 @@
   "syncPostman": false,
   "runNewman": true,
   "envFile": ".env",
-  "portmanConfigFile":"/Users/itachisasuke/projects/dc/git-analytics/tyk-analytics/swagger/portman/portmanconfig.json"
+  "portmanConfigFile":"portmanconfig.json"
 }
