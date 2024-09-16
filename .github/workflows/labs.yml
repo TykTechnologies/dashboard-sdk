@@ -66,7 +66,12 @@ jobs:
           user_api_secret=$(echo "$output" | grep 'USER_API_SECRET' | awk -F '=' '{print $2}')
           echo "USER_API_SECRET=${user_api_secret}"
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
-
+      - name: Create .env file with tokens
+        run: |
+          cd portman
+          echo "PORTMAN_BEARER_TOKEN=${USER_API_SECRET}" > .env
+          echo "POSTMAN_BEARER_TOKEN=${USER_API_SECRET}" >> .env
+          ls -a
       - name: Populate the dashboard
         run: |
           cd populate && go run main.go -token $USER_API_SECRET
