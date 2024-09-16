@@ -70,6 +70,7 @@ jobs:
       - name: Populate the dashboard
         run: |
           cd populate && go run main.go -token $USER_API_SECRET
+          cd ..
 
       - name: make request to the dashboard
         run: |
