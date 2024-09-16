@@ -1,4 +1,9 @@
 .idea
 .idea/
 examples
+portman/package-lock.json
+portman/node_modules
+portman/crm.postman.json
+portman/tmp
+
 
