@@ -72,7 +72,6 @@ jobs:
           echo "PORTMAN_BEARER_TOKEN=${USER_API_SECRET}" > .env
           echo "POSTMAN_BEARER_TOKEN=${USER_API_SECRET}" >> .env
           ls -a
-          cat .env
       - name: Populate the dashboard
         run: |
           cd populate && go run main.go -token $USER_API_SECRET
