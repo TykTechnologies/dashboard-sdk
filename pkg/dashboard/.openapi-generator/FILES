@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -543,21 +542,4 @@ model_web_hooks.go
 model_x_tyk_api_gateway.go
 model_x_tyk_api_gateway_0.go
 response.go
-test/api_additional_permissions_test.go
-test/api_analytics_test.go
-test/api_apis_test.go
-test/api_assets_test.go
-test/api_basic_authentication_test.go
-test/api_certificates_test.go
-test/api_keys_test.go
-test/api_oasapis_test.go
-test/api_oauth_test.go
-test/api_open_policy_agent_test.go
-test/api_policies_test.go
-test/api_schema_test.go
-test/api_single_sign_on_test.go
-test/api_system_test.go
-test/api_user_group_test.go
-test/api_users_test.go
-test/api_webhooks_test.go
 utils.go
