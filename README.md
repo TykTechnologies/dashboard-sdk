@@ -12,67 +12,63 @@ To run the sdk please run
 
 `go get github.com/TykTechnologies/dashboard-sdk`
 
-## Sample of how to create and get OAS API
+## Sample of how to create OAS API
 ```go
 package main
 
 import (
-  "context"
-  "errors"
-  "log"
+	"context"
+	"log"
 
-  "github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
+	"github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
 )
 
 var (
-  BaseUrl = <Your DASHBOARD BASE URL HERE>
+	BaseUrl = "http://localhost:3000"
 )
+var sampleOAS = `{"openapi":"3.0.3","info":{"title":"OAS Sample","description":"This is a sample OAS.","version":"1.0.0"},"servers":[{"url":"https://localhost:8080"}],"security":[{"bearerAuth":[]}],"paths":{"/api/sample/users":{"get":{"tags":["users"],"summary":"Get users","operationId":"getUsers","responses":{"200":{"description":"fetched users","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"}}}}}}}}}}},"components":{"securitySchemes":{"bearerAuth":{"type":"http","scheme":"bearer","description":"The API Access Credentials"}}},"x-tyk-api-gateway":{"info":{"name":"user","state":{"active":true}},"upstream":{"url":"https://localhost:8080"},"server":{"listenPath":{"value":"/user-test/","strip":true}}}}`
 
 func main() {
-  data := `{"openapi":"3.0.3","info":{"title":"OAS Sample","description":"This is a sample OAS.","version":"1.0.0"},"servers":[{"url":"https://localhost:8080"}],"security":[{"bearerAuth":[]}],"paths":{"/api/sample/users":{"get":{"tags":["users"],"summary":"Get users","operationId":"getUsers","responses":{"200":{"description":"fetched users","content":{"application/json":{"schema":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"}}}}}}}}}}},"components":{"securitySchemes":{"bearerAuth":{"type":"http","scheme":"bearer","description":"The API Access Credentials"}}},"x-tyk-api-gateway":{"info":{"name":"user","state":{"active":true}},"upstream":{"url":"https://localhost:8080"},"server":{"listenPath":{"value":"/user-test/","strip":true}}}}`
-  client := configDashboard()
-  var dt dashboard.CreateApiOASRequest
-  err := dt.UnmarshalJSON([]byte(data))
-  if err != nil {
-    log.Fatal(err)
-  }
-  execute, h, err := client.OASAPIsAPI.CreateApiOAS(context.Background()).CreateApiOASRequest(dt).Execute()
-  if err != nil {
-    log.Fatal(err)
-  }
-  if h.StatusCode != 200 {
-    log.Fatal(errors.New("test here"))
-  }
-  log.Println(*execute.ID)
-  api, resp, err := client.OASAPIsAPI.GetOASAPIDetails(context.Background(), execute.GetID()).Execute()
-  if err != nil {
-    log.Println(err)
-    return
-  }
-  log.Println(resp.StatusCode)
-  marshalJSON, err := api.MarshalJSON()
-  if err != nil {
-    log.Fatal(err)
-  }
-  log.Println(string(marshalJSON))
+	client := configDashboard()
+
+	oasapi, err := createOASAPI(client)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	log.Println(oasapi.GetID())
+}
+
+func createOASAPI(client *dashboard.APIClient) (*dashboard.ApiResponse, error) {
+	var dt dashboard.CreateApiOASRequest
+	err := dt.UnmarshalJSON([]byte(sampleOAS))
+	if err != nil {
+		return nil, err
+	}
+	apiResponse, rep, err := client.OASAPIsAPI.CreateApiOAS(context.Background()).CreateApiOASRequest(dt).Execute()
+	if err != nil {
+		log.Println(rep.StatusCode)
+		log.Println(rep.Body)
+		return nil, err
+	}
+	return apiResponse, nil
 }
 
 func configDashboard() *dashboard.APIClient {
-  dashConfig := dashboard.Configuration{
-    DefaultHeader: map[string]string{},
-    Debug:         false,
-    Servers: dashboard.ServerConfigurations{
-      {
-        URL: BaseUrl,
-      },
-    },
-  }
-  dashConfig.AddDefaultHeader("authorization", "Bearer "+<YOUY DASHBOARD SECRET HERE>)
+	dashConfig := dashboard.Configuration{
+		DefaultHeader: map[string]string{},
+		Debug:         false,
+		Servers: dashboard.ServerConfigurations{
+			{
+				URL: BaseUrl,
+			},
+		},
+	}
+	dashConfig.AddDefaultHeader("authorization", "Bearer "+<YOUR SECRET HERE>)
 
-  client := dashboard.NewAPIClient(&dashConfig)
+	client := dashboard.NewAPIClient(&dashConfig)
 
-  return client
+	return client
 }
-
 ```
 
