@@ -76,6 +76,3 @@ func configDashboard() *dashboard.APIClient {
 
 ```
 
-## Documentation
-
-For documentation [check here.](https://github.com/TykTechnologies/dashboard-sdk/blob/main/pkg/dashboard/README.md)
