@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **Active** | Pointer to **bool** |  | [optional] 
 **DateCreated** | Pointer to **time.Time** |  | [optional] 
 **HmacEnabled** | Pointer to **bool** |  | [optional] 
-**Id** | Pointer to **string** |  | [optional] 
+**Mid** | Pointer to **string** |  | [optional] 
 **IsInactive** | Pointer to **bool** |  | [optional] 
 **KeyExpiresIn** | Pointer to **int64** |  | [optional] 
 **LastUpdated** | Pointer to **string** |  | [optional] 
@@ -181,30 +181,30 @@ SetHmacEnabled sets HmacEnabled field to given value.
 
 HasHmacEnabled returns a boolean if a field has been set.
 
-### GetId
+### GetMid
 
-`func (o *Policy) GetId() string`
+`func (o *Policy) GetMid() string`
 
-GetId returns the Id field if non-nil, zero value otherwise.
+GetMid returns the Mid field if non-nil, zero value otherwise.
 
-### GetIdOk
+### GetMidOk
 
-`func (o *Policy) GetIdOk() (*string, bool)`
+`func (o *Policy) GetMidOk() (*string, bool)`
 
-GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+GetMidOk returns a tuple with the Mid field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetId
+### SetMid
 
-`func (o *Policy) SetId(v string)`
+`func (o *Policy) SetMid(v string)`
 
-SetId sets Id field to given value.
+SetMid sets Mid field to given value.
 
-### HasId
+### HasMid
 
-`func (o *Policy) HasId() bool`
+`func (o *Policy) HasMid() bool`
 
-HasId returns a boolean if a field has been set.
+HasMid returns a boolean if a field has been set.
 
 ### GetIsInactive
 

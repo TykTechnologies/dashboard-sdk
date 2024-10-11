@@ -26,7 +26,7 @@ type Policy struct {
 	Active             *bool                       `json:"active,omitempty"`
 	DateCreated        *time.Time                  `json:"date_created,omitempty"`
 	HmacEnabled        *bool                       `json:"hmac_enabled,omitempty"`
-	Id                 *string                     `json:"id,omitempty"`
+	Mid                *string                     `json:"Mid,omitempty"`
 	IsInactive         *bool                       `json:"is_inactive,omitempty"`
 	KeyExpiresIn       *int64                      `json:"key_expires_in,omitempty"`
 	LastUpdated        *string                     `json:"last_updated,omitempty"`
@@ -223,36 +223,36 @@ func (o *Policy) SetHmacEnabled(v bool) {
 	o.HmacEnabled = &v
 }
 
-// GetId returns the Id field value if set, zero value otherwise.
-func (o *Policy) GetId() string {
-	if o == nil || IsNil(o.Id) {
+// GetMid returns the Mid field value if set, zero value otherwise.
+func (o *Policy) GetMid() string {
+	if o == nil || IsNil(o.Mid) {
 		var ret string
 		return ret
 	}
-	return *o.Id
+	return *o.Mid
 }
 
-// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// GetMidOk returns a tuple with the Mid field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Policy) GetIdOk() (*string, bool) {
-	if o == nil || IsNil(o.Id) {
+func (o *Policy) GetMidOk() (*string, bool) {
+	if o == nil || IsNil(o.Mid) {
 		return nil, false
 	}
-	return o.Id, true
+	return o.Mid, true
 }
 
-// HasId returns a boolean if a field has been set.
-func (o *Policy) HasId() bool {
-	if o != nil && !IsNil(o.Id) {
+// HasMid returns a boolean if a field has been set.
+func (o *Policy) HasMid() bool {
+	if o != nil && !IsNil(o.Mid) {
 		return true
 	}
 
 	return false
 }
 
-// SetId gets a reference to the given string and assigns it to the Id field.
-func (o *Policy) SetId(v string) {
-	o.Id = &v
+// SetMid gets a reference to the given string and assigns it to the Mid field.
+func (o *Policy) SetMid(v string) {
+	o.Mid = &v
 }
 
 // GetIsInactive returns the IsInactive field value if set, zero value otherwise.
@@ -805,8 +805,8 @@ func (o Policy) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.HmacEnabled) {
 		toSerialize["hmac_enabled"] = o.HmacEnabled
 	}
-	if !IsNil(o.Id) {
-		toSerialize["id"] = o.Id
+	if !IsNil(o.Mid) {
+		toSerialize["Mid"] = o.Mid
 	}
 	if !IsNil(o.IsInactive) {
 		toSerialize["is_inactive"] = o.IsInactive

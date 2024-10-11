@@ -23444,6 +23444,7 @@ components:
         is_inactive: true
         throttle_interval: 7.061401241503109
         active: true
+        Mid: Mid
         access_rights:
           key:
             restricted_types:
@@ -23545,7 +23546,6 @@ components:
           key: ""
         name: name
         _id: _id
-        id: id
         smoothing:
           delay: 1
           step: 1
@@ -23569,7 +23569,7 @@ components:
           type: string
         hmac_enabled:
           type: boolean
-        id:
+        Mid:
           type: string
         is_inactive:
           type: boolean
@@ -24129,6 +24129,7 @@ components:
           is_inactive: true
           throttle_interval: 7.061401241503109
           active: true
+          Mid: Mid
           access_rights:
             key:
               restricted_types:
@@ -24230,7 +24231,6 @@ components:
             key: ""
           name: name
           _id: _id
-          id: id
           smoothing:
             delay: 1
             step: 1
@@ -24252,6 +24252,7 @@ components:
           is_inactive: true
           throttle_interval: 7.061401241503109
           active: true
+          Mid: Mid
           access_rights:
             key:
               restricted_types:
@@ -24353,7 +24354,6 @@ components:
             key: ""
           name: name
           _id: _id
-          id: id
           smoothing:
             delay: 1
             step: 1
