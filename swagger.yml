@@ -9376,7 +9376,7 @@ components:
       x-go-package: github.com/TykTechnologies/tyk/gateway
     Asset:
       properties:
-        _id:
+        mid:
           description: database id of asset
           example: 659b9613a1ed7ef7afdccb9d
           readOnly: true
