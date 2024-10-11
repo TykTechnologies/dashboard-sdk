@@ -20,7 +20,7 @@ dashboard:
 
 	sudo rm -rf pkg/dashboard/model_server_variable.go
 	sudo python3 file_replace.py
-	sudo mv pkg/dashboard/docs/XTykapiGateway.md pkg/dashboard/docs/XTykapi.md
+	sudo mv pkg/dashboard/docs/XTykApiGateway.md pkg/dashboard/docs/XTykapi.md
 	sudo gofmt -s -w .
 
 
