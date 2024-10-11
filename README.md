@@ -31,12 +31,12 @@ var sampleOAS = `{"openapi":"3.0.3","info":{"title":"OAS Sample","description":"
 func main() {
 	client := configDashboard()
 
-	oasapi, err := createOASAPI(client)
+	apiResp, err := createOASAPI(client)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	log.Println(oasapi.GetID())
+	log.Println(apiResp.GetID())
 }
 
 func createOASAPI(client *dashboard.APIClient) (*dashboard.ApiResponse, error) {
