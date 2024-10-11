@@ -15619,11 +15619,11 @@ components:
         kind: oas-template
         org_id: org_id
         name: name
+        mid: 659b9613a1ed7ef7afdccb9d
         description: description
-        _id: 659b9613a1ed7ef7afdccb9d
         id: my-unique-template-id
       properties:
-        _id:
+        mid:
           description: database id of asset
           example: 659b9613a1ed7ef7afdccb9d
           readOnly: true

@@ -22,7 +22,7 @@ var _ MappedNullable = &Asset{}
 // Asset struct for Asset
 type Asset struct {
 	// database id of asset
-	Id          *string                `json:"_id,omitempty"`
+	Mid         *string                `json:"_id,omitempty"`
 	Data        map[string]interface{} `json:"data,omitempty"`
 	Description *string                `json:"description,omitempty"`
 	// custom id of asset that can be provided while creation/updating.
@@ -57,36 +57,36 @@ func NewAssetWithDefaults() *Asset {
 	return &this
 }
 
-// GetId returns the Id field value if set, zero value otherwise.
-func (o *Asset) GetId() string {
-	if o == nil || IsNil(o.Id) {
+// GetMid returns the Mid field value if set, zero value otherwise.
+func (o *Asset) GetMid() string {
+	if o == nil || IsNil(o.Mid) {
 		var ret string
 		return ret
 	}
-	return *o.Id
+	return *o.Mid
 }
 
-// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// GetMidOk returns a tuple with the Mid field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Asset) GetIdOk() (*string, bool) {
-	if o == nil || IsNil(o.Id) {
+func (o *Asset) GetMidOk() (*string, bool) {
+	if o == nil || IsNil(o.Mid) {
 		return nil, false
 	}
-	return o.Id, true
+	return o.Mid, true
 }
 
-// HasId returns a boolean if a field has been set.
-func (o *Asset) HasId() bool {
-	if o != nil && !IsNil(o.Id) {
+// HasMid returns a boolean if a field has been set.
+func (o *Asset) HasMid() bool {
+	if o != nil && !IsNil(o.Mid) {
 		return true
 	}
 
 	return false
 }
 
-// SetId gets a reference to the given string and assigns it to the Id field.
-func (o *Asset) SetId(v string) {
-	o.Id = &v
+// SetMid gets a reference to the given string and assigns it to the Mid field.
+func (o *Asset) SetMid(v string) {
+	o.Mid = &v
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
@@ -323,8 +323,8 @@ func (o Asset) MarshalJSON() ([]byte, error) {
 
 func (o Asset) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Id) {
-		toSerialize["_id"] = o.Id
+	if !IsNil(o.Mid) {
+		toSerialize["mid"] = o.Mid
 	}
 	if !IsNil(o.Data) {
 		toSerialize["data"] = o.Data
