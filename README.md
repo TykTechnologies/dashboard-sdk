@@ -40,12 +40,12 @@ func main() {
 }
 
 func createOASAPI(client *dashboard.APIClient) (*dashboard.ApiResponse, error) {
-	var dt dashboard.CreateApiOASRequest
-	err := dt.UnmarshalJSON([]byte(sampleOAS))
+	var oasData dashboard.CreateApiOASRequest
+	err := oasData.UnmarshalJSON([]byte(sampleOAS))
 	if err != nil {
 		return nil, err
 	}
-	apiResponse, rep, err := client.OASAPIsAPI.CreateApiOAS(context.Background()).CreateApiOASRequest(dt).Execute()
+	apiResponse, rep, err := client.OASAPIsAPI.CreateApiOAS(context.Background()).CreateApiOASRequest(oasData).Execute()
 	if err != nil {
 		log.Println(rep.StatusCode)
 		log.Println(rep.Body)
