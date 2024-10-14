@@ -1,6 +1,6 @@
 module github.com/TykTechnologies/dashboard-sdk
 
-go 1.19
+go 1.23.2
 
 require github.com/stretchr/testify v1.9.0
 

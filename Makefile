@@ -24,10 +24,6 @@ dashboard:
 	sudo gofmt -s -w .
 
 
-
-validate-swagger:
-	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v6.2.0 validate \
-	  -i /local/swagger.yml
 tests:
 	go test ./... -count=1  -cover
 
