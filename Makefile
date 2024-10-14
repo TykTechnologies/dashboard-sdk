@@ -12,7 +12,7 @@ dashboard:
          --minimal-update \
         --global-property skipFormModel=true \
         --global-property skipFormModel=true \
-        --global-property apis,apiTests=true,apiDocs=true \
+        --global-property apis,apiTests=false,apiDocs=true \
         --global-property models,modelTests=true,modelDocs=true \
         --global-property supportingFiles \
         -c /local/config.json\
