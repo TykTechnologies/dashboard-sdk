@@ -22,6 +22,7 @@ dashboard:
 	sudo python3 file_replace.py
 	sudo mv pkg/dashboard/docs/XTykApiGateway.md pkg/dashboard/docs/XTykapi.md
 	sudo gofmt -s -w .
+	go mod tidy
 
 
 
