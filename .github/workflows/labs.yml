@@ -1,0 +1,88 @@
+name: Run Live Dashboard And Tests
+on:
+  workflow_run:
+    workflows: ['Generate dashboard sdks']
+    types:
+      - completed
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  run-test-with-live-gateway:
+    runs-on: ubuntu-latest
+    name: Example
+    steps:
+      # AWS Configuration
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::754489498669:role/ecr_rw_tyk
+          role-session-name: cipush
+          aws-region: eu-central-1
+
+      # Amazon ECR login
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'true'
+
+      # Set up Python
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      # Checkout current repository
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+
+      # Checkout tyk-pro repository
+      - name: Checkout tyk-pro repository
+        uses: actions/checkout@v4
+        with:
+          repository: tyklabs/tyk-pro
+          path: tyk-pro
+
+      # Install go-stask
+      - name: Install go-stask
+        uses: arduino/setup-task@v1
+        with:
+          version: '3.39.0'
+
+      # Run smoke tests
+      - name: Run Dashboard containers
+        env:
+          pull_policy: 'always'
+          GH_TOKEN: ${{ secrets.ORG_GH_TOKEN }}
+          TYK_DB_LICENSEKEY: ${{ secrets.DASH_LICENSE }}
+          TYK_MDCB_LICENSE: ${{ secrets.MDCB_LICENSE }}
+        run: |
+          cd tyk-pro
+          aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 754489498669.dkr.ecr.eu-central-1.amazonaws.com
+          task --version
+          task login
+          output=$(task local FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128)
+          user_api_secret=$(echo "$output" | grep 'USER_API_SECRET' | awk -F '=' '{print $2}')
+          echo "USER_API_SECRET=${user_api_secret}"
+          echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
+      - name: Create .env file with tokens
+        run: |
+          cd portman
+          echo "PORTMAN_BEARER_TOKEN=${USER_API_SECRET}" > .env
+          echo "POSTMAN_BEARER_TOKEN=${USER_API_SECRET}" >> .env
+          ls -a
+      - name: Populate the dashboard
+        run: |
+          cd populate && go run main.go -token $USER_API_SECRET
+          cd ..
+          cd portman && make test
+
+      - name: make request to the dashboard
+        run: |
+          curl -X GET http://localhost:3000/api/apis \
+            -H "Authorization: Bearer $USER_API_SECRET"
+      - name: Clean up
+        run: |
+          cd tyk-pro
+          task clean FLAVOUR=pro-ha DB=mongo44 VARIATION=murmur128
+          
