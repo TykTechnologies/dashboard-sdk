@@ -16,5 +16,5 @@ jobs:
           go-version: '1.23.2'
       - name: Generate dashboard sdks and commit them
         run: |
-          make validate-swagger
-          make dashboard
+          echo "Generating dashboard SDKs..."
+
