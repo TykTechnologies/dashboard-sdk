@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - re-run
 jobs:
   generate-angular-client:
     runs-on: ubuntu-latest

@@ -1,10 +1,9 @@
-name: Run Live Gateway And Dashboard
-
+name: Run Live Dashboard And Tests
 on:
-  push:
-    branches:
-      - re-run
-
+  workflow_run:
+    workflows: ['Generate dashboard sdks']
+    types:
+      - completed
 permissions:
   id-token: write
   contents: read
