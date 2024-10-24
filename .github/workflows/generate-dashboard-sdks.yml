@@ -17,6 +17,10 @@ jobs:
       - name: Generate dashboard sdks and commit them
         run: |
           echo "Generating dashboard SDKs..."
-      - name: Run Live Dashboard And Tests
-        uses: ./.github/workflows/labs.yml
+  oas-tests:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    uses: ./.github/workflows/labs.yml
+    secrets: inherit
 
