@@ -64,6 +64,7 @@ jobs:
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
       - name: Create .env file with tokens
         run: |
+          ls -a
           cd portman
           echo "PORTMAN_BEARER_TOKEN=${USER_API_SECRET}" > .env
           echo "POSTMAN_BEARER_TOKEN=${USER_API_SECRET}" >> .env
