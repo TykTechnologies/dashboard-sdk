@@ -73,8 +73,7 @@ jobs:
           pwd
           echo "${USER_API_SECRET}"
           cd portman &&cd populate && go run main.go -token $USER_API_SECRET
-          cd .. && cd ..
-          make test
+          cd .. && npm install && npm start
 
       - name: make request to the dashboard
         run: |
