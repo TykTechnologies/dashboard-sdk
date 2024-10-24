@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -9,12 +10,24 @@ import (
 )
 
 func main() {
+	// Define a command-line flag for the Bearer token
+	bearerTokenFlag := flag.String("token", "", "Bearer token for authentication")
+
+	// Parse the command-line flags
+	flag.Parse()
+
+	// Validate the Bearer token
+	if *bearerTokenFlag == "" {
+		log.Fatal("Bearer token is required. Use the -token flag to provide it.")
+	}
+
 	baseUrl := "http://localhost:3000"
 	policyUrl := fmt.Sprintf("%s/api/portal/policies", baseUrl)
 	deletePolicyUrl := fmt.Sprintf("%s/api/portal/policies/%s", baseUrl, "66d9121d5715ec0715608640")
 	deleteApiUrl := fmt.Sprintf("%s/api/apis/%s", baseUrl, "a12b34c56d78e90f1234567890abcdef")
 	createApiurl := fmt.Sprintf("%s/api/apis", baseUrl)
-	bearerToken := "a32e0ae5408940527b2543fa85d7dc00"
+	bearerToken := *bearerTokenFlag
+
 	err := sendDeleteRequest(deletePolicyUrl, bearerToken)
 	if err != nil {
 		log.Println(err)
@@ -42,22 +55,16 @@ func main() {
 }
 
 func sendPostRequest(url string, jsonData string, bearerToken string) error {
-	// Convert string to byte array
 	jsonBytes := []byte(jsonData)
 
-	// Create a new POST request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %v", err)
 	}
 
-	// Set content type header to application/json
 	req.Header.Set("Content-Type", "application/json")
-
-	// Set the Authorization header with the Bearer token
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bearerToken))
 
-	// Send the request using the default client
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -65,13 +72,11 @@ func sendPostRequest(url string, jsonData string, bearerToken string) error {
 	}
 	defer resp.Body.Close()
 
-	// Check for a successful response
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("error response: %s", string(body))
 	}
 
-	// Print response (if needed)
 	body, _ := io.ReadAll(resp.Body)
 	fmt.Println("Response: ", string(body))
 
@@ -79,18 +84,15 @@ func sendPostRequest(url string, jsonData string, bearerToken string) error {
 }
 
 func sendDeleteRequest(url string, bearerToken string) error {
-	// Create a new DELETE request
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %v", err)
 	}
 
-	// Set the Authorization header with the Bearer token
 	if bearerToken != "" {
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bearerToken))
 	}
 
-	// Send the request using the default client
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -98,13 +100,11 @@ func sendDeleteRequest(url string, bearerToken string) error {
 	}
 	defer resp.Body.Close()
 
-	// Check for a successful response
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNotFound {
 		body, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("error response: %s", string(body))
 	}
 
-	// Print response (if needed)
 	body, _ := io.ReadAll(resp.Body)
 	fmt.Println("Response: ", string(body))
 
@@ -112,24 +112,27 @@ func sendDeleteRequest(url string, bearerToken string) error {
 }
 
 var miniPolicy = `{
-  "access_rights": {
-    "Tyk Test API": {
-      "allowed_urls": [
+    "auth_type": "oauth",
+    "auth_types": [
+        "oauth"
+    ],
+    "state": "active",
+    "access_rights_array": [
         {
-          "methods": [
-            "GET"
-          ],
-          "url": "/users"
+            "api_name": "Tyk Test API",
+            "api_id": "a12b34c56d78e90f1234567890abcdef",
+            "versions": [
+                "Default"
+            ],
+            "allowed_urls": [],
+            "restricted_types": [],
+            "allowed_types": [],
+            "disable_introspection": false,
+            "limit": null,
+            "field_access_rights": [],
+            "allowance_scope": ""
         }
-      ],
-      "api_id": "a12b34c56d78e90f1234567890abcdef",
-      "api_name": "Tyk Test API",
-      "disable_introspection": false,
-      "versions": [
-        "Default"
-      ]
-    }
-  },
+    ],
   "id":"66d9121d5715ec0715608640",
   "_id":"66d9121d5715ec0715608640",
   "active": true,
