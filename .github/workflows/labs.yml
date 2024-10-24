@@ -72,7 +72,7 @@ jobs:
         run: |
           ls -a
           pwd
-          cd portman && go run main.go -token $USER_API_SECRET
+          cd portman &&cd populate && go run main.go -token $USER_API_SECRET
           cd ..
           make test
 
