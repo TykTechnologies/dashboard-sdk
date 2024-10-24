@@ -64,14 +64,14 @@ jobs:
           echo "USER_API_SECRET=${user_api_secret}" >> $GITHUB_ENV
       - name: Create .env file with tokens
         run: |
-          ls -a
-          pwd
           cd portman
           echo "PORTMAN_BEARER_TOKEN=${USER_API_SECRET}" > .env
           echo "POSTMAN_BEARER_TOKEN=${USER_API_SECRET}" >> .env
           ls -a
       - name: Populate the dashboard
         run: |
+          ls -a
+          pwd
           cd populate && go run main.go -token $USER_API_SECRET
           cd ..
           cd portman && make test
