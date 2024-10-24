@@ -32,6 +32,9 @@ validate-swagger:
 tests:
 	go test ./... -count=1  -cover
 
+test:
+	npm install && npm start
+
 
 
 
