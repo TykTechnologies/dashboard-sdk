@@ -1885,6 +1885,428 @@ paths:
       summary: Create a Basic Auth User.
       tags:
       - Basic Authentication
+  /api/apis/streams:
+    post:
+      description: |-
+        Create a Streams API Definition in Tyk OAS API format.
+         Note that the response includes the newly created Tyk Streams API Definition containing the unique identifier for the API (`ID`). You can provide a value for `ID` in the request body, otherwise Tyk will automatically generate a value.
+      operationId: createStreamsApi
+      parameters:
+        - name: "Content-Type"
+          in: header
+          required: true
+          description: "Content type for streams endpoints should be `application/vnd.tyk.streams.oas`"
+          schema:
+            type: string
+            enum: ["application/vnd.tyk.streams.oas"]
+      requestBody:
+        content:
+          application/json:
+            examples:
+              StreamsAPIExample:
+                $ref: "#/components/examples/streamsExample"
+            schema:
+              allOf:
+                - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
+                - $ref: '#/components/schemas/XTykApiGateway'
+                - $ref: '#/components/schemas/XTykStreaming'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                ID: 4c1c0d8fc885401053ddac4e39ef676b
+                Message: API created
+                Meta: 665597e0b646b300011acb69
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API created.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Couldn't read body.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Malformed data.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve detail of apiID 62a0ec9092faf50001395817
+                  in org 82a0ec9052faf50001395817.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "409":
+          content:
+            application/json:
+              example:
+                Message: Found API with the same ID.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Error while creating API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Create Streams API.
+      tags:
+        - Streams APIs
+
+  /api/apis/streams/{apiId}:
+    delete:
+      description: Deleting a Streams API definition will remove the file from the file store.
+        The API definition will not be unloaded and a separate reload request will
+        need to be made to disable the API endpoint.
+      operationId: deleteStreamsApi
+      parameters:
+        - description: ID of the API you want to delete.
+          example: 4c1c0d8fc885401053ddac4e39ef676b
+          in: path
+          name: apiId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API deleted.
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Deleted successfully.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not delete the API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/streams/{apiId}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found.
+      summary: Delete Streams API.
+      tags:
+        - Streams APIs
+    get:
+      description: Get a single Streams API definition.
+      operationId: getStreamsAPIDetails
+      parameters:
+        - description: ID of the API you want to fetch.
+          example: 4c1c0d8fc885401053ddac4e39ef676b
+          in: path
+          name: apiId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                oasExample:
+                  $ref: '#/components/examples/streamsExample'
+              schema:
+                allOf:
+                  - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
+                  - $ref: '#/components/schemas/XTykApiGateway'
+                  - $ref: '#/components/schemas/XTykStreaming'
+          description: Fetched API.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad request or API not found.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: 'access denied: You do not have permission to access  /api/apis/streams/{apiId}'
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to marshal data for API detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get Streams API details.
+      tags:
+        - Streams APIs
+    patch:
+      description: Update a Tyk Streams API. You can use this endpoint to update the OAS
+        part of your Tyk Streams API definition. This endpoint allows you to configure
+        the Tyk OAS extension based on the query parameters provided (similar to import).
+      operationId: patchApiStreams
+      parameters:
+        - name: "Content-Type"
+          in: header
+          required: true
+          description: "Content type for streams endpoints should be `application/vnd.tyk.streams.oas`"
+          schema:
+            type: string
+            enum: [ "application/vnd.tyk.streams.oas" ]
+        - description: ID of the API you want to patch.
+          example: 4c1c0d8fc885401053ddac4e39ef676b
+          in: path
+          name: apiId
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ListenPath'
+        - $ref: '#/components/parameters/CustomDomain'
+        - $ref: '#/components/parameters/AllowList'
+        - $ref: '#/components/parameters/ValidateRequest'
+        - $ref: '#/components/parameters/MockResponse'
+        - $ref: '#/components/parameters/Authentication'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              PatchOASExample:
+                $ref: "#/components/examples/streamsExample"
+            schema:
+              oneOf:
+                - allOf:
+                    - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
+                    - $ref: '#/components/schemas/XTykApiGateway'
+                    - $ref: '#/components/schemas/XTykStreaming'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FormDataFile'
+        description: The content of the file should be the OpenAPI document in JSON
+          format.
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API updated
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Patched API.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Invalid `ID` value
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Malformed request.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Failed to update org object to DB.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden.
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found.
+      summary: Patch a single Streams API by ID.
+      tags:
+        - Streams APIs
+    put:
+      description: Updating an API definition uses the same signature object as a
+        `POST`. It will first ensure that the API ID being updated is the same as
+        in the `PUT` object.<br/> Updating will completely replace the file descriptor
+        and will not change an API definition that has already been loaded. The hot-reload
+        endpoint will need to be called to push the new definition to live.
+      operationId: updateStreamsApi
+      parameters:
+        - name: "Content-Type"
+          in: header
+          required: true
+          description: "Content type for streams endpoints should be `application/vnd.tyk.streams.oas`"
+          schema:
+            type: string
+            enum: [ "application/vnd.tyk.streams.oas" ]
+        - description: ID of the API you want to update.
+          example: 4c1c0d8fc885401053ddac4e39ef676b
+          in: path
+          name: apiId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              StreamsAPIExample:
+                $ref: "#/components/examples/streamsExample"
+            schema:
+              allOf:
+                - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
+                - $ref: '#/components/schemas/XTykApiGateway'
+                - $ref: '#/components/schemas/XTykStreaming'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API updated.
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Updated API.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: The payload should contain x-tyk-api-gateway and/or x-tyk-streaming.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Malformed API data.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Found API with same url.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API definition does not exist
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found.
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Error while creating API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Update Streams API.
+      tags:
+        - Streams APIs
+
   /api/apis/oas:
     post:
       description: |-
@@ -1974,7 +2396,7 @@ paths:
                   url: https://localhost:8080
             schema:
               allOf:
-              - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+              - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
               - $ref: '#/components/schemas/XTykApiGateway'
       responses:
         "200":
@@ -2130,7 +2552,7 @@ paths:
                   $ref: '#/components/examples/oasExample'
               schema:
                 allOf:
-                - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+                - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
                 - $ref: '#/components/schemas/XTykApiGateway'
           description: Fetched API.
           headers:
@@ -2262,7 +2684,7 @@ paths:
               oneOf:
               - $ref: '#/components/schemas/ApiImportByUrlPayload'
               - allOf:
-                - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+                - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
                 - $ref: '#/components/schemas/XTykApiGateway'
           multipart/form-data:
             schema:
@@ -2389,7 +2811,7 @@ paths:
                   url: https://localhost:8080
             schema:
               allOf:
-              - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+              - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
               - $ref: '#/components/schemas/XTykApiGateway'
       responses:
         "200":
@@ -2888,7 +3310,7 @@ paths:
               schema:
                 allOf:
                 - $ref: '#/components/schemas/XTykApiGateway'
-                - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+                - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
           description: Success.
         "400":
           content:
@@ -3018,7 +3440,7 @@ paths:
             schema:
               oneOf:
               - $ref: '#/components/schemas/ApiImportByUrlPayload'
-              - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+              - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/FormDataFile'
@@ -8769,6 +9191,79 @@ components:
             versions:
               Default:
                 name: Default
+    streamsExample:
+      value:
+        components:
+          securitySchemes:
+            bearerAuth:
+              description: The API Access Credentials
+              scheme: bearer
+              type: http
+        info:
+          description: This is a sample Streams API.
+          title: Streams Sample
+          version: 1.0.0
+        openapi: 3.0.3
+        paths:
+          /api/sample/users:
+            get:
+              operationId: getUsersSample
+              responses:
+                "200":
+                  content:
+                    application/json:
+                      schema:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                          type: object
+                        type: array
+                  description: fetched users
+              summary: Get users
+              tags:
+                - users
+        security:
+          - bearerAuth: [ ]
+        servers:
+          - url: https://localhost:8080
+        x-tyk-api-gateway:
+          info:
+            name: user
+            state:
+              active: true
+          server:
+            listenPath:
+              strip: true
+              value: /user-test/
+          upstream:
+            url: https://localhost:8080
+        x-tyk-streaming:
+          streams:
+            stream1:
+              input:
+                kafka:
+                  addressess:
+                    - localhost:9093
+                  auto_replay_nacks: true
+                  checkpoint_limit: 1024
+                  consumer_group: group1
+                  target_version: 3.3.0
+                  topics:
+                    - instrument.json.AMZN
+                    - instrument.json.GOOG
+              output:
+                broker:
+                  outputs:
+                    - stdout:
+                        codec: lines
+                    - http_server:
+                        allowed_verbs:
+                          - GET
+                        path: "/one"
+                        stream_path: "/sse"
+                        ws_path: "/ws"
+                  pattern: fan_out
   parameters:
     AccessType:
       description: Filter for internal or external API versions.
@@ -9376,7 +9871,7 @@ components:
       x-go-package: github.com/TykTechnologies/tyk/gateway
     Asset:
       properties:
-        mid:
+        _id:
           description: database id of asset
           example: 659b9613a1ed7ef7afdccb9d
           readOnly: true
@@ -10015,10 +10510,10 @@ components:
     DryRunRequest:
       properties:
         oas:
-          $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+          $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
         tyk_oas:
           allOf:
-          - $ref: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json
+          - $ref: https://raw.githubusercontent.com/TykTechnologies/tyk/refs/heads/master/apidef/oas/schema/3.0.json
           - $ref: '#/components/schemas/XTykApiGateway'
       type: object
     EndPointMeta:
@@ -11401,7 +11896,7 @@ components:
           type: string
         hmac_enabled:
           type: boolean
-        Mid:
+        id:
           type: string
         is_inactive:
           type: boolean
@@ -12893,6 +13388,15 @@ components:
         x-tyk-api-gateway:
           $ref: '#/components/schemas/XTykAPIGateway'
       type: object
+    XTykStreaming:
+      properties:
+        x-tyk-streaming:
+          type: object
+          properties:
+            streams:
+              type: object
+              additionalProperties: true
+            #to be added
   securitySchemes:
     bearerAuth:
       description: The Tyk Dashboard API Access Credentials
