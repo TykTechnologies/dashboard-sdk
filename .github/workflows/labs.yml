@@ -1,9 +1,6 @@
 name: Run Live Dashboard And Tests
 on:
-  workflow_run:
-    workflows: ['Generate dashboard sdks']
-    types:
-      - completed
+  workflow_call:
 permissions:
   id-token: write
   contents: read

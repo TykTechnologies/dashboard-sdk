@@ -17,4 +17,6 @@ jobs:
       - name: Generate dashboard sdks and commit them
         run: |
           echo "Generating dashboard SDKs..."
+      - name: Run Live Dashboard And Tests
+        uses: ./.github/workflows/labs.yml
 
