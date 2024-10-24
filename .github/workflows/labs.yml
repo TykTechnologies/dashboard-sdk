@@ -73,7 +73,7 @@ jobs:
           ls -a
           pwd
           cd portman &&cd populate && go run main.go -token $USER_API_SECRET
-          cd ..
+          cd .. && cd ..
           make test
 
       - name: make request to the dashboard
