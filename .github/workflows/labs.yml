@@ -72,9 +72,9 @@ jobs:
         run: |
           ls -a
           pwd
-          cd populate && go run main.go -token $USER_API_SECRET
+          cd portman/populate && go run main.go -token $USER_API_SECRET
           cd ..
-          cd portman && make test
+          make test
 
       - name: make request to the dashboard
         run: |
