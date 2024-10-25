@@ -5,14 +5,14 @@
     "contractTests": [
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
+        "excludeForOperations": ["dryRunApiOAS","updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","setUserPassword","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "statusSuccess": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "responseTime": {
           "enabled": false,
           "maxMs": 300
@@ -20,28 +20,28 @@
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "contentType": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "jsonBody": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","listCertificates","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","listCertificates","setUserPassword","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "schemaValidation": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "headersPresent": {
           "enabled": true
         }
@@ -320,6 +320,16 @@
         {
           "key": "policy_id",
           "remove": true
+        }
+      ]
+    },
+    {
+      "openApiOperationIds": ["patchApiOAS"],
+      "overwriteRequestBody": [
+        {
+          "key": "url",
+          "overwrite": true,
+          "value": "https://gist.githubusercontent.com/Keithwachira/e4f11baefb68f2ace5dd2297b7ccc3e0/raw/bd0aeee05d1bd380535af7a8d5d59aa30f9b5aad/tykOas.json"
         }
       ]
     },
