@@ -174,7 +174,7 @@
     {
       "openApiOperationId": "createCertificates",
       "scripts": [
-        "const body = { mode: 'formdata', formdata: [{ key: 'file', type: 'file', src: '/Users/itachisasuke/projects/dc/tyk-gateway-docker/certs/atlanta.pem' }]}; pm.request.body.update(body);"
+        "const body = { mode: 'formdata', formdata: [{ key: 'file', type: 'file', src: 'atlanta.pem' }]}; pm.request.body.update(body);"
       ]
     }
 
