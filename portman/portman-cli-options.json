@@ -1,6 +1,6 @@
 {
   "local": "swagger.yml",
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "https://valuable-nation-adm.aws-euw2.cloud-ara.tyk.io",
   "output": "dashboard.collection.postman.json",
   "oaOutput": "filtered.dashboard.swagger.yml",
   "includeTests": true,
