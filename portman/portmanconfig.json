@@ -5,14 +5,14 @@
     "contractTests": [
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["setUserPassword","listApiKeys","SearchKeys"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "statusSuccess": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["setUserPassword","listApiKeys","SearchKeys"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "responseTime": {
           "enabled": false,
           "maxMs": 300
@@ -20,28 +20,28 @@
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["setUserPassword","listApiKeys","SearchKeys"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "contentType": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["setUserPassword","listApiKeys","SearchKeys"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "jsonBody": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["listCertificates","setUserPassword","listApiKeys","SearchKeys"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","listCertificates","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "schemaValidation": {
           "enabled": true
         }
       },
       {
         "openApiOperation": "*::/*",
-        "excludeForOperations": ["setUserPassword","listApiKeys","SearchKeys"],
+        "excludeForOperations": ["updateStreamsApi","patchApiStreams","getStreamsAPIDetails","deleteStreamsApi","createStreamsApi","dryRunApiOAS","setUserPassword","listApiKeys","SearchKeys","getOPARules","updateOrgOPARules","listKeys","getKeysDetailed"],
         "headersPresent": {
           "enabled": true
         }
@@ -52,6 +52,15 @@
     "variationTests": []
   },
   "assignVariables": [
+    {
+      "openApiOperationIds": ["createApiOAS"],
+      "collectionVariables": [
+        {
+          "responseBodyProp": "ID",
+          "name": "createApiOAS.id"
+        }
+      ]
+    },
     {
       "openApiOperationIds": ["createCertificates"],
       "collectionVariables": [
@@ -191,6 +200,16 @@
         {
           "key": "q",
           "value": "{{postApis.name}}"
+        }
+      ]
+    },
+    {
+      "openApiOperationIds": ["patchApiOAS","deleteOASApi","updateApiCategories","updateApiOAS","getOASAPIDetails","getApiCategories","downloadApiOASPublic","listOASApiVersions"],
+      "overwriteRequestPathVariables": [
+        {
+          "key": "apiId",
+          "overwrite": true,
+          "value": "{{createApiOAS.id}}"
         }
       ]
     },
@@ -603,6 +622,7 @@
       "POST::/*",
       "GET::/*",
       "PUT::/*",
+      "PATCH::/*",
       "DELETE::/api/portal/policies/{id}",
       "DELETE::/*"
     ]
