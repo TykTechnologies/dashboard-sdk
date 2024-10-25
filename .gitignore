@@ -11,3 +11,5 @@ node_modules
 node_modules/
 tmp
 .env
+portman/dashboard.collection.postman.json
+portman/filtered.dashboard.swagger.yml

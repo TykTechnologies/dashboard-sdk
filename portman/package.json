@@ -11,6 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apideck/portman": "^1.30.1"
+    "@apideck/portman": "^1.30.4"
   }
 }

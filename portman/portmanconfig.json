@@ -30,6 +30,7 @@
       },
       {
         "openApiOperation": "*::/*",
+        "excludeForOperations": ["listCertificates"],
         "schemaValidation": {
           "enabled": true
         }
@@ -46,6 +47,15 @@
     "variationTests": []
   },
   "assignVariables": [
+    {
+      "openApiOperationIds": ["createCertificates"],
+      "collectionVariables": [
+        {
+          "responseBodyProp": "id",
+          "name": "createCertificates.id"
+        }
+      ]
+    },
     {
       "openApiOperationIds": ["createNewClientApp"],
       "collectionVariables": [
@@ -160,6 +170,15 @@
       ]
     }
   ],
+  "operationPreRequestScripts": [
+    {
+      "openApiOperationId": "createCertificates",
+      "scripts": [
+        "const body = { mode: 'formdata', formdata: [{ key: 'file', type: 'file', src: '/Users/itachisasuke/projects/dc/tyk-gateway-docker/certs/atlanta.pem' }]}; pm.request.body.update(body);"
+      ]
+    }
+
+  ],
   "overwrites": [
     {
       "openApiOperationIds": ["searchApis"],
@@ -167,6 +186,16 @@
         {
           "key": "q",
           "value": "{{postApis.name}}"
+        }
+      ]
+    },
+    {
+      "openApiOperationIds": ["deleteCertificates","getCertificate"," deleteCertificateDependencies","getCertificateDependencies"],
+      "overwriteRequestPathVariables": [
+        {
+          "key": "certId",
+          "overwrite": true,
+          "value": "{{createCertificates.id}}"
         }
       ]
     },
