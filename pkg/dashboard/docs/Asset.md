@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Mid** | Pointer to **string** | database id of asset | [optional] [readonly] 
+**Id** | Pointer to **string** | database id of asset | [optional] [readonly] 
 **Data** | Pointer to **map[string]interface{}** |  | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
 **Id** | Pointer to **string** | custom id of asset that can be provided while creation/updating. | [optional] 
@@ -32,30 +32,30 @@ NewAssetWithDefaults instantiates a new Asset object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetMid
+### GetId
 
-`func (o *Asset) GetMid() string`
+`func (o *Asset) GetId() string`
 
-GetMid returns the Mid field if non-nil, zero value otherwise.
+GetId returns the Id field if non-nil, zero value otherwise.
 
-### GetMidOk
+### GetIdOk
 
-`func (o *Asset) GetMidOk() (*string, bool)`
+`func (o *Asset) GetIdOk() (*string, bool)`
 
-GetMidOk returns a tuple with the Mid field if it's non-nil, zero value otherwise
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetMid
+### SetId
 
-`func (o *Asset) SetMid(v string)`
+`func (o *Asset) SetId(v string)`
 
-SetMid sets Mid field to given value.
+SetId sets Id field to given value.
 
-### HasMid
+### HasId
 
-`func (o *Asset) HasMid() bool`
+`func (o *Asset) HasId() bool`
 
-HasMid returns a boolean if a field has been set.
+HasId returns a boolean if a field has been set.
 
 ### GetData
 

@@ -3,7 +3,7 @@ Tyk Dashboard API
 
 ## <a name=\"introduction\"></a> Introduction  The Tyk Dashboard API offers granular, programmatic access to a centralised database of resources that your Tyk nodes can pull from. This API has a dynamic user administrative structure which means the secret key that is used to communicate with your Tyk nodes can be kept secret and access to the wider management functions can be handled on a user-by-user and organisation-by-organisation basis.  A common question around using a database-backed configuration is how to programmatically add API definitions to your Tyk nodes, the Dashboard API allows much more fine-grained, secure and multi-user access to your Tyk cluster, and should be used to manage a database-backed Tyk node.  The Tyk Dashboard API works seamlessly with the Tyk Dashboard (and the two come bundled together).  ## <a name=\"security-hierarchy\"></a> Security Hierarchy  The Dashboard API provides a more structured security layer to managing Tyk nodes.  ### Organisations, APIs and Users  With the Dashboard API and a database-backed Tyk setup, (and to an extent with file-based API setups - if diligence is used in naming and creating definitions), the following security model is applied to the management of Upstream APIs:  * **Organisations**: All APIs are *owned* by an organisation, this is designated by the 'OrgID' parameter in the API Definition. * **Users**: All users created in the Dashboard belong to an organisation (unless an exception is made for super-administrative access). * **APIs**: All APIs belong to an Organisation and only Users that belong to that organisation can see the analytics for those APIs and manage their configurations. * **API Keys**: API Keys are designated by organisation, this means an API key that has full access rights will not be allowed to access the APIs of another organisation on the same system, but can have full access to all APIs within the organisation. * **Access Rights**: Access rights are stored with the key, this enables a key to give access to multiple APIs, this is defined by the session object in the core Tyk API.  In order to use the Dashboard API, you'll need to get the 'Tyk Dashboard API Access Credentials' secret from your user profile on the Dashboard UI.  The secret you set should then be sent along as a header with each Dashboard API Request in order for it to be successful:   authorization: <your-secret>
 
-API version: 5.6.0
+API version: 5.7.0
 Contact: support@tyk.io
 */
 
@@ -26,7 +26,7 @@ type Policy struct {
 	Active             *bool                       `json:"active,omitempty"`
 	DateCreated        *time.Time                  `json:"date_created,omitempty"`
 	HmacEnabled        *bool                       `json:"hmac_enabled,omitempty"`
-	Mid                *string                     `json:"Mid,omitempty"`
+	Id                 *string                     `json:"id,omitempty"`
 	IsInactive         *bool                       `json:"is_inactive,omitempty"`
 	KeyExpiresIn       *int64                      `json:"key_expires_in,omitempty"`
 	LastUpdated        *string                     `json:"last_updated,omitempty"`
@@ -223,36 +223,36 @@ func (o *Policy) SetHmacEnabled(v bool) {
 	o.HmacEnabled = &v
 }
 
-// GetMid returns the Mid field value if set, zero value otherwise.
-func (o *Policy) GetMid() string {
-	if o == nil || IsNil(o.Mid) {
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *Policy) GetId() string {
+	if o == nil || IsNil(o.Id) {
 		var ret string
 		return ret
 	}
-	return *o.Mid
+	return *o.Id
 }
 
-// GetMidOk returns a tuple with the Mid field value if set, nil otherwise
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Policy) GetMidOk() (*string, bool) {
-	if o == nil || IsNil(o.Mid) {
+func (o *Policy) GetIdOk() (*string, bool) {
+	if o == nil || IsNil(o.Id) {
 		return nil, false
 	}
-	return o.Mid, true
+	return o.Id, true
 }
 
-// HasMid returns a boolean if a field has been set.
-func (o *Policy) HasMid() bool {
-	if o != nil && !IsNil(o.Mid) {
+// HasId returns a boolean if a field has been set.
+func (o *Policy) HasId() bool {
+	if o != nil && !IsNil(o.Id) {
 		return true
 	}
 
 	return false
 }
 
-// SetMid gets a reference to the given string and assigns it to the Mid field.
-func (o *Policy) SetMid(v string) {
-	o.Mid = &v
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *Policy) SetId(v string) {
+	o.Id = &v
 }
 
 // GetIsInactive returns the IsInactive field value if set, zero value otherwise.
@@ -805,8 +805,8 @@ func (o Policy) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.HmacEnabled) {
 		toSerialize["hmac_enabled"] = o.HmacEnabled
 	}
-	if !IsNil(o.Mid) {
-		toSerialize["Mid"] = o.Mid
+	if !IsNil(o.Id) {
+		toSerialize["id"] = o.Id
 	}
 	if !IsNil(o.IsInactive) {
 		toSerialize["is_inactive"] = o.IsInactive

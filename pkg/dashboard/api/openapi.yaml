@@ -38,7 +38,7 @@ info:
     name: Mozilla Public License Version 2.0
     url: https://github.com/TykTechnologies/tyk/blob/master/LICENSE.md
   title: Tyk Dashboard API
-  version: 5.6.0
+  version: 5.7.0
 servers:
 - url: "https://{tenant}"
   variables:
@@ -1978,6 +1978,477 @@ paths:
       summary: Create a Basic Auth User.
       tags:
       - Basic Authentication
+  /api/apis/streams:
+    post:
+      description: |-
+        Create a Streams API Definition in Tyk OAS API format.
+         Note that the response includes the newly created Tyk Streams API Definition containing the unique identifier for the API (`ID`). You can provide a value for `ID` in the request body, otherwise Tyk will automatically generate a value.
+      operationId: createStreamsApi
+      parameters:
+      - description: Content type for streams endpoints should be `application/vnd.tyk.streams.oas`
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          enum:
+          - application/vnd.tyk.streams.oas
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              StreamsAPIExample:
+                $ref: '#/components/examples/streamsExample'
+            schema:
+              $ref: '#/components/schemas/createStreamsApi_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                ID: 4c1c0d8fc885401053ddac4e39ef676b
+                Message: API created
+                Meta: 665597e0b646b300011acb69
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API created.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Couldn't read body.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Malformed data.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Your license does not support adding/ modifying streams API
+                  configuration.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "409":
+          content:
+            application/json:
+              example:
+                Message: Found API with the same ID.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Conflict
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Error while creating API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Create Streams API.
+      tags:
+      - Streams APIs
+  /api/apis/streams/{apiId}:
+    delete:
+      description: Deleting a Streams API definition will remove the file from the
+        file store. The API definition will not be unloaded and a separate reload
+        request will need to be made to disable the API endpoint.
+      operationId: deleteStreamsApi
+      parameters:
+      - description: ID of the API you want to delete.
+        example: 4c1c0d8fc885401053ddac4e39ef676b
+        explode: false
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API deleted.
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Deleted successfully.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not delete the API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: "access denied: You do not have permission to access  /api/apis/streams/{apiId}"
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found.
+      summary: Delete Streams API.
+      tags:
+      - Streams APIs
+    get:
+      description: Get a single Streams API definition.
+      operationId: getStreamsAPIDetails
+      parameters:
+      - description: ID of the API you want to fetch.
+        example: 4c1c0d8fc885401053ddac4e39ef676b
+        explode: false
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                streamsAPIExample:
+                  $ref: '#/components/examples/streamsExample'
+              schema:
+                $ref: '#/components/schemas/createStreamsApi_request'
+          description: Fetched API.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Could not retrieve API detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad request or API not found.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: "access denied: You do not have permission to access  /api/apis/streams/{apiId}"
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Failed to marshal data for API detail.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Get Streams API details.
+      tags:
+      - Streams APIs
+    patch:
+      description: Update a Tyk Streams API. You can use this endpoint to update the
+        OAS part of your Tyk Streams API definition. This endpoint allows you to configure
+        the Tyk OAS extension based on the query parameters provided (similar to import).
+      operationId: patchApiStreams
+      parameters:
+      - description: Content type for streams endpoints should be `application/vnd.tyk.streams.oas`
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          enum:
+          - application/vnd.tyk.streams.oas
+          type: string
+        style: simple
+      - description: ID of the API you want to patch.
+        example: 4c1c0d8fc885401053ddac4e39ef676b
+        explode: false
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Listen path for the API.
+        example: /user-test/
+        explode: true
+        in: query
+        name: listenPath
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Custom domain for the API.
+        example: tyk.io
+        explode: true
+        in: query
+        name: customDomain
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Enable allowList middleware for all endpoints.
+        explode: true
+        in: query
+        name: allowList
+        required: false
+        schema:
+          $ref: '#/components/schemas/BooleanQueryParam'
+        style: form
+      - description: Enable validateRequest middleware for all endpoints having a
+          request body with media type application/json.
+        explode: true
+        in: query
+        name: validateRequest
+        required: false
+        schema:
+          $ref: '#/components/schemas/BooleanQueryParam'
+        style: form
+      - description: Enable mockResponse middleware for all endpoints having responses
+          configured.
+        explode: true
+        in: query
+        name: mockResponse
+        required: false
+        schema:
+          $ref: '#/components/schemas/BooleanQueryParam'
+        style: form
+      - description: Enable/disable the authentication mechanism in your Tyk Gateway
+          for your OAS API.
+        explode: true
+        in: query
+        name: authentication
+        required: false
+        schema:
+          $ref: '#/components/schemas/BooleanQueryParam'
+        style: form
+      requestBody:
+        content:
+          application/json:
+            examples:
+              PatchOASExample:
+                $ref: '#/components/examples/streamsExample'
+            schema:
+              $ref: '#/components/schemas/patchApiStreams_request'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FormDataFile'
+        description: The content of the file should be the OpenAPI document in JSON
+          format.
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API updated
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Patched API.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: Invalid `ID` value
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Malformed request.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Failed to update org object to DB.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden.
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API not found.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found.
+      summary: Patch a single Streams API by ID.
+      tags:
+      - Streams APIs
+    put:
+      description: Updating an API definition uses the same signature object as a
+        `POST`. It will first ensure that the API ID being updated is the same as
+        in the `PUT` object.<br/> Updating will completely replace the file descriptor
+        and will not change an API definition that has already been loaded. The hot-reload
+        endpoint will need to be called to push the new definition to live.
+      operationId: updateStreamsApi
+      parameters:
+      - description: Content type for streams endpoints should be `application/vnd.tyk.streams.oas`
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          enum:
+          - application/vnd.tyk.streams.oas
+          type: string
+        style: simple
+      - description: ID of the API you want to update.
+        example: 4c1c0d8fc885401053ddac4e39ef676b
+        explode: false
+        in: path
+        name: apiId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              StreamsAPIExample:
+                $ref: '#/components/examples/streamsExample'
+            schema:
+              $ref: '#/components/schemas/createStreamsApi_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                Message: API updated.
+                Meta: null
+                Status: OK
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Updated API.
+        "400":
+          content:
+            application/json:
+              example:
+                Message: The payload should contain x-tyk-api-gateway and/or x-tyk-streaming.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Malformed API data.
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: Found API with same url.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                Message: API definition does not exist
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: API not found.
+        "500":
+          content:
+            application/json:
+              example:
+                Message: Error while creating API.
+                Meta: null
+                Status: Error
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal server error.
+      summary: Update Streams API.
+      tags:
+      - Streams APIs
   /api/apis/oas:
     post:
       description: |-
@@ -9009,6 +9480,180 @@ paths:
       summary: Search user with email.
       tags:
       - Users
+  /api/audit-logs:
+    get:
+      description: Retrieve audit logs from database
+      operationId: getAuditLogs
+      parameters:
+      - description: Use p query parameter to say which page you want returned. The
+          size of the page is determined by the configuration option page_size of
+          dashboard.
+        example: 1
+        explode: true
+        in: query
+        name: p
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Filters audit logs to show only actions performed by the specified
+          user. This parameter allows you to focus on the activity of a particular
+          user across the system.
+        example: jhon@mail.com
+        explode: true
+        in: query
+        name: user
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filters audit logs based on the specific action performed by
+          users. This parameter allows you to focus on particular types of activities
+          within the system.
+        example: List APIs
+        explode: true
+        in: query
+        name: action
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filters audit logs based on the IP address from which the action
+          originated. This parameter allows you to focus on activities from specific
+          network locations or to investigate actions from particular IP addresses.
+        example: 127.0.0.1
+        explode: true
+        in: query
+        name: ip
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filters audit logs based on the HTTP method used in the API request.
+          This parameter allows you to focus on specific types of operations performed
+          on the API.
+        example: POST
+        explode: true
+        in: query
+        name: method
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filters audit logs based on the HTTP status code returned by
+          the API in response to the request. This parameter allows you to focus on
+          specific outcomes of API interactions.
+        example: 200
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Filters audit logs based on the specific URL path of the API
+          endpoint that was accessed. This parameter allows you to focus on actions
+          performed on particular resources or sections of your API.
+        example: /api/apis
+        explode: true
+        in: query
+        name: url
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "Specifies the start date for the audit log search. If not provided,\
+          \ the search will include records from the earliest available date. Format\
+          \ DD-MM-YYY."
+        example: 01-01-1990
+        explode: true
+        in: query
+        name: from_date
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "Specifies the end date for the audit log search. If not provided,\
+          \ the search will include records up to the current date and time. Format\
+          \ DD-MM-YYY."
+        example: 01-01-2030
+        explode: true
+        in: query
+        name: to_date
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                pages: 1
+                audit_logs:
+                - _id: 672a83e2b0418b224440ce29
+                  req_id: 0462e283-a55f-41ab-6482-60d2eeb1858c
+                  org_id: 66cf7f8db0418b1fbe91852b
+                  date: "Tue, 05 Nov 2024 17:45:22 -03"
+                  timestamp: 1730839522
+                  ip: 127.0.0.1
+                  user: jhon@mail.com
+                  action: ""
+                  method: GET
+                  url: /api/audit-logs
+                  status: 200
+                - _id: 672a83e9b0418b224440ce2a
+                  req_id: 1276517a-a57e-4b20-5cf5-a6d830fc399d
+                  org_id: 66cf7f8db0418b1fbe91852b
+                  date: "Tue, 05 Nov 2024 17:45:29 -03"
+                  timestamp: 1730839529
+                  ip: 127.0.0.1
+                  user: jhon@mail.com
+                  action: ""
+                  method: GET
+                  url: /api/audit-logs
+                  status: 200
+                - _id: 672a83ecb0418b224440ce2b
+                  req_id: 9c720384-2c93-4c38-7164-35b876fd56ef
+                  org_id: 66cf7f8db0418b1fbe91852b
+                  date: "Tue, 05 Nov 2024 17:45:32 -03"
+                  timestamp: 1730839532
+                  ip: 127.0.0.1
+                  user: jhon@mail.com
+                  action: ""
+                  method: GET
+                  url: /api/audit-logs
+                  status: 200
+              schema:
+                $ref: '#/components/schemas/AuditLogs'
+          description: Audit Logs retrieved successfully
+        "400":
+          content:
+            application/json:
+              example:
+                Message: could not retrieve audit records
+                Meta: null
+                Status: Error
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                Message: Not authorised
+                Meta: null
+                Status: Error
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                Message: "access denied: You do not have permission to access  /api/audit-logs"
+                Meta: null
+                Status: Error
+          description: Forbidden
+      summary: List audit logs
+      tags:
+      - AuditLogs
 components:
   examples:
     aggregateAnalytics:
@@ -9200,6 +9845,79 @@ components:
             versions:
               Default:
                 name: Default
+    streamsExample:
+      value:
+        components:
+          securitySchemes:
+            bearerAuth:
+              description: The API Access Credentials
+              scheme: bearer
+              type: http
+        info:
+          description: This is a sample Streams API.
+          title: Streams Sample
+          version: 1.0.0
+        openapi: 3.0.3
+        paths:
+          /api/sample/users:
+            get:
+              operationId: getUsersSample
+              responses:
+                "200":
+                  content:
+                    application/json:
+                      schema:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                          type: object
+                        type: array
+                  description: fetched users
+              summary: Get users
+              tags:
+              - users
+        security:
+        - bearerAuth: []
+        servers:
+        - url: https://localhost:8080
+        x-tyk-api-gateway:
+          info:
+            name: user
+            state:
+              active: true
+          server:
+            listenPath:
+              strip: true
+              value: /user-test/
+          upstream:
+            url: https://localhost:8080
+        x-tyk-streaming:
+          streams:
+            stream1:
+              input:
+                kafka:
+                  addressess:
+                  - localhost:9093
+                  auto_replay_nacks: true
+                  checkpoint_limit: 1024
+                  consumer_group: group1
+                  target_version: 3.3.0
+                  topics:
+                  - instrument.json.AMZN
+                  - instrument.json.GOOG
+              output:
+                broker:
+                  outputs:
+                  - stdout:
+                      codec: lines
+                  - http_server:
+                      allowed_verbs:
+                      - GET
+                      path: /one
+                      stream_path: /sse
+                      ws_path: /ws
+                  pattern: fan_out
   parameters:
     AccessType:
       description: Filter for internal or external API versions.
@@ -15619,11 +16337,11 @@ components:
         kind: oas-template
         org_id: org_id
         name: name
-        mid: 659b9613a1ed7ef7afdccb9d
         description: description
+        _id: 659b9613a1ed7ef7afdccb9d
         id: my-unique-template-id
       properties:
-        mid:
+        _id:
           description: database id of asset
           example: 659b9613a1ed7ef7afdccb9d
           readOnly: true
@@ -15678,6 +16396,89 @@ components:
           type: string
         org_id:
           type: string
+      type: object
+    AuditLog:
+      example:
+        req_id: 0462e283-a55f-41ab-6482-60d2eeb1858c
+        date: "Tue, 05 Nov 2024 17:45:22 -03"
+        method: GET
+        org_id: 5e9d9544a1dcd60001d0ed20
+        ip: 127.0.0.1
+        action: List APIS
+        _id: 672a83e2b0418b224440ce29
+        user: jhon@mail.com
+        url: /api/apis
+        timestamp: 1730839522
+        status: 200
+      properties:
+        _id:
+          example: 672a83e2b0418b224440ce29
+          type: string
+        req_id:
+          example: 0462e283-a55f-41ab-6482-60d2eeb1858c
+          type: string
+        org_id:
+          example: 5e9d9544a1dcd60001d0ed20
+          type: string
+        date:
+          example: "Tue, 05 Nov 2024 17:45:22 -03"
+          type: string
+        timestamp:
+          example: 1730839522
+          type: integer
+        ip:
+          example: 127.0.0.1
+          type: string
+        user:
+          example: jhon@mail.com
+          type: string
+        action:
+          example: List APIS
+          type: string
+        method:
+          example: GET
+          type: string
+        url:
+          example: /api/apis
+          type: string
+        status:
+          example: 200
+          type: integer
+      type: object
+    AuditLogs:
+      example:
+        pages: 0
+        audit_logs:
+        - req_id: 0462e283-a55f-41ab-6482-60d2eeb1858c
+          date: "Tue, 05 Nov 2024 17:45:22 -03"
+          method: GET
+          org_id: 5e9d9544a1dcd60001d0ed20
+          ip: 127.0.0.1
+          action: List APIS
+          _id: 672a83e2b0418b224440ce29
+          user: jhon@mail.com
+          url: /api/apis
+          timestamp: 1730839522
+          status: 200
+        - req_id: 0462e283-a55f-41ab-6482-60d2eeb1858c
+          date: "Tue, 05 Nov 2024 17:45:22 -03"
+          method: GET
+          org_id: 5e9d9544a1dcd60001d0ed20
+          ip: 127.0.0.1
+          action: List APIS
+          _id: 672a83e2b0418b224440ce29
+          user: jhon@mail.com
+          url: /api/apis
+          timestamp: 1730839522
+          status: 200
+      properties:
+        pages:
+          type: integer
+        audit_logs:
+          items:
+            $ref: '#/components/schemas/AuditLog'
+          nullable: true
+          type: array
       type: object
     AuthConfig:
       example:
@@ -18822,7 +19623,7 @@ components:
               url: url
       properties:
         oas:
-          $ref: '#/components/schemas/schema'
+          $ref: '#/components/schemas/30'
         tyk_oas:
           $ref: '#/components/schemas/createApiOAS_request'
       type: object
@@ -23444,7 +24245,6 @@ components:
         is_inactive: true
         throttle_interval: 7.061401241503109
         active: true
-        Mid: Mid
         access_rights:
           key:
             restricted_types:
@@ -23546,6 +24346,7 @@ components:
           key: ""
         name: name
         _id: _id
+        id: id
         smoothing:
           delay: 1
           step: 1
@@ -23569,7 +24370,7 @@ components:
           type: string
         hmac_enabled:
           type: boolean
-        Mid:
+        id:
           type: string
         is_inactive:
           type: boolean
@@ -24129,7 +24930,6 @@ components:
           is_inactive: true
           throttle_interval: 7.061401241503109
           active: true
-          Mid: Mid
           access_rights:
             key:
               restricted_types:
@@ -24231,6 +25031,7 @@ components:
             key: ""
           name: name
           _id: _id
+          id: id
           smoothing:
             delay: 1
             step: 1
@@ -24252,7 +25053,6 @@ components:
           is_inactive: true
           throttle_interval: 7.061401241503109
           active: true
-          Mid: Mid
           access_rights:
             key:
               restricted_types:
@@ -24354,6 +25154,7 @@ components:
             key: ""
           name: name
           _id: _id
+          id: id
           smoothing:
             delay: 1
             step: 1
@@ -27872,7 +28673,11 @@ components:
         x-tyk-api-gateway:
           $ref: '#/components/schemas/XTykAPIGateway'
       type: object
-    schema:
+    XTykStreaming:
+      properties:
+        x-tyk-streaming:
+          $ref: '#/components/schemas/XTykStreaming_x_tyk_streaming'
+    "30":
       additionalProperties: false
       description: "The description of OpenAPI v3.0.x documents, as defined by https://spec.openapis.org/oas/v3.0.3"
       example:
@@ -28140,9 +28945,566 @@ components:
         callbacks:
           type: object
       type: object
+    createStreamsApi_request:
+      allOf:
+      - $ref: '#/components/schemas/30'
+      - $ref: '#/components/schemas/XTykApiGateway'
+      - $ref: '#/components/schemas/XTykStreaming'
+      example:
+        security:
+        - null
+        - null
+        components:
+          headers: "{}"
+          examples: "{}"
+          schemas: "{}"
+          requestBodies: "{}"
+          responses: "{}"
+          callbacks: "{}"
+          links: "{}"
+          securitySchemes: "{}"
+          parameters: "{}"
+        servers:
+        - variables:
+            key:
+              default: default
+              description: description
+              enum:
+              - enum
+              - enum
+          description: description
+          url: url
+        - variables:
+            key:
+              default: default
+              description: description
+              enum:
+              - enum
+              - enum
+          description: description
+          url: url
+        openapi: openapi
+        paths: "{}"
+        x-tyk-api-gateway:
+          server:
+            gatewayTags:
+              enabled: true
+              tags:
+              - tags
+              - tags
+            detailedActivityLogs:
+              enabled: true
+            listenPath:
+              strip: true
+              value: value
+            eventHandlers:
+            - name: name
+              id: id
+              trigger: trigger
+              type: type
+              enabled: true
+            - name: name
+              id: id
+              trigger: trigger
+              type: type
+              enabled: true
+            customDomain:
+              certificates:
+              - certificates
+              - certificates
+              name: name
+              enabled: true
+            detailedTracing:
+              enabled: true
+            authentication:
+              baseIdentityProvider: baseIdentityProvider
+              custom:
+                AuthSources:
+                  cookie:
+                    name: name
+                    enabled: true
+                  query:
+                    name: name
+                    enabled: true
+                  header:
+                    name: name
+                    enabled: true
+                config:
+                  path: path
+                  idExtractor:
+                    with: with
+                    source: source
+                    config:
+                      regexp: regexp
+                      headerName: headerName
+                      xPathExp: xPathExp
+                      formParamName: formParamName
+                      regexpMatchIndex: 6
+                    enabled: true
+                  functionName: functionName
+                  rawBodyOnly: true
+                  enabled: true
+                enabled: true
+              hmac:
+                allowedAlgorithms:
+                - allowedAlgorithms
+                - allowedAlgorithms
+                AuthSources:
+                  cookie:
+                    name: name
+                    enabled: true
+                  query:
+                    name: name
+                    enabled: true
+                  header:
+                    name: name
+                    enabled: true
+                allowedClockSkew: 7.457744773683766
+                enabled: true
+              stripAuthorizationData: true
+              securitySchemes:
+                key: ""
+              oidc:
+                AuthSources:
+                  cookie:
+                    name: name
+                    enabled: true
+                  query:
+                    name: name
+                    enabled: true
+                  header:
+                    name: name
+                    enabled: true
+                segregateByClientId: true
+                scopes:
+                  scopeToPolicyMapping:
+                  - policyId: policyId
+                    scope: scope
+                  - policyId: policyId
+                    scope: scope
+                  claimName: claimName
+                enabled: true
+                providers:
+                - clientToPolicyMapping:
+                  - clientId: clientId
+                    policyId: policyId
+                  - clientId: clientId
+                    policyId: policyId
+                  issuer: issuer
+                - clientToPolicyMapping:
+                  - clientId: clientId
+                    policyId: policyId
+                  - clientId: clientId
+                    policyId: policyId
+                  issuer: issuer
+              enabled: true
+            clientCertificates:
+              allowlist:
+              - allowlist
+              - allowlist
+              enabled: true
+          upstream:
+            rateLimit:
+              rate: 4
+              per: 1
+              enabled: true
+            test:
+              serviceDiscovery:
+                cache:
+                  enabled: true
+                  timeout: 5
+                cacheTimeout: 9
+                queryEndpoint: queryEndpoint
+                portDataPath: portDataPath
+                endpointReturnsList: true
+                parentDataPath: parentDataPath
+                targetPath: targetPath
+                useNestedQuery: true
+                enabled: true
+                dataPath: dataPath
+                useTargetList: true
+            mutualTLS:
+              domainToCertificateMapping:
+              - domain: domain
+                certificate: certificate
+              - domain: domain
+                certificate: certificate
+              enabled: true
+            certificatePinning:
+              domainToPublicKeysMapping:
+              - publicKeys:
+                - publicKeys
+                - publicKeys
+                domain: domain
+              - publicKeys:
+                - publicKeys
+                - publicKeys
+                domain: domain
+              enabled: true
+            serviceDiscovery:
+              cache:
+                enabled: true
+                timeout: 5
+              cacheTimeout: 9
+              queryEndpoint: queryEndpoint
+              portDataPath: portDataPath
+              endpointReturnsList: true
+              parentDataPath: parentDataPath
+              targetPath: targetPath
+              useNestedQuery: true
+              enabled: true
+              dataPath: dataPath
+              useTargetList: true
+            url: url
+          info:
+            versioning:
+              fallbackToDefault: true
+              default: default
+              versions:
+              - name: name
+                id: id
+              - name: name
+                id: id
+              urlVersioningPattern: urlVersioningPattern
+              name: name
+              location: location
+              enabled: true
+              key: key
+              stripVersioningData: true
+            dbId: dbId
+            name: name
+            expiration: expiration
+            id: id
+            state:
+              internal: true
+              active: true
+            orgId: orgId
+          middleware:
+            operations:
+              key:
+                allow:
+                  ignoreCase: true
+                  enabled: true
+                transformRequestHeaders:
+                  add:
+                  - name: name
+                    value: value
+                  - name: name
+                    value: value
+                  enabled: true
+                  remove:
+                  - remove
+                  - remove
+                cache:
+                  cacheByRegex: cacheByRegex
+                  cacheResponseCodes:
+                  - 5
+                  - 5
+                  enabled: true
+                  timeout: 5
+                internal:
+                  enabled: true
+                doNotTrackEndpoint:
+                  enabled: true
+                rateLimit:
+                  rate: 1
+                  per: 7
+                  enabled: true
+                validateRequest:
+                  errorResponseCode: 1
+                  enabled: true
+                trackEndpoint:
+                  enabled: true
+                transformRequestBody:
+                  path: path
+                  format: format
+                  body: body
+                  enabled: true
+                transformResponseBody:
+                  path: path
+                  format: format
+                  body: body
+                  enabled: true
+                transformResponseHeaders:
+                  add:
+                  - name: name
+                    value: value
+                  - name: name
+                    value: value
+                  enabled: true
+                  remove:
+                  - remove
+                  - remove
+                transformRequestMethod:
+                  toMethod: toMethod
+                  enabled: true
+                postPlugins:
+                - path: path
+                  functionName: functionName
+                  name: name
+                  enabled: true
+                - path: path
+                  functionName: functionName
+                  name: name
+                  enabled: true
+                virtualEndpoint:
+                  path: path
+                  functionName: functionName
+                  proxyOnError: true
+                  name: name
+                  body: body
+                  requireSession: true
+                  enabled: true
+                requestSizeLimit:
+                  value: 1
+                  enabled: true
+                ignoreAuthentication:
+                  ignoreCase: true
+                  enabled: true
+                mockResponse:
+                  headers:
+                  - name: name
+                    value: value
+                  - name: name
+                    value: value
+                  code: 2
+                  fromOASExamples:
+                    code: 4
+                    exampleName: exampleName
+                    contentType: contentType
+                    enabled: true
+                  body: body
+                  enabled: true
+                enforceTimeout:
+                  value: 3
+                  enabled: true
+                circuitBreaker:
+                  halfOpenStateEnabled: true
+                  coolDownPeriod: 2
+                  threshold: 9.301444243932576
+                  sampleSize: 7
+                  enabled: true
+                block:
+                  ignoreCase: true
+                  enabled: true
+                urlRewrite:
+                  pattern: pattern
+                  rewriteTo: rewriteTo
+                  triggers:
+                  - condition: condition
+                    rules:
+                    - in: in
+                      negate: true
+                      name: name
+                      pattern: pattern
+                    - in: in
+                      negate: true
+                      name: name
+                      pattern: pattern
+                    rewriteTo: rewriteTo
+                  - condition: condition
+                    rules:
+                    - in: in
+                      negate: true
+                      name: name
+                      pattern: pattern
+                    - in: in
+                      negate: true
+                      name: name
+                      pattern: pattern
+                    rewriteTo: rewriteTo
+                  enabled: true
+            global:
+              postPlugin:
+                plugins:
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+              transformRequestHeaders:
+                add:
+                - name: name
+                  value: value
+                - name: name
+                  value: value
+                enabled: true
+                remove:
+                - remove
+                - remove
+              cache:
+                cacheResponseCodes:
+                - 0
+                - 0
+                controlTTLHeaderName: controlTTLHeaderName
+                cacheAllSafeRequests: true
+                enableUpstreamCacheControl: true
+                enabled: true
+                timeout: 6
+                cacheByHeaders:
+                - cacheByHeaders
+                - cacheByHeaders
+              cors:
+                optionsPassthrough: true
+                debug: true
+                allowedOrigins:
+                - allowedOrigins
+                - allowedOrigins
+                maxAge: 1
+                exposedHeaders:
+                - exposedHeaders
+                - exposedHeaders
+                allowedHeaders:
+                - allowedHeaders
+                - allowedHeaders
+                allowedMethods:
+                - allowedMethods
+                - allowedMethods
+                allowCredentials: true
+                enabled: true
+              transformResponseHeaders:
+                add:
+                - name: name
+                  value: value
+                - name: name
+                  value: value
+                enabled: true
+                remove:
+                - remove
+                - remove
+              responsePlugins:
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              postPlugins:
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              prePlugins:
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              responsePlugin:
+                plugins:
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+              postAuthenticationPlugin:
+                plugins:
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+              prePlugin:
+                plugins:
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+                - path: path
+                  functionName: functionName
+                  rawBodyOnly: true
+                  requireSession: true
+                  enabled: true
+              pluginConfig:
+                data:
+                  value:
+                    key: ""
+                  enabled: true
+                driver: driver
+                bundle:
+                  path: path
+                  enabled: true
+              trafficLogs:
+                enabled: true
+              contextVariables:
+                enabled: true
+              postAuthenticationPlugins:
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+              - path: path
+                functionName: functionName
+                rawBodyOnly: true
+                requireSession: true
+                enabled: true
+        x-tyk-streaming:
+          streams:
+            key: ""
+        externalDocs:
+          description: description
+          url: url
+        info:
+          license:
+            name: name
+            url: url
+          contact:
+            name: name
+            url: url
+            email: email
+          description: description
+          termsOfService: termsOfService
+          title: title
+          version: version
+        tags:
+        - name: name
+          description: description
+          externalDocs:
+            description: description
+            url: url
+        - name: name
+          description: description
+          externalDocs:
+            description: description
+            url: url
+    patchApiStreams_request:
+      oneOf:
+      - $ref: '#/components/schemas/createStreamsApi_request'
     createApiOAS_request:
       allOf:
-      - $ref: '#/components/schemas/schema'
+      - $ref: '#/components/schemas/30'
       - $ref: '#/components/schemas/XTykApiGateway'
       example:
         security:
@@ -28697,7 +30059,7 @@ components:
     dryRunApiOAS_200_response:
       allOf:
       - $ref: '#/components/schemas/XTykApiGateway'
-      - $ref: '#/components/schemas/schema'
+      - $ref: '#/components/schemas/30'
       example:
         security:
         - null
@@ -29247,7 +30609,7 @@ components:
     importOAS_request:
       oneOf:
       - $ref: '#/components/schemas/ApiImportByUrlPayload'
-      - $ref: '#/components/schemas/schema'
+      - $ref: '#/components/schemas/30'
     addAsset_request:
       properties:
         data:
@@ -29491,6 +30853,15 @@ components:
             type: string
           nullable: true
           type: array
+      type: object
+    XTykStreaming_x_tyk_streaming:
+      example:
+        streams:
+          key: ""
+      properties:
+        streams:
+          additionalProperties: true
+          type: object
       type: object
   securitySchemes:
     bearerAuth:

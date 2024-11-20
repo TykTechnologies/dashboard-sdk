@@ -6,6 +6,7 @@ api_additional_permissions.go
 api_analytics.go
 api_apis.go
 api_assets.go
+api_audit_logs.go
 api_basic_authentication.go
 api_certificates.go
 api_keys.go
@@ -15,6 +16,7 @@ api_open_policy_agent.go
 api_policies.go
 api_schema.go
 api_single_sign_on.go
+api_streams_apis.go
 api_system.go
 api_user_group.go
 api_users.go
@@ -45,6 +47,9 @@ docs/ApiResponse.md
 docs/ApiStatusMessage.md
 docs/Asset.md
 docs/AssetsAPI.md
+docs/AuditLog.md
+docs/AuditLogs.md
+docs/AuditLogsAPI.md
 docs/AuthConfig.md
 docs/AuthProviderMeta.md
 docs/AuthSource.md
@@ -79,6 +84,7 @@ docs/Contact.md
 docs/Contact1.md
 docs/ContextVariables.md
 docs/CreateApiOASRequest.md
+docs/CreateStreamsApiRequest.md
 docs/CreateWebhookRequest.md
 docs/CustomPlugin.md
 docs/CustomPluginAuthentication.md
@@ -160,6 +166,7 @@ docs/MiddlewareIdExtractor.md
 docs/MiddlewareSection.md
 docs/MockResponse.md
 docs/MockResponseMeta.md
+docs/Model30.md
 docs/MutualTLS.md
 docs/NewAdditionalPermissions.md
 docs/NewClientRequest.md
@@ -180,6 +187,7 @@ docs/OpenPolicyAgentAPI.md
 docs/Operation.md
 docs/OperationType2.md
 docs/PatchApiOASRequest.md
+docs/PatchApiStreamsRequest.md
 docs/PathItem.md
 docs/PersistGraphQLMeta.md
 docs/PinnedPublicKey.md
@@ -212,7 +220,6 @@ docs/ReturnDataStruct.md
 docs/RoutingTrigger.md
 docs/RoutingTriggerOptions.md
 docs/SSOAccessData.md
-docs/Schema.md
 docs/SchemaAPI.md
 docs/ScopeClaim.md
 docs/ScopeToPolicy.md
@@ -237,6 +244,7 @@ docs/SessionStateMonitor.md
 docs/SignatureConfig.md
 docs/SingleSignOnAPI.md
 docs/State.md
+docs/StreamsAPIsAPI.md
 docs/StringRegexMap.md
 docs/SystemAPI.md
 docs/SystemStatsResp.md
@@ -289,7 +297,10 @@ docs/WebHooks.md
 docs/WebhooksAPI.md
 docs/XTykAPIGateway.md
 docs/XTykApiGateway.md
+docs/XTykStreaming.md
+docs/XTykStreamingXTykStreaming.md
 git_push.sh
+model_30.go
 model_access_definition.go
 model_access_management_payload.go
 model_access_spec.go
@@ -310,6 +321,8 @@ model_api_limit.go
 model_api_response.go
 model_api_status_message.go
 model_asset.go
+model_audit_log.go
+model_audit_logs.go
 model_auth_config.go
 model_auth_provider_meta.go
 model_auth_source.go
@@ -342,6 +355,7 @@ model_context_variables.go
 model_cors.go
 model_cors_config.go
 model_create_api_oas_request.go
+model_create_streams_api_request.go
 model_create_webhook_request.go
 model_custom_plugin.go
 model_custom_plugin_authentication.go
@@ -439,6 +453,7 @@ model_open_id_options.go
 model_operation.go
 model_operation_type2.go
 model_patch_api_oas_request.go
+model_patch_api_streams_request.go
 model_path_item.go
 model_persist_graph_ql_meta.go
 model_pinned_public_key.go
@@ -469,7 +484,6 @@ model_result_unit.go
 model_return_data_struct.go
 model_routing_trigger.go
 model_routing_trigger_options.go
-model_schema.go
 model_scope_claim.go
 model_scope_to_policy.go
 model_scopes.go
@@ -541,5 +555,7 @@ model_web_hook_handler_conf.go
 model_web_hooks.go
 model_x_tyk_api_gateway.go
 model_x_tyk_api_gateway_0.go
+model_x_tyk_streaming.go
+model_x_tyk_streaming_x_tyk_streaming.go
 response.go
 utils.go

@@ -3,7 +3,7 @@ Tyk Dashboard API
 
  ## <a name=\"introduction\"></a> Introduction  The Tyk Dashboard API offers granular, programmatic access to a centralised database of resources that your Tyk nodes can pull from. This API has a dynamic user administrative structure which means the secret key that is used to communicate with your Tyk nodes can be kept secret and access to the wider management functions can be handled on a user-by-user and organisation-by-organisation basis.  A common question around using a database-backed configuration is how to programmatically add API definitions to your Tyk nodes, the Dashboard API allows much more fine-grained, secure and multi-user access to your Tyk cluster, and should be used to manage a database-backed Tyk node.  The Tyk Dashboard API works seamlessly with the Tyk Dashboard (and the two come bundled together).  ## <a name=\"security-hierarchy\"></a> Security Hierarchy  The Dashboard API provides a more structured security layer to managing Tyk nodes.  ### Organisations, APIs and Users  With the Dashboard API and a database-backed Tyk setup, (and to an extent with file-based API setups - if diligence is used in naming and creating definitions), the following security model is applied to the management of Upstream APIs:  * **Organisations**: All APIs are *owned* by an organisation, this is designated by the 'OrgID' parameter in the API Definition. * **Users**: All users created in the Dashboard belong to an organisation (unless an exception is made for super-administrative access). * **APIs**: All APIs belong to an Organisation and only Users that belong to that organisation can see the analytics for those APIs and manage their configurations. * **API Keys**: API Keys are designated by organisation, this means an API key that has full access rights will not be allowed to access the APIs of another organisation on the same system, but can have full access to all APIs within the organisation. * **Access Rights**: Access rights are stored with the key, this enables a key to give access to multiple APIs, this is defined by the session object in the core Tyk API.  In order to use the Dashboard API, you'll need to get the 'Tyk Dashboard API Access Credentials' secret from your user profile on the Dashboard UI.  The secret you set should then be sent along as a header with each Dashboard API Request in order for it to be successful:   authorization: <your-secret>
 
-API version: 5.6.0
+API version: 5.7.0
 Contact: support@tyk.io
 */
 
@@ -20,7 +20,7 @@ import (
 // ImportOASRequest - struct for ImportOASRequest
 type ImportOASRequest struct {
 	ApiImportByUrlPayload *ApiImportByUrlPayload
-	Schema                *Schema
+	Model30               *Model30
 }
 
 // ApiImportByUrlPayloadAsImportOASRequest is a convenience function that returns ApiImportByUrlPayload wrapped in ImportOASRequest
@@ -30,10 +30,10 @@ func ApiImportByUrlPayloadAsImportOASRequest(v *ApiImportByUrlPayload) ImportOAS
 	}
 }
 
-// SchemaAsImportOASRequest is a convenience function that returns Schema wrapped in ImportOASRequest
-func SchemaAsImportOASRequest(v *Schema) ImportOASRequest {
+// Model30AsImportOASRequest is a convenience function that returns Model30 wrapped in ImportOASRequest
+func Model30AsImportOASRequest(v *Model30) ImportOASRequest {
 	return ImportOASRequest{
-		Schema: v,
+		Model30: v,
 	}
 }
 
@@ -58,27 +58,27 @@ func (dst *ImportOASRequest) UnmarshalJSON(data []byte) error {
 		dst.ApiImportByUrlPayload = nil
 	}
 
-	// try to unmarshal data into Schema
-	err = newStrictDecoder(data).Decode(&dst.Schema)
+	// try to unmarshal data into Model30
+	err = newStrictDecoder(data).Decode(&dst.Model30)
 	if err == nil {
-		jsonSchema, _ := json.Marshal(dst.Schema)
-		if string(jsonSchema) == "{}" { // empty struct
-			dst.Schema = nil
+		jsonModel30, _ := json.Marshal(dst.Model30)
+		if string(jsonModel30) == "{}" { // empty struct
+			dst.Model30 = nil
 		} else {
-			if err = validator.Validate(dst.Schema); err != nil {
-				dst.Schema = nil
+			if err = validator.Validate(dst.Model30); err != nil {
+				dst.Model30 = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.Schema = nil
+		dst.Model30 = nil
 	}
 
 	if match > 1 { // more than 1 match
 		// reset to nil
 		dst.ApiImportByUrlPayload = nil
-		dst.Schema = nil
+		dst.Model30 = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(ImportOASRequest)")
 	} else if match == 1 {
@@ -94,8 +94,8 @@ func (src ImportOASRequest) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ApiImportByUrlPayload)
 	}
 
-	if src.Schema != nil {
-		return json.Marshal(&src.Schema)
+	if src.Model30 != nil {
+		return json.Marshal(&src.Model30)
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -110,8 +110,8 @@ func (obj *ImportOASRequest) GetActualInstance() interface{} {
 		return obj.ApiImportByUrlPayload
 	}
 
-	if obj.Schema != nil {
-		return obj.Schema
+	if obj.Model30 != nil {
+		return obj.Model30
 	}
 
 	// all schemas are nil

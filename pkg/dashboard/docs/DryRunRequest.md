@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Oas** | Pointer to [**Schema**](Schema.md) |  | [optional] 
+**Oas** | Pointer to [**Model30**](Model30.md) |  | [optional] 
 **TykOas** | Pointer to [**CreateApiOASRequest**](CreateApiOASRequest.md) |  | [optional] 
 
 ## Methods
@@ -28,20 +28,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetOas
 
-`func (o *DryRunRequest) GetOas() Schema`
+`func (o *DryRunRequest) GetOas() Model30`
 
 GetOas returns the Oas field if non-nil, zero value otherwise.
 
 ### GetOasOk
 
-`func (o *DryRunRequest) GetOasOk() (*Schema, bool)`
+`func (o *DryRunRequest) GetOasOk() (*Model30, bool)`
 
 GetOasOk returns a tuple with the Oas field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOas
 
-`func (o *DryRunRequest) SetOas(v Schema)`
+`func (o *DryRunRequest) SetOas(v Model30)`
 
 SetOas sets Oas field to given value.
 
