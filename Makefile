@@ -16,7 +16,8 @@ dashboard:
         --global-property models,modelTests=true,modelDocs=true \
         --global-property supportingFiles \
         -c /local/config.json\
-        --reserved-words-mappings _id=MID,interface=customInterface
+        --name-mappings _id=MID
+
 
 	sudo rm -rf pkg/dashboard/model_server_variable.go
 	sudo python3 file_replace.py

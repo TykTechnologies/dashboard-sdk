@@ -12067,6 +12067,7 @@ components:
       properties:
         _id:
           type: string
+          x-go-name: Mid
         access_rights:
           additionalProperties:
             $ref: '#/components/schemas/AccessDefinition'
