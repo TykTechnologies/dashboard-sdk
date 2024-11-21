@@ -1,7 +1,7 @@
 .idea
 .idea/
-examples
-examples/
+local_examples/
+local_examples
 
 
 dist/
