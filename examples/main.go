@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
+	"github.com/TykTechnologies/dashboard-sdk/examples/assets"
 	"github.com/TykTechnologies/dashboard-sdk/examples/oas"
 	"github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
 )
@@ -11,6 +13,7 @@ import (
 var BaseUrl = "http://localhost:3000"
 
 func main() {
+	ctx := context.Background()
 	token := os.Getenv("TYK_DASHBOARD_SDK_TOKEN")
 	client := createDashBoardClient(token)
 	apiResp, err := oas.CreateOASAPI(client)
@@ -19,6 +22,16 @@ func main() {
 		return
 	}
 	_, err = oas.GetOASApiByID(client, apiResp.GetID())
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	createAssetsResponse, err := assets.CreateAssets(ctx, client)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	_, err = assets.GetAssetsByID(ctx, client, createAssetsResponse.GetID())
 	if err != nil {
 		log.Fatal(err)
 		return
