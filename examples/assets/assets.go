@@ -3,6 +3,7 @@ package assets
 import (
 	"context"
 	"log"
+	"net/http"
 
 	"github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
 )
@@ -15,10 +16,9 @@ func CreateAssets(ctx context.Context, client *dashboard.APIClient) (*dashboard.
 	if err != nil {
 		return nil, err
 	}
-	apiResponse, rep, err := client.AssetsAPI.AddAsset(ctx).AddAssetRequest(*assetData.Get()).Execute()
+	apiResponse, resp, err := client.AssetsAPI.AddAsset(ctx).AddAssetRequest(*assetData.Get()).Execute()
 	if err != nil {
-		log.Println(rep.StatusCode)
-		log.Println(rep.Body)
+		ExtractErrMessage(resp)
 		return nil, err
 	}
 	log.Printf("Asset created successfully with ID: %s", apiResponse.GetID())
@@ -27,13 +27,18 @@ func CreateAssets(ctx context.Context, client *dashboard.APIClient) (*dashboard.
 }
 
 func GetAssetsByID(ctx context.Context, client *dashboard.APIClient, AssetId string) (*dashboard.Asset, error) {
-	asset, rep, err := client.AssetsAPI.GetAsset(ctx, AssetId).Execute()
+	asset, resp, err := client.AssetsAPI.GetAsset(ctx, AssetId).Execute()
 	if err != nil {
-		log.Println(rep.StatusCode)
-		log.Println(rep.Body)
+		ExtractErrMessage(resp)
 		return nil, err
 	}
 	log.Printf("Asset fetched successfully with ID: %s and Name: %s", asset.GetId(), asset.GetName())
 	log.Println("-------------------------------------------------------------")
 	return asset, nil
+}
+
+func ExtractErrMessage(resp *http.Response) {
+	if resp != nil && resp.Body != nil {
+		log.Println(resp.Body)
+	}
 }

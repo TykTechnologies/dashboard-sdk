@@ -15,13 +15,17 @@ var BaseUrl = "http://localhost:3000"
 func main() {
 	ctx := context.Background()
 	token := os.Getenv("TYK_DASHBOARD_SDK_TOKEN")
+	if token == "" {
+		log.Println("You have not provided a token")
+		return
+	}
 	client := createDashBoardClient(token)
-	apiResp, err := oas.CreateOASAPI(client)
+	apiResp, err := oas.CreateOASAPI(ctx, client)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	_, err = oas.GetOASApiByID(client, apiResp.GetID())
+	_, err = oas.GetOASApiByID(ctx, client, apiResp.GetID())
 	if err != nil {
 		log.Fatal(err)
 		return
