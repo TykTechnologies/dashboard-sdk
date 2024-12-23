@@ -66,7 +66,7 @@ jobs:
                 let isMember = false;
                 try {
                   await github.rest.orgs.checkMembershipForUser({
-                    org: 'my-org',              // <--- PUT YOUR ORG NAME HERE
+                    org: 'TykTechnologies',              // <--- PUT YOUR ORG NAME HERE
                     username: userWhoAddedLabel
                   });
                   // If this call succeeds, they're a member
