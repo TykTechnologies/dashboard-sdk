@@ -24,7 +24,7 @@ jobs:
             // 1. Get the pull request number from the event payload
             const pullRequestNumber = context.payload.pull_request.number;
             
-            // 2. Use GitHub's REST API to create a comment on the PR
+            // 2. Use GitHub's REST API to create  comment on the PR
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
