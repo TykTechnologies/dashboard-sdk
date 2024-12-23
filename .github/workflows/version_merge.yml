@@ -2,7 +2,7 @@ name: On Pull Request Merged to Master
 
 on:
   pull_request:
-    # Only trigger on pull requests targeting the master branch
+    # Only trigger on pull requests targeting the main branch
     branches:
       - master
       - main
