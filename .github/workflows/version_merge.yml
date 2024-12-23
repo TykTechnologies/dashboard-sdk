@@ -1,0 +1,21 @@
+name: On Pull Request Merged to Master
+
+on:
+  pull_request:
+    # Only trigger on pull requests targeting the master branch
+    branches:
+      - master
+      - main
+    types:
+      - closed
+
+jobs:
+  run-on-pr-merged:
+    runs-on: ubuntu-latest
+
+    # Only run if the PR was merged (and not just closed)
+    if: ${{ github.event.pull_request.merged == true }}
+
+    steps:
+      - name: Print a message
+        run: echo "A pull request was merged into master!"
