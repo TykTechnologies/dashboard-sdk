@@ -9,13 +9,6 @@ on:
     types:
       - closed
 
-# We need sufficient permissions to read org membership
-permissions:
-  contents: read           # default for reading repo contents
-  issues: write            # needed to comment on issues/PRs
-  pull-requests: write     # not strictly required for this example, but often useful
-  organization: read       # needed to check user membership in your org
-
 jobs:
   run-on-pr-merged:
     runs-on: ubuntu-latest
