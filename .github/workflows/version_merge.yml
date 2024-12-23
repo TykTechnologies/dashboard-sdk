@@ -3,8 +3,11 @@ name: On Pull Request Merged to Master
 on:
   pull_request:
     # Only trigger on pull requests targeting main/master
-    branches: [ master, main ]
-    types: [ closed ]
+    branches:
+      - master
+      - main
+    types:
+      - closed
 
 # We need sufficient permissions to read org membership
 permissions:
