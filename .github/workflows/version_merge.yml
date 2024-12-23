@@ -49,7 +49,7 @@ jobs:
               }
             }
 
-            // 6. For each label on the PR, check if it matches "release-..."
+            // 6. For each label on the PR, check if it matches "release-.."
             //    If yes, we see who labeled it last and check their membership
             for (const label of labelsOnPR) {
               if (labelRegex.test(label.name)) {
