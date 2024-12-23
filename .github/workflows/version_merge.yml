@@ -29,5 +29,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pullRequestNumber,
-              body: "/release to rerun"
+              body: "/release to re-run"
             });
