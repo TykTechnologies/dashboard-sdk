@@ -17,5 +17,17 @@ jobs:
     if: ${{ github.event.pull_request.merged == true }}
 
     steps:
-      - name: Print a message
-        run: echo "A pull request was merged into master!"
+      - name: Add a comment to the merged PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            // 1. Get the pull request number from the event payload
+            const pullRequestNumber = context.payload.pull_request.number;
+            
+            // 2. Use GitHub's REST API to create a comment on the PR
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pullRequestNumber,
+              body: "/release to rerun"
+            });
