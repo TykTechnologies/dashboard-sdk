@@ -95,5 +95,7 @@ jobs:
                     body: `/release to ${label.name}`
                   });
                 }
-              }
+              }else{
+                console.log(`Label '${label.name}' does not match the expected format.`);
+               }
             }
