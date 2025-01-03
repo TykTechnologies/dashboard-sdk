@@ -41,7 +41,7 @@ jobs:
                 label: event.label?.name,
                 user: event.actor?.login,
                 timestamp: event.created_at
-            )));
+            })));
             // 5. Build a map: labelName -> last user who added it
             //    (We reverse to get the *most recent* labeler, if a label was added multiple times)
             const labelToLastLabeler = {};
