@@ -4,7 +4,7 @@
   of creating they own client .
 
 - This is the dashboard sdk generated from the open Api specs.
-- Report any issue you may encounter will using this Sdk .
+- Report any issue you may encounter while using this Sdk .
 
 ## How to install
 
