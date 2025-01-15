@@ -8,7 +8,7 @@
 
 ## How to install
 
-To run the sdk please run 
+To install the sdk please run 
 
 `go get github.com/TykTechnologies/dashboard-sdk`
 
