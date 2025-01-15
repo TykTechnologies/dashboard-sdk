@@ -2,7 +2,6 @@ name: Run Open Api Specifications contract tests with live gateway
 on:
   push:
     branches:
-      - generate-test-for-tyk-gateway-open-api-spec-improved
       - '*'
 jobs:
   run-contract-test-with-live-gateway:
