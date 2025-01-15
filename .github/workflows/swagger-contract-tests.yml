@@ -1,5 +1,10 @@
 name: Run Open Api Specifications contract tests with live gateway
 on:
+  pull_request:
+    # Only trigger on pull requests targeting main/master
+    branches:
+      - master
+      - main
   push:
     branches:
       - '*'
