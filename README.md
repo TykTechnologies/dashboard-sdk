@@ -12,7 +12,7 @@ To install the sdk please run
 
 `go get github.com/TykTechnologies/dashboard-sdk`
 
-## Sample on how to create OAS API with the SDKS
+## Example of creating an OAS API using SDKs.
 
 ```go
 package main
