@@ -1,4 +1,4 @@
-name: Generate gateway sdks
+name: Generate dashboard sdks
 on:
   pull_request:
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
           }')
           echo "branchArray=$JSON_ARRAY" >> $GITHUB_OUTPUT
 
-  generate-gateway-sdks:
+  generate-dashboard-sdks:
     needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
@@ -79,10 +79,10 @@ jobs:
         with:
           go-version: '1.23.2'
 
-      - name: Generate gateway sdks
+      - name: Generate dashboard sdks
         run: |
           make validate-swagger
-          make apim-sdk
+          make dashboard
 
       - name: Push new branch if base branch does not exist
         if: ${{ env.BRANCH_EXISTS == 'false' }}
@@ -95,9 +95,9 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.ORG_GH_TOKEN }}
-          commit-message: "save generated gateway sdks for source branch ${{ env.TARGET_BRANCH }}"
-          title: "Generated gateway SDKs for ${{ env.TARGET_BRANCH }}"
-          body: "This PR contains the generated gateway SDKs."
+          commit-message: "save generated dashboard sdks for source branch ${{ env.TARGET_BRANCH }}"
+          title: "Generated dashboard SDKs for ${{ env.TARGET_BRANCH }}"
+          body: "This PR contains the generated dashboard SDKs."
           branch: ${{ env.TARGET_BRANCH }}-update   # The new branch with -update suffix
           base: ${{ env.TARGET_BRANCH }}
 
