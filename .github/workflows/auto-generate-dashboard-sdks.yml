@@ -1,6 +1,5 @@
 name: Generate dashboard sdks
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       branches:
