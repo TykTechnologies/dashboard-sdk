@@ -1,7 +1,6 @@
 name: Generate gateway sdks
 on:
-  pull-request:
-
+  pull_request:
   workflow_dispatch:
     inputs:
       branches:
