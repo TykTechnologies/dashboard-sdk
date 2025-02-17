@@ -73,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ORG_GH_TOKEN}}
         run: |
-          gh api "repos/${secrets.FILE_PATH}/swagger.yml?ref=${env.TARGET_BRANCH}" --header "Accept: application/vnd.github.v3.raw" > swagger.yml
+          gh api "repos/${{ secrets.FILE_PATH }}/swagger.yml?ref=${{ env.TARGET_BRANCH }}" --header "Accept: application/vnd.github.v3.raw" > swagger.yml
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
