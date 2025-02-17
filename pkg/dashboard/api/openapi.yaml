@@ -38,7 +38,7 @@ info:
     name: Mozilla Public License Version 2.0
     url: https://github.com/TykTechnologies/tyk/blob/master/LICENSE.md
   title: Tyk Dashboard API
-  version: 5.7.0
+  version: 5.7.1
 servers:
 - url: "https://{tenant}"
   variables:
@@ -1704,6 +1704,92 @@ paths:
       summary: Get API URLs
       tags:
       - APIs
+  /api/proxy:
+    post:
+      description: |
+        Forwards a request to a specified gateway endpoint. This endpoint allows you to send requests to other services through the Tyk gateway, which can be useful for testing or accessing protected resources.
+
+        The proxy will forward your request to the specified URL, including any headers and body data you provide. It then returns the response from the target service, including status code, headers, and body.
+      operationId: proxyRequest
+      requestBody:
+        content:
+          application/json:
+            example:
+              method: GET
+              url: http://localhost:8181/test-oas/get
+              headers:
+                test: tyk
+                Content-Type: application/json
+              body:
+                name: New Resource
+                description: Description of the resource.
+            schema:
+              $ref: '#/components/schemas/ProxyRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                status_code: 200
+                headers:
+                  Access-Control-Allow-Credentials: "true"
+                  Access-Control-Allow-Origin: '*'
+                  Content-Length: "364"
+                  Content-Type: application/json
+                  Date: "Thu, 19 Dec 2024 14:10:48 GMT"
+                  Server: gunicorn/19.9.0
+                  X-Ratelimit-Limit: "0"
+                  X-Ratelimit-Remaining: "0"
+                  X-Ratelimit-Reset: "0"
+                body:
+                  args: {}
+                  headers:
+                    Accept-Encoding: gzip
+                    Content-Length: "83"
+                    Content-Type: application/json
+                    Host: httpbin.org
+                    Test: tyk
+                    User-Agent: Go-http-client/1.1
+                    X-Amzn-Trace-Id: Root=1-67642968-11206636527acf9a25d230c3
+                  origin: "::1, 81.18.84.15"
+                  url: http://httpbin.org/get
+              schema:
+                $ref: '#/components/schemas/ProxyResponse'
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              example:
+                Status: Error
+                Message: Invalid proxy request
+                Meta: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad request - usually due to malformed request syntax
+        "403":
+          content:
+            application/json:
+              example:
+                Status: Error
+                Message: Provided URL is not a recognised gateway URL
+                Meta: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Forbidden - URL not recognized or not allowed
+        "500":
+          content:
+            application/json:
+              example:
+                Status: Error
+                Message: Failed to process proxy request
+                Meta: null
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal server error - issue with proxy or target service
+      summary: Proxy API request
+      tags:
+      - Proxy
   /api/apis/categories:
     get:
       description: Get a list of all the defined API categories and the number(count)
@@ -10045,6 +10131,71 @@ components:
         type: string
       style: form
   schemas:
+    ProxyRequest:
+      example:
+        headers:
+          key: headers
+        method: method
+        body: "{}"
+        url: url
+      properties:
+        method:
+          description: "HTTP method for the proxy request (GET, POST, PUT, DELETE,\
+            \ etc.)"
+          type: string
+        url:
+          description: "Full URL for the proxy request (valid Gateway url), including\
+            \ scheme, host, and path"
+          type: string
+        headers:
+          additionalProperties:
+            type: string
+          description: Headers to be sent with the proxy request
+          type: object
+        body:
+          description: "Body of the proxy request, typically used for POST or PUT\
+            \ requests"
+          type: object
+      required:
+      - method
+      - url
+      type: object
+    ProxyResponse:
+      example:
+        headers:
+          key: headers
+        status_code: 0
+        body: "{}"
+      properties:
+        status_code:
+          description: HTTP status code of the proxied response
+          type: integer
+        headers:
+          additionalProperties:
+            type: string
+          description: Headers received from the proxied response
+          type: object
+        body:
+          description: "Body of the proxied response, parsed as JSON if possible"
+          type: object
+      type: object
+    ErrorResponse:
+      example:
+        Status: Status
+        Meta: "{}"
+        Message: Message
+      properties:
+        Status:
+          description: "Error status, typically \"Error\""
+          type: string
+        Message:
+          description: Detailed error message explaining what went wrong
+          type: string
+        Meta:
+          description: "Additional metadata about the error, if available"
+          nullable: true
+          type: object
+      type: object
     APICertificateStatusMessage:
       example:
         id: 5e9d9544a1dcd60001d0ed207c440d66ebb0a4629d21329808dce9091acf5f2fde328067a6e60e5347271d90
@@ -24358,7 +24509,6 @@ components:
       properties:
         _id:
           type: string
-          x-go-name: Mid
         access_rights:
           additionalProperties:
             $ref: '#/components/schemas/AccessDefinition'
