@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/dashboard-sdk/v5.7
+module github.com/TykTechnologies/dashboard-sdk/v5
 
 go 1.23.2
 
