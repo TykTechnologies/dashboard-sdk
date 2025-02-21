@@ -18,7 +18,7 @@ This versioning strategy ensures clear traceability, allowing users to easily id
 
 ## How to install
 
-### To install the SDK generated for a specific Gateway version (e.g., 5.7.2), run:
+### To install the SDK generated for a specific dashboard version (e.g., 5.7.2), run:
 
   `go get github.com/TykTechnologies/dashboard-sdk@v0.0.1-dashboard.5.7.2`
 
