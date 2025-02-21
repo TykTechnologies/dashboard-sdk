@@ -1,0 +1,25 @@
+name: Generate dashboard sdks
+on:
+  push:
+    branches:
+      - main-paused
+jobs:
+  generate-angular-client:
+    runs-on: ubuntu-latest
+    name: Example
+    steps:
+
+      # Checkout your code
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+      - name: Generate dashboard sdks and commit them
+        run: |
+          make validate-swagger
+          make dashboard
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: save generated dashboard sdks
