@@ -116,7 +116,7 @@ type OASAPIsAPI interface {
 	/*
 		ImportOAS Import OAS.
 
-		For use with an existing OpenAPI document that you want to expose via your Tyk Gateway. <br/> Create a new Tyk OAS API from an OpenAPI document in JSON format (without x-tyk-api-gateway extension). <br/>The payload can contain either a fully fledged OpenAPI document or a URL pointing to an OpenAPI document.
+		For use with an existing OpenAPI document that you want to expose via your Tyk Gateway. <br/> Create a new Tyk OAS API from an OpenAPI document in JSON or YAML format (without x-tyk-api-gateway extension). <br/>The payload can contain either a fully fledged OpenAPI document or a URL pointing to an OpenAPI document.
 
 		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 		@return ApiImportOASRequest
@@ -296,7 +296,7 @@ func (a *OASAPIsAPIService) CreateApiOASExecute(r ApiCreateApiOASRequest) (*ApiR
 		parameterAddToHeaderOrQuery(localVarQueryParams, "templateID", r.templateID, "form", "")
 	}
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
+	localVarHTTPContentTypes := []string{"application/json", "application/x-yaml"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -553,15 +553,22 @@ func (a *OASAPIsAPIService) DeleteOASApiExecute(r ApiDeleteOASApiRequest) (*ApiR
 }
 
 type ApiDownloadApiOASPublicRequest struct {
-	ctx        context.Context
-	ApiService OASAPIsAPI
-	apiId      string
-	mode       *string
+	ctx         context.Context
+	ApiService  OASAPIsAPI
+	apiId       string
+	mode        *string
+	contentType *string
 }
 
 // Mode of OAS export, by default mode could be empty which means to export OAS spec including OAS Tyk extension. When mode&#x3D;public, OAS spec excluding Tyk extension is exported.
 func (r ApiDownloadApiOASPublicRequest) Mode(mode string) ApiDownloadApiOASPublicRequest {
 	r.mode = &mode
+	return r
+}
+
+// Content type of the fetched data. The endpoint returns data in JSON format if Content-Type header is empty.
+func (r ApiDownloadApiOASPublicRequest) ContentType(contentType string) ApiDownloadApiOASPublicRequest {
+	r.contentType = &contentType
 	return r
 }
 
@@ -628,6 +635,9 @@ func (a *OASAPIsAPIService) DownloadApiOASPublicExecute(r ApiDownloadApiOASPubli
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.contentType != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Content-Type", r.contentType, "simple", "")
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
@@ -1166,7 +1176,7 @@ func (a *OASAPIsAPIService) GetOASAPIDetailsExecute(r ApiGetOASAPIDetailsRequest
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
+	localVarHTTPHeaderAccepts := []string{"application/json", "application/x-yaml"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -1268,6 +1278,7 @@ type ApiImportOASRequest struct {
 	baseApiVersionName *string
 	newVersionName     *string
 	setDefault         *bool
+	contentType        *string
 	importOASRequest   *ImportOASRequest
 }
 
@@ -1343,7 +1354,13 @@ func (r ApiImportOASRequest) SetDefault(setDefault bool) ApiImportOASRequest {
 	return r
 }
 
-// The content of the file should be the OpenAPI document in JSON format (without x-tyk-api-gateway extension).
+// Content type of the imported document. If Content-Type header is empty, it&#39;s assumed that Content-Type is application/json.
+func (r ApiImportOASRequest) ContentType(contentType string) ApiImportOASRequest {
+	r.contentType = &contentType
+	return r
+}
+
+// The content of the file should be the OpenAPI document in JSON or YAML format (without x-tyk-api-gateway extension).
 func (r ApiImportOASRequest) ImportOASRequest(importOASRequest ImportOASRequest) ApiImportOASRequest {
 	r.importOASRequest = &importOASRequest
 	return r
@@ -1356,7 +1373,7 @@ func (r ApiImportOASRequest) Execute() (*ApiResponse, *http.Response, error) {
 /*
 ImportOAS Import OAS.
 
-For use with an existing OpenAPI document that you want to expose via your Tyk Gateway. <br/> Create a new Tyk OAS API from an OpenAPI document in JSON format (without x-tyk-api-gateway extension). <br/>The payload can contain either a fully fledged OpenAPI document or a URL pointing to an OpenAPI document.
+For use with an existing OpenAPI document that you want to expose via your Tyk Gateway. <br/> Create a new Tyk OAS API from an OpenAPI document in JSON or YAML format (without x-tyk-api-gateway extension). <br/>The payload can contain either a fully fledged OpenAPI document or a URL pointing to an OpenAPI document.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiImportOASRequest
@@ -1427,7 +1444,7 @@ func (a *OASAPIsAPIService) ImportOASExecute(r ApiImportOASRequest) (*ApiRespons
 		parameterAddToHeaderOrQuery(localVarQueryParams, "set_default", r.setDefault, "form", "")
 	}
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json", "multipart/form-data"}
+	localVarHTTPContentTypes := []string{"application/json", "application/x-yaml", "multipart/form-data"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -1442,6 +1459,9 @@ func (a *OASAPIsAPIService) ImportOASExecute(r ApiImportOASRequest) (*ApiRespons
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.contentType != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "Content-Type", r.contentType, "simple", "")
 	}
 	// body params
 	localVarPostBody = r.importOASRequest
@@ -1748,7 +1768,7 @@ func (r ApiPatchApiOASRequest) Authentication(authentication bool) ApiPatchApiOA
 	return r
 }
 
-// The content of the file should be the OpenAPI document in JSON format.
+// The content of the file should be the OpenAPI document in JSON or YAML format.
 func (r ApiPatchApiOASRequest) PatchApiOASRequest(patchApiOASRequest PatchApiOASRequest) ApiPatchApiOASRequest {
 	r.patchApiOASRequest = &patchApiOASRequest
 	return r
@@ -1820,7 +1840,7 @@ func (a *OASAPIsAPIService) PatchApiOASExecute(r ApiPatchApiOASRequest) (*ApiRes
 		parameterAddToHeaderOrQuery(localVarQueryParams, "authentication", r.authentication, "form", "")
 	}
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json", "multipart/form-data"}
+	localVarHTTPContentTypes := []string{"application/json", "application/x-yaml", "multipart/form-data"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -2141,7 +2161,7 @@ func (a *OASAPIsAPIService) UpdateApiOASExecute(r ApiUpdateApiOASRequest) (*ApiR
 	localVarFormParams := url.Values{}
 
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
+	localVarHTTPContentTypes := []string{"application/json", "application/x-yaml"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)

@@ -277,9 +277,16 @@ func (a *StreamsAPIsAPIService) CreateStreamsApiExecute(r ApiCreateStreamsApiReq
 }
 
 type ApiDeleteStreamsApiRequest struct {
-	ctx        context.Context
-	ApiService StreamsAPIsAPI
-	apiId      string
+	ctx         context.Context
+	ApiService  StreamsAPIsAPI
+	apiId       string
+	contentType *string
+}
+
+// Content type for streams endpoints should be &#x60;application/vnd.tyk.streams.oas&#x60;
+func (r ApiDeleteStreamsApiRequest) ContentType(contentType string) ApiDeleteStreamsApiRequest {
+	r.contentType = &contentType
+	return r
 }
 
 func (r ApiDeleteStreamsApiRequest) Execute() (*ApiResponse, *http.Response, error) {
@@ -325,6 +332,9 @@ func (a *StreamsAPIsAPIService) DeleteStreamsApiExecute(r ApiDeleteStreamsApiReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.contentType == nil {
+		return localVarReturnValue, nil, reportError("contentType is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -343,6 +353,7 @@ func (a *StreamsAPIsAPIService) DeleteStreamsApiExecute(r ApiDeleteStreamsApiReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "Content-Type", r.contentType, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -424,9 +435,16 @@ func (a *StreamsAPIsAPIService) DeleteStreamsApiExecute(r ApiDeleteStreamsApiReq
 }
 
 type ApiGetStreamsAPIDetailsRequest struct {
-	ctx        context.Context
-	ApiService StreamsAPIsAPI
-	apiId      string
+	ctx         context.Context
+	ApiService  StreamsAPIsAPI
+	apiId       string
+	contentType *string
+}
+
+// Content type for streams endpoints should be &#x60;application/vnd.tyk.streams.oas&#x60;
+func (r ApiGetStreamsAPIDetailsRequest) ContentType(contentType string) ApiGetStreamsAPIDetailsRequest {
+	r.contentType = &contentType
+	return r
 }
 
 func (r ApiGetStreamsAPIDetailsRequest) Execute() (*CreateStreamsApiRequest, *http.Response, error) {
@@ -472,6 +490,9 @@ func (a *StreamsAPIsAPIService) GetStreamsAPIDetailsExecute(r ApiGetStreamsAPIDe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.contentType == nil {
+		return localVarReturnValue, nil, reportError("contentType is required and must be specified")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -490,6 +511,7 @@ func (a *StreamsAPIsAPIService) GetStreamsAPIDetailsExecute(r ApiGetStreamsAPIDe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "Content-Type", r.contentType, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

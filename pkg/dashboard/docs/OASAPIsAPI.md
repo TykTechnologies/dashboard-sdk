@@ -86,7 +86,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: application/json, application/x-yaml
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -166,7 +166,7 @@ Name | Type | Description  | Notes
 
 ## DownloadApiOASPublic
 
-> *os.File DownloadApiOASPublic(ctx, apiId).Mode(mode).Execute()
+> *os.File DownloadApiOASPublic(ctx, apiId).Mode(mode).ContentType(contentType).Execute()
 
 Export OAS API.
 
@@ -187,10 +187,11 @@ import (
 func main() {
 	apiId := "4c1c0d8fc885401053ddac4e39ef676b" // string | ID of the API you want to export.
 	mode := "public" // string | Mode of OAS export, by default mode could be empty which means to export OAS spec including OAS Tyk extension. When mode=public, OAS spec excluding Tyk extension is exported. (optional)
+	contentType := "contentType_example" // string | Content type of the fetched data. The endpoint returns data in JSON format if Content-Type header is empty. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.OASAPIsAPI.DownloadApiOASPublic(context.Background(), apiId).Mode(mode).Execute()
+	resp, r, err := apiClient.OASAPIsAPI.DownloadApiOASPublic(context.Background(), apiId).Mode(mode).ContentType(contentType).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `OASAPIsAPI.DownloadApiOASPublic``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -217,6 +218,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **mode** | **string** | Mode of OAS export, by default mode could be empty which means to export OAS spec including OAS Tyk extension. When mode&#x3D;public, OAS spec excluding Tyk extension is exported. | 
+ **contentType** | **string** | Content type of the fetched data. The endpoint returns data in JSON format if Content-Type header is empty. | 
 
 ### Return type
 
@@ -263,7 +265,7 @@ func main() {
 	newVersionName := "v2" // string | The version name of the created version. (optional)
 	setDefault := true // bool | If true, the new version is set as default version. (optional)
 	upstreamURL := "https://localhost:8080" // string | Upstream URL for the API. (optional)
-	listenPath := "/user-test/" // string | Listen path for the API. (optional)
+	listenPath := "/user-test-seven/" // string | Listen path for the API. (optional)
 	customDomain := "tyk.io" // string | Custom domain for the API. (optional)
 	allowList := true // bool | Enable allowList middleware for all endpoints. (optional)
 	validateRequest := true // bool | Enable validateRequest middleware for all endpoints having a request body with media type application/json. (optional)
@@ -459,7 +461,7 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: application/json
+- **Accept**: application/json, application/x-yaml
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
@@ -468,7 +470,7 @@ Name | Type | Description  | Notes
 
 ## ImportOAS
 
-> ApiResponse ImportOAS(ctx).UpstreamURL(upstreamURL).ListenPath(listenPath).CustomDomain(customDomain).AllowList(allowList).ValidateRequest(validateRequest).MockResponse(mockResponse).Authentication(authentication).TemplateID(templateID).BaseApiId(baseApiId).BaseApiVersionName(baseApiVersionName).NewVersionName(newVersionName).SetDefault(setDefault).ImportOASRequest(importOASRequest).Execute()
+> ApiResponse ImportOAS(ctx).UpstreamURL(upstreamURL).ListenPath(listenPath).CustomDomain(customDomain).AllowList(allowList).ValidateRequest(validateRequest).MockResponse(mockResponse).Authentication(authentication).TemplateID(templateID).BaseApiId(baseApiId).BaseApiVersionName(baseApiVersionName).NewVersionName(newVersionName).SetDefault(setDefault).ContentType(contentType).ImportOASRequest(importOASRequest).Execute()
 
 Import OAS.
 
@@ -488,7 +490,7 @@ import (
 
 func main() {
 	upstreamURL := "https://localhost:8080" // string | Upstream URL for the API. (optional)
-	listenPath := "/user-test/" // string | Listen path for the API. (optional)
+	listenPath := "/user-test-seven/" // string | Listen path for the API. (optional)
 	customDomain := "tyk.io" // string | Custom domain for the API. (optional)
 	allowList := true // bool | Enable allowList middleware for all endpoints. (optional)
 	validateRequest := true // bool | Enable validateRequest middleware for all endpoints having a request body with media type application/json. (optional)
@@ -499,11 +501,12 @@ func main() {
 	baseApiVersionName := "Default" // string | The version name of the base API while creating the first version. This doesn't have to be sent for the next versions but if it is set, it will override base API version name. (optional)
 	newVersionName := "v2" // string | The version name of the created version. (optional)
 	setDefault := true // bool | If true, the new version is set as default version. (optional)
-	importOASRequest := openapiclient.importOAS_request{ApiImportByUrlPayload: openapiclient.NewApiImportByUrlPayload()} // ImportOASRequest | The content of the file should be the OpenAPI document in JSON format (without x-tyk-api-gateway extension). (optional)
+	contentType := "contentType_example" // string | Content type of the imported document. If Content-Type header is empty, it's assumed that Content-Type is application/json. (optional)
+	importOASRequest := openapiclient.importOAS_request{ApiImportByUrlPayload: openapiclient.NewApiImportByUrlPayload()} // ImportOASRequest | The content of the file should be the OpenAPI document in JSON or YAML format (without x-tyk-api-gateway extension). (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.OASAPIsAPI.ImportOAS(context.Background()).UpstreamURL(upstreamURL).ListenPath(listenPath).CustomDomain(customDomain).AllowList(allowList).ValidateRequest(validateRequest).MockResponse(mockResponse).Authentication(authentication).TemplateID(templateID).BaseApiId(baseApiId).BaseApiVersionName(baseApiVersionName).NewVersionName(newVersionName).SetDefault(setDefault).ImportOASRequest(importOASRequest).Execute()
+	resp, r, err := apiClient.OASAPIsAPI.ImportOAS(context.Background()).UpstreamURL(upstreamURL).ListenPath(listenPath).CustomDomain(customDomain).AllowList(allowList).ValidateRequest(validateRequest).MockResponse(mockResponse).Authentication(authentication).TemplateID(templateID).BaseApiId(baseApiId).BaseApiVersionName(baseApiVersionName).NewVersionName(newVersionName).SetDefault(setDefault).ContentType(contentType).ImportOASRequest(importOASRequest).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `OASAPIsAPI.ImportOAS``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -536,7 +539,8 @@ Name | Type | Description  | Notes
  **baseApiVersionName** | **string** | The version name of the base API while creating the first version. This doesn&#39;t have to be sent for the next versions but if it is set, it will override base API version name. | 
  **newVersionName** | **string** | The version name of the created version. | 
  **setDefault** | **bool** | If true, the new version is set as default version. | 
- **importOASRequest** | [**ImportOASRequest**](ImportOASRequest.md) | The content of the file should be the OpenAPI document in JSON format (without x-tyk-api-gateway extension). | 
+ **contentType** | **string** | Content type of the imported document. If Content-Type header is empty, it&#39;s assumed that Content-Type is application/json. | 
+ **importOASRequest** | [**ImportOASRequest**](ImportOASRequest.md) | The content of the file should be the OpenAPI document in JSON or YAML format (without x-tyk-api-gateway extension). | 
 
 ### Return type
 
@@ -548,7 +552,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json, multipart/form-data
+- **Content-Type**: application/json, application/x-yaml, multipart/form-data
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -653,13 +657,13 @@ import (
 func main() {
 	apiId := "4c1c0d8fc885401053ddac4e39ef676b" // string | ID of the API you want to patch.
 	upstreamURL := "https://localhost:8080" // string | Upstream URL for the API. (optional)
-	listenPath := "/user-test/" // string | Listen path for the API. (optional)
+	listenPath := "/user-test-seven/" // string | Listen path for the API. (optional)
 	customDomain := "tyk.io" // string | Custom domain for the API. (optional)
 	allowList := true // bool | Enable allowList middleware for all endpoints. (optional)
 	validateRequest := true // bool | Enable validateRequest middleware for all endpoints having a request body with media type application/json. (optional)
 	mockResponse := true // bool | Enable mockResponse middleware for all endpoints having responses configured. (optional)
 	authentication := true // bool | Enable/disable the authentication mechanism in your Tyk Gateway for your OAS API. (optional)
-	patchApiOASRequest := openapiclient.patchApiOAS_request{ApiImportByUrlPayload: openapiclient.NewApiImportByUrlPayload()} // PatchApiOASRequest | The content of the file should be the OpenAPI document in JSON format. (optional)
+	patchApiOASRequest := openapiclient.patchApiOAS_request{ApiImportByUrlPayload: openapiclient.NewApiImportByUrlPayload()} // PatchApiOASRequest | The content of the file should be the OpenAPI document in JSON or YAML format. (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -696,7 +700,7 @@ Name | Type | Description  | Notes
  **validateRequest** | **bool** | Enable validateRequest middleware for all endpoints having a request body with media type application/json. | 
  **mockResponse** | **bool** | Enable mockResponse middleware for all endpoints having responses configured. | 
  **authentication** | **bool** | Enable/disable the authentication mechanism in your Tyk Gateway for your OAS API. | 
- **patchApiOASRequest** | [**PatchApiOASRequest**](PatchApiOASRequest.md) | The content of the file should be the OpenAPI document in JSON format. | 
+ **patchApiOASRequest** | [**PatchApiOASRequest**](PatchApiOASRequest.md) | The content of the file should be the OpenAPI document in JSON or YAML format. | 
 
 ### Return type
 
@@ -708,7 +712,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json, multipart/form-data
+- **Content-Type**: application/json, application/x-yaml, multipart/form-data
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -852,7 +856,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
+- **Content-Type**: application/json, application/x-yaml
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

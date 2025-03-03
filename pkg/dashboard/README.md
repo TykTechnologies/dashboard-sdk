@@ -152,6 +152,7 @@ Class | Method | HTTP request | Description
 *KeysAPI* | [**UpdateApiKeyDetail**](docs/KeysAPI.md#updateapikeydetail) | **Put** /api/apis/{apiID}/keys/{keyID} | With API ID and key ID.
 *KeysAPI* | [**UpdateKeyDetail**](docs/KeysAPI.md#updatekeydetail) | **Put** /api/keys/{keyId} | Update key.
 *KeysAPI* | [**ValidateAKeyDefinition**](docs/KeysAPI.md#validateakeydefinition) | **Post** /api/keys/preview | This will validate a key definition.
+*MigrateOASAPI* | [**MigrateAPI**](docs/MigrateOASAPI.md#migrateapi) | **Post** /api/apis/migrate | Migrate APIs between Classic and OAS formats
 *OASAPIsAPI* | [**CreateApiOAS**](docs/OASAPIsAPI.md#createapioas) | **Post** /api/apis/oas | Create OAS API.
 *OASAPIsAPI* | [**DeleteOASApi**](docs/OASAPIsAPI.md#deleteoasapi) | **Delete** /api/apis/oas/{apiId} | Delete OAS API.
 *OASAPIsAPI* | [**DownloadApiOASPublic**](docs/OASAPIsAPI.md#downloadapioaspublic) | **Get** /api/apis/oas/{apiId}/export | Export OAS API.
@@ -344,6 +345,15 @@ Class | Method | HTTP request | Description
  - [MiddlewareDefinition](docs/MiddlewareDefinition.md)
  - [MiddlewareIdExtractor](docs/MiddlewareIdExtractor.md)
  - [MiddlewareSection](docs/MiddlewareSection.md)
+ - [MigrateAPIRequest](docs/MigrateAPIRequest.md)
+ - [MigrateAPIResponse](docs/MigrateAPIResponse.md)
+ - [MigrateAPIResponseFailure](docs/MigrateAPIResponseFailure.md)
+ - [MigrateAPIResponseFailureErrorsInner](docs/MigrateAPIResponseFailureErrorsInner.md)
+ - [MigrateAPIResponseSkipped](docs/MigrateAPIResponseSkipped.md)
+ - [MigrateAPIResponseSkippedApisInner](docs/MigrateAPIResponseSkippedApisInner.md)
+ - [MigrateAPIResponseSuccess](docs/MigrateAPIResponseSuccess.md)
+ - [MigrateAPIResponseSuccessDefinitionsInner](docs/MigrateAPIResponseSuccessDefinitionsInner.md)
+ - [MigrateAPIResponseSuccessStagedAPIsInner](docs/MigrateAPIResponseSuccessStagedAPIsInner.md)
  - [MockResponse](docs/MockResponse.md)
  - [MockResponseMeta](docs/MockResponseMeta.md)
  - [Model30](docs/Model30.md)
