@@ -65,6 +65,8 @@ type APIClient struct {
 
 	KeysAPI KeysAPI
 
+	MigrateOASAPI MigrateOASAPI
+
 	OASAPIsAPI OASAPIsAPI
 
 	OauthAPI OauthAPI
@@ -114,6 +116,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.BasicAuthenticationAPI = (*BasicAuthenticationAPIService)(&c.common)
 	c.CertificatesAPI = (*CertificatesAPIService)(&c.common)
 	c.KeysAPI = (*KeysAPIService)(&c.common)
+	c.MigrateOASAPI = (*MigrateOASAPIService)(&c.common)
 	c.OASAPIsAPI = (*OASAPIsAPIService)(&c.common)
 	c.OauthAPI = (*OauthAPIService)(&c.common)
 	c.OpenPolicyAgentAPI = (*OpenPolicyAgentAPIService)(&c.common)
