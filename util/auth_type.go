@@ -19,50 +19,50 @@ const (
 )
 
 
-func  GetAuthType(a *dashboard.APIDefinition) string {
-	if a.GetUseKeyless()  {
+func  GetAuthType(apiDefinition *dashboard.APIDefinition) string {
+	if apiDefinition.GetUseKeyless()  {
 		return string(AuthTypeKeyless)
 	}
 
 	count := 0
 	authType := AuthTypeOther
 
-	if a.GetUseBasicAuth() {
+	if apiDefinition.GetUseBasicAuth() {
 		authType = AuthTypeBasic
 		count++
 	}
 
-	if a.GetEnableSignatureChecking() {
+	if apiDefinition.GetEnableSignatureChecking() {
 		authType = AuthTypeHmac
 		count++
 	}
 
-	if a.GetEnableJwt() {
+	if apiDefinition.GetEnableJwt() {
 		authType = AuthTypeJWT
 		count++
 	}
 
-	if a.GetUseOauth2(){
+	if apiDefinition.GetUseOauth2(){
 		authType = AuthTypeOAuth
 		count++
 	}
 
-	if a.GetUseOpenid() {
+	if apiDefinition.GetUseOpenid() {
 		authType = AuthTypeOpenID
 		count++
 	}
 
-	if a.GetCustomPluginAuthEnabled() || a.GetUseGoPluginAuth()  || a.GetEnableCoprocessAuth()   {
+	if apiDefinition.GetCustomPluginAuthEnabled() || apiDefinition.GetUseGoPluginAuth()  || apiDefinition.GetEnableCoprocessAuth()   {
 		authType = AuthTypeCustom
 		count++
 	}
 
-	if a.GetUseMutualTlsAuth()  {
+	if apiDefinition.GetUseMutualTlsAuth()  {
 		authType = AuthTypeMutualTLS
 		count++
 	}
 
-	if a.GetUseStandardAuth() {
+	if apiDefinition.GetUseStandardAuth() {
 		authType = AuthTypeAuthToken
 		count++
 	}
@@ -75,35 +75,35 @@ func  GetAuthType(a *dashboard.APIDefinition) string {
 }
 
 
-func AvailableAuthTypes(a dashboard.APIDefinition) (out []AuthType) {
-	if a.GetUseKeyless() {
+func AvailableAuthTypes(apiDefinition dashboard.APIDefinition) (out []AuthType) {
+	if apiDefinition.GetUseKeyless() {
 		out = append(out, AuthTypeKeyless)
 	}
-	if a.GetUseBasicAuth() {
+	if apiDefinition.GetUseBasicAuth() {
 		out = append(out, AuthTypeBasic)
 	}
-	if a.GetEnableSignatureChecking() {
+	if apiDefinition.GetEnableSignatureChecking() {
 		out = append(out, AuthTypeHmac)
 	}
-	if a.GetEnableJwt() {
+	if apiDefinition.GetEnableJwt() {
 		out = append(out, AuthTypeJWT)
 	}
-	if a.GetUseOauth2()  {
+	if apiDefinition.GetUseOauth2()  {
 		out = append(out, AuthTypeOAuth)
 	}
-	if  a.GetUseOpenid(){
+	if  apiDefinition.GetUseOpenid(){
 		out = append(out, AuthTypeOpenID)
 	}
-	if a.GetUseGoPluginAuth() {
+	if apiDefinition.GetUseGoPluginAuth() {
 		out = append(out, AuthTypeCustom)
 	}
-	if a.GetUseMutualTlsAuth() {
+	if apiDefinition.GetUseMutualTlsAuth() {
 		out = append(out, AuthTypeMutualTLS)
 	}
-	if a.GetUseStandardAuth() {
+	if apiDefinition.GetUseStandardAuth() {
 		out = append(out, AuthTypeAuthToken)
 	}
-	if a.GetEnableCoprocessAuth(){
+	if apiDefinition.GetEnableCoprocessAuth(){
 		out = append(out, AuthTypeCustom)
 	}
 	return
