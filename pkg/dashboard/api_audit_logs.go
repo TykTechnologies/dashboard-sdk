@@ -3,7 +3,7 @@ Tyk Dashboard API
 
  ## <a name=\"introduction\"></a> Introduction  The Tyk Dashboard API offers granular, programmatic access to a centralised database of resources that your Tyk nodes can pull from. This API has a dynamic user administrative structure which means the secret key that is used to communicate with your Tyk nodes can be kept secret and access to the wider management functions can be handled on a user-by-user and organisation-by-organisation basis.  A common question around using a database-backed configuration is how to programmatically add API definitions to your Tyk nodes, the Dashboard API allows much more fine-grained, secure and multi-user access to your Tyk cluster, and should be used to manage a database-backed Tyk node.  The Tyk Dashboard API works seamlessly with the Tyk Dashboard (and the two come bundled together).  ## <a name=\"security-hierarchy\"></a> Security Hierarchy  The Dashboard API provides a more structured security layer to managing Tyk nodes.  ### Organisations, APIs and Users  With the Dashboard API and a database-backed Tyk setup, (and to an extent with file-based API setups - if diligence is used in naming and creating definitions), the following security model is applied to the management of Upstream APIs:  * **Organisations**: All APIs are *owned* by an organisation, this is designated by the 'OrgID' parameter in the API Definition. * **Users**: All users created in the Dashboard belong to an organisation (unless an exception is made for super-administrative access). * **APIs**: All APIs belong to an Organisation and only Users that belong to that organisation can see the analytics for those APIs and manage their configurations. * **API Keys**: API Keys are designated by organisation, this means an API key that has full access rights will not be allowed to access the APIs of another organisation on the same system, but can have full access to all APIs within the organisation. * **Access Rights**: Access rights are stored with the key, this enables a key to give access to multiple APIs, this is defined by the session object in the core Tyk API.  In order to use the Dashboard API, you'll need to get the 'Tyk Dashboard API Access Credentials' secret from your user profile on the Dashboard UI.  The secret you set should then be sent along as a header with each Dashboard API Request in order for it to be successful:   authorization: <your-secret>
 
-API version: 5.7.1
+API version: 5.8.0
 Contact: support@tyk.io
 */
 
@@ -17,9 +17,26 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"strings"
 )
 
 type AuditLogsAPI interface {
+
+	/*
+		GetAuditLog Retrieve single audit log
+
+		Retrieve a single audit log from database by ID
+
+		@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+		@param auditLogId ID of the audit log record to fetch.
+		@return ApiGetAuditLogRequest
+	*/
+	GetAuditLog(ctx context.Context, auditLogId int32) ApiGetAuditLogRequest
+
+	// GetAuditLogExecute executes the request
+	//  @return AuditLog
+	GetAuditLogExecute(r ApiGetAuditLogRequest) (*AuditLog, *http.Response, error)
 
 	/*
 		GetAuditLogs List audit logs
@@ -32,12 +49,126 @@ type AuditLogsAPI interface {
 	GetAuditLogs(ctx context.Context) ApiGetAuditLogsRequest
 
 	// GetAuditLogsExecute executes the request
-	//  @return AuditLogs
-	GetAuditLogsExecute(r ApiGetAuditLogsRequest) (*AuditLogs, *http.Response, error)
+	//  @return *os.File
+	GetAuditLogsExecute(r ApiGetAuditLogsRequest) (*os.File, *http.Response, error)
 }
 
 // AuditLogsAPIService AuditLogsAPI service
 type AuditLogsAPIService service
+
+type ApiGetAuditLogRequest struct {
+	ctx        context.Context
+	ApiService AuditLogsAPI
+	auditLogId int32
+}
+
+func (r ApiGetAuditLogRequest) Execute() (*AuditLog, *http.Response, error) {
+	return r.ApiService.GetAuditLogExecute(r)
+}
+
+/*
+GetAuditLog Retrieve single audit log
+
+Retrieve a single audit log from database by ID
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param auditLogId ID of the audit log record to fetch.
+	@return ApiGetAuditLogRequest
+*/
+func (a *AuditLogsAPIService) GetAuditLog(ctx context.Context, auditLogId int32) ApiGetAuditLogRequest {
+	return ApiGetAuditLogRequest{
+		ApiService: a,
+		ctx:        ctx,
+		auditLogId: auditLogId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AuditLog
+func (a *AuditLogsAPIService) GetAuditLogExecute(r ApiGetAuditLogRequest) (*AuditLog, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AuditLog
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuditLogsAPIService.GetAuditLog")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/api/audit-logs/{audit-log-id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"audit-log-id"+"}", url.PathEscape(parameterValueToString(r.auditLogId, "auditLogId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ApiResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
 
 type ApiGetAuditLogsRequest struct {
 	ctx        context.Context
@@ -51,6 +182,8 @@ type ApiGetAuditLogsRequest struct {
 	url        *string
 	fromDate   *string
 	toDate     *string
+	download   *bool
+	type_      *string
 }
 
 // Use p query parameter to say which page you want returned. The size of the page is determined by the configuration option page_size of dashboard.
@@ -89,7 +222,7 @@ func (r ApiGetAuditLogsRequest) Status(status int32) ApiGetAuditLogsRequest {
 	return r
 }
 
-// Filters audit logs based on the specific URL path of the API endpoint that was accessed. This parameter allows you to focus on actions performed on particular resources or sections of your API.
+// This parameter filters audit logs based on partially matching the accessed API endpoint&#39;s URL path. It allows searching for actions performed on related resources or sections of the API by matching any portion of the URL. The match is case-sensitive and ignores additional path segments or query parameters beyond the matched portion.   For example, if the database contains URLs like &#x60;/tib/create&#x60;, &#x60;/tib/get/1?schema&#x3D;json&#x60;,  &#x60;/api/schema&#x60;, and &#x60;/schema1&#x60; searching with &#x60;url&#x3D;schema&#x60; would return  &#x60;/api/schema&#x60; and &#x60;/schema1&#x60;.
 func (r ApiGetAuditLogsRequest) Url(url string) ApiGetAuditLogsRequest {
 	r.url = &url
 	return r
@@ -107,7 +240,19 @@ func (r ApiGetAuditLogsRequest) ToDate(toDate string) ApiGetAuditLogsRequest {
 	return r
 }
 
-func (r ApiGetAuditLogsRequest) Execute() (*AuditLogs, *http.Response, error) {
+// Determines whether the response should be a downloadable file containing the records. If set to &#x60;true&#x60;, the API returns a file instead of a JSON list of records. When enabled, pagination is not applied, and the file will include all records that match the search criteria.
+func (r ApiGetAuditLogsRequest) Download(download bool) ApiGetAuditLogsRequest {
+	r.download = &download
+	return r
+}
+
+// Specifies the format of the downloadable file. This parameter is only applied when &#x60;download&#x60; is set to &#x60;true&#x60;. If set to &#x60;csv&#x60;, the file content will be in CSV format; otherwise, JSON format will be used.
+func (r ApiGetAuditLogsRequest) Type_(type_ string) ApiGetAuditLogsRequest {
+	r.type_ = &type_
+	return r
+}
+
+func (r ApiGetAuditLogsRequest) Execute() (*os.File, *http.Response, error) {
 	return r.ApiService.GetAuditLogsExecute(r)
 }
 
@@ -128,13 +273,13 @@ func (a *AuditLogsAPIService) GetAuditLogs(ctx context.Context) ApiGetAuditLogsR
 
 // Execute executes the request
 //
-//	@return AuditLogs
-func (a *AuditLogsAPIService) GetAuditLogsExecute(r ApiGetAuditLogsRequest) (*AuditLogs, *http.Response, error) {
+//	@return *os.File
+func (a *AuditLogsAPIService) GetAuditLogsExecute(r ApiGetAuditLogsRequest) (*os.File, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *AuditLogs
+		localVarReturnValue *os.File
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuditLogsAPIService.GetAuditLogs")
@@ -175,6 +320,12 @@ func (a *AuditLogsAPIService) GetAuditLogsExecute(r ApiGetAuditLogsRequest) (*Au
 	if r.toDate != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "to_date", r.toDate, "form", "")
 	}
+	if r.download != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "download", r.download, "form", "")
+	}
+	if r.type_ != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -185,7 +336,7 @@ func (a *AuditLogsAPIService) GetAuditLogsExecute(r ApiGetAuditLogsRequest) (*Au
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
+	localVarHTTPHeaderAccepts := []string{"application/octet-stream", "application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)

@@ -4,7 +4,7 @@ All URIs are relative to *https://localhost:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**MigrateAPI**](MigrateOASAPI.md#MigrateAPI) | **Post** /api/apis/migrate | Migrate APIs between Classic and OAS formats
+[**MigrateAPI**](MigrateOASAPI.md#MigrateAPI) | **Post** /api/apis/migrate | Migrate APIs from Tyk Classic to Tyk OAS format.
 
 
 
@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 > MigrateAPIResponse MigrateAPI(ctx).MigrateAPIRequest(migrateAPIRequest).Execute()
 
-Migrate APIs between Classic and OAS formats
+Migrate APIs from Tyk Classic to Tyk OAS format.
 
 
 
