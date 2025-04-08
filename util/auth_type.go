@@ -3,6 +3,7 @@ package util
 import "github.com/TykTechnologies/dashboard-sdk/pkg/dashboard"
 
 type AuthType string
+
 const (
 	AuthTypeMultiAuth   AuthType = "multiAuth"
 	AuthTypeKeyless     AuthType = "keyless"
@@ -18,9 +19,8 @@ const (
 	AuthTypeOther       AuthType = "other"
 )
 
-
-func  GetAuthType(apiDefinition *dashboard.APIDefinition) string {
-	if apiDefinition.GetUseKeyless()  {
+func GetAuthType(apiDefinition *dashboard.APIDefinition) string {
+	if apiDefinition.GetUseKeyless() {
 		return string(AuthTypeKeyless)
 	}
 
@@ -42,7 +42,7 @@ func  GetAuthType(apiDefinition *dashboard.APIDefinition) string {
 		count++
 	}
 
-	if apiDefinition.GetUseOauth2(){
+	if apiDefinition.GetUseOauth2() {
 		authType = AuthTypeOAuth
 		count++
 	}
@@ -52,12 +52,12 @@ func  GetAuthType(apiDefinition *dashboard.APIDefinition) string {
 		count++
 	}
 
-	if apiDefinition.GetCustomPluginAuthEnabled() || apiDefinition.GetUseGoPluginAuth()  || apiDefinition.GetEnableCoprocessAuth()   {
+	if apiDefinition.GetCustomPluginAuthEnabled() || apiDefinition.GetUseGoPluginAuth() || apiDefinition.GetEnableCoprocessAuth() {
 		authType = AuthTypeCustom
 		count++
 	}
 
-	if apiDefinition.GetUseMutualTlsAuth()  {
+	if apiDefinition.GetUseMutualTlsAuth() {
 		authType = AuthTypeMutualTLS
 		count++
 	}
@@ -74,7 +74,6 @@ func  GetAuthType(apiDefinition *dashboard.APIDefinition) string {
 	return string(authType)
 }
 
-
 func AvailableAuthTypes(apiDefinition dashboard.APIDefinition) (out []AuthType) {
 	if apiDefinition.GetUseKeyless() {
 		out = append(out, AuthTypeKeyless)
@@ -88,10 +87,10 @@ func AvailableAuthTypes(apiDefinition dashboard.APIDefinition) (out []AuthType) 
 	if apiDefinition.GetEnableJwt() {
 		out = append(out, AuthTypeJWT)
 	}
-	if apiDefinition.GetUseOauth2()  {
+	if apiDefinition.GetUseOauth2() {
 		out = append(out, AuthTypeOAuth)
 	}
-	if  apiDefinition.GetUseOpenid(){
+	if apiDefinition.GetUseOpenid() {
 		out = append(out, AuthTypeOpenID)
 	}
 	if apiDefinition.GetUseGoPluginAuth() {
@@ -103,7 +102,7 @@ func AvailableAuthTypes(apiDefinition dashboard.APIDefinition) (out []AuthType) 
 	if apiDefinition.GetUseStandardAuth() {
 		out = append(out, AuthTypeAuthToken)
 	}
-	if apiDefinition.GetEnableCoprocessAuth(){
+	if apiDefinition.GetEnableCoprocessAuth() {
 		out = append(out, AuthTypeCustom)
 	}
 	return
