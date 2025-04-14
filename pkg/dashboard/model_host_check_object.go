@@ -26,7 +26,7 @@ type HostCheckObject struct {
 	Headers             map[string]string `json:"headers,omitempty"`
 	Method              *string           `json:"method,omitempty"`
 	Protocol            *string           `json:"protocol,omitempty"`
-	Timeout             *int64            `json:"timeout,omitempty"`
+	Timeout             *string           `json:"timeout,omitempty"`
 	Url                 *string           `json:"url,omitempty"`
 }
 
@@ -242,9 +242,9 @@ func (o *HostCheckObject) SetProtocol(v string) {
 }
 
 // GetTimeout returns the Timeout field value if set, zero value otherwise.
-func (o *HostCheckObject) GetTimeout() int64 {
+func (o *HostCheckObject) GetTimeout() string {
 	if o == nil || IsNil(o.Timeout) {
-		var ret int64
+		var ret string
 		return ret
 	}
 	return *o.Timeout
@@ -252,7 +252,7 @@ func (o *HostCheckObject) GetTimeout() int64 {
 
 // GetTimeoutOk returns a tuple with the Timeout field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *HostCheckObject) GetTimeoutOk() (*int64, bool) {
+func (o *HostCheckObject) GetTimeoutOk() (*string, bool) {
 	if o == nil || IsNil(o.Timeout) {
 		return nil, false
 	}
@@ -268,8 +268,8 @@ func (o *HostCheckObject) HasTimeout() bool {
 	return false
 }
 
-// SetTimeout gets a reference to the given int64 and assigns it to the Timeout field.
-func (o *HostCheckObject) SetTimeout(v int64) {
+// SetTimeout gets a reference to the given string and assigns it to the Timeout field.
+func (o *HostCheckObject) SetTimeout(v string) {
 	o.Timeout = &v
 }
 

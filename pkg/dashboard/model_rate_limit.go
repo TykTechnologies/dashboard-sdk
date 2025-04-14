@@ -20,9 +20,9 @@ var _ MappedNullable = &RateLimit{}
 
 // RateLimit struct for RateLimit
 type RateLimit struct {
-	Enabled *bool  `json:"enabled,omitempty"`
-	Per     *int64 `json:"per,omitempty"`
-	Rate    *int32 `json:"rate,omitempty"`
+	Enabled *bool   `json:"enabled,omitempty"`
+	Per     *string `json:"per,omitempty"`
+	Rate    *int32  `json:"rate,omitempty"`
 }
 
 // NewRateLimit instantiates a new RateLimit object
@@ -75,9 +75,9 @@ func (o *RateLimit) SetEnabled(v bool) {
 }
 
 // GetPer returns the Per field value if set, zero value otherwise.
-func (o *RateLimit) GetPer() int64 {
+func (o *RateLimit) GetPer() string {
 	if o == nil || IsNil(o.Per) {
-		var ret int64
+		var ret string
 		return ret
 	}
 	return *o.Per
@@ -85,7 +85,7 @@ func (o *RateLimit) GetPer() int64 {
 
 // GetPerOk returns a tuple with the Per field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *RateLimit) GetPerOk() (*int64, bool) {
+func (o *RateLimit) GetPerOk() (*string, bool) {
 	if o == nil || IsNil(o.Per) {
 		return nil, false
 	}
@@ -101,8 +101,8 @@ func (o *RateLimit) HasPer() bool {
 	return false
 }
 
-// SetPer gets a reference to the given int64 and assigns it to the Per field.
-func (o *RateLimit) SetPer(v int64) {
+// SetPer gets a reference to the given string and assigns it to the Per field.
+func (o *RateLimit) SetPer(v string) {
 	o.Per = &v
 }
 
