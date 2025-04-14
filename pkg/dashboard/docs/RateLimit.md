@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Enabled** | Pointer to **bool** |  | [optional] 
-**Per** | Pointer to **int64** |  | [optional] 
+**Per** | Pointer to **string** |  | [optional] 
 **Rate** | Pointer to **int32** |  | [optional] 
 
 ## Methods
@@ -54,20 +54,20 @@ HasEnabled returns a boolean if a field has been set.
 
 ### GetPer
 
-`func (o *RateLimit) GetPer() int64`
+`func (o *RateLimit) GetPer() string`
 
 GetPer returns the Per field if non-nil, zero value otherwise.
 
 ### GetPerOk
 
-`func (o *RateLimit) GetPerOk() (*int64, bool)`
+`func (o *RateLimit) GetPerOk() (*string, bool)`
 
 GetPerOk returns a tuple with the Per field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPer
 
-`func (o *RateLimit) SetPer(v int64)`
+`func (o *RateLimit) SetPer(v string)`
 
 SetPer sets Per field to given value.
 

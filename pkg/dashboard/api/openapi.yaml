@@ -4,7 +4,8 @@ info:
     email: support@tyk.io
     name: Tyk Technologies
     url: https://tyk.io/contact
-  description: |2
+  description: |
+    <img src="https://tyk.io/docs/img/swagger_dashboard_image.png" width="963" height="250">
 
     ## <a name="introduction"></a> Introduction
 
@@ -43,7 +44,7 @@ servers:
 - url: "https://{tenant}"
   variables:
     tenant:
-      default: localhost:8080
+      default: localhost:3000
       description: Your dashboard host
 security:
 - bearerAuth: []
@@ -2248,10 +2249,10 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Content type for streams endpoints should be `application/vnd.tyk.streams.oas`
+      - description: Accept type for streams endpoints should be `application/vnd.tyk.streams.oas`
         explode: false
         in: header
-        name: Content-Type
+        name: Accept
         required: true
         schema:
           enum:
@@ -10938,19 +10939,19 @@ components:
               extended_paths:
                 circuit_breakers:
                 - path: path
-                  threshold_percent: 6.778324963048013
+                  threshold_percent: 2.8841621266687802
                   method: method
                   disabled: true
                   disable_half_open_state: true
-                  return_to_service_after: 1
-                  samples: 2
+                  return_to_service_after: 6
+                  samples: 1
                 - path: path
-                  threshold_percent: 6.778324963048013
+                  threshold_percent: 2.8841621266687802
                   method: method
                   disabled: true
                   disable_half_open_state: true
-                  return_to_service_after: 1
-                  samples: 2
+                  return_to_service_after: 6
+                  samples: 1
                 do_not_track_endpoints:
                 - path: path
                   method: method
@@ -10993,14 +10994,14 @@ components:
                 - schema:
                     key: ""
                   path: path
-                  error_response_code: 7
+                  error_response_code: 3
                   method: method
                   disabled: true
                   schema_b64: schema_b64
                 - schema:
                     key: ""
                   path: path
-                  error_response_code: 7
+                  error_response_code: 3
                   method: method
                   disabled: true
                   schema_b64: schema_b64
@@ -11012,7 +11013,7 @@ components:
                     key:
                       headers:
                         key: headers
-                      code: 6
+                      code: 3
                       data: data
                       action: action
                   disabled: true
@@ -11023,7 +11024,7 @@ components:
                     key:
                       headers:
                         key: headers
-                      code: 6
+                      code: 3
                       data: data
                       action: action
                   disabled: true
@@ -11032,7 +11033,7 @@ components:
                   headers:
                     key: headers
                   path: path
-                  code: 5
+                  code: 6
                   method: method
                   disabled: true
                   body: body
@@ -11040,7 +11041,7 @@ components:
                   headers:
                     key: headers
                   path: path
-                  code: 5
+                  code: 6
                   method: method
                   disabled: true
                   body: body
@@ -11057,11 +11058,11 @@ components:
                   operation: operation
                 validate_request:
                 - path: path
-                  error_response_code: 0
+                  error_response_code: 7
                   method: method
                   enabled: true
                 - path: path
-                  error_response_code: 0
+                  error_response_code: 7
                   method: method
                   enabled: true
                 go_plugin:
@@ -11100,17 +11101,17 @@ components:
                   method: method
                   disabled: true
                   cache_response_codes:
-                  - 6
-                  - 6
-                  timeout: 3
+                  - 9
+                  - 9
+                  timeout: 6
                 - cache_key_regex: cache_key_regex
                   path: path
                   method: method
                   disabled: true
                   cache_response_codes:
-                  - 6
-                  - 6
-                  timeout: 3
+                  - 9
+                  - 9
+                  timeout: 6
                 white_list:
                 - ignore_case: true
                   path: path
@@ -11119,7 +11120,7 @@ components:
                     key:
                       headers:
                         key: headers
-                      code: 6
+                      code: 3
                       data: data
                       action: action
                   disabled: true
@@ -11130,7 +11131,7 @@ components:
                     key:
                       headers:
                         key: headers
-                      code: 6
+                      code: 3
                       data: data
                       action: action
                   disabled: true
@@ -11185,7 +11186,7 @@ components:
                     key:
                       headers:
                         key: headers
-                      code: 6
+                      code: 3
                       data: data
                       action: action
                   disabled: true
@@ -11196,7 +11197,7 @@ components:
                     key:
                       headers:
                         key: headers
-                      code: 6
+                      code: 3
                       data: data
                       action: action
                   disabled: true
@@ -11222,14 +11223,14 @@ components:
                 rate_limit:
                 - path: path
                   method: method
-                  rate: 3.353193347011243
+                  rate: 6.704019297950036
                   disabled: true
-                  per: 6.704019297950036
+                  per: 5.944895607614016
                 - path: path
                   method: method
-                  rate: 3.353193347011243
+                  rate: 6.704019297950036
                   disabled: true
-                  per: 6.704019297950036
+                  per: 5.944895607614016
                 transform_response_headers:
                 - path: path
                   add_headers:
@@ -11385,7 +11386,7 @@ components:
               expires: expires
               override_target: override_target
               ignore_endpoint_case: true
-              global_size_limit: 7
+              global_size_limit: 0
               global_headers:
                 key: global_headers
               paths:
@@ -11440,7 +11441,7 @@ components:
               message: message
             - name: name
               message: message
-            timeout: 6
+            timeout: 30s
             url: url
           - headers:
               key: headers
@@ -11453,10 +11454,10 @@ components:
               message: message
             - name: name
               message: message
-            timeout: 6
+            timeout: 30s
             url: url
           config:
-            expire_utime_after: 8
+            expire_utime_after: 6
             service_discovery:
               cache_disabled: true
               parent_data_path: parent_data_path
@@ -11469,7 +11470,7 @@ components:
               endpoint_returns_list: true
               target_path: target_path
               data_path: data_path
-            recheck_wait: 9
+            recheck_wait: 8
         custom_middleware_bundle_disabled: true
         domain_disabled: true
         use_basic_auth: true
@@ -13008,19 +13009,19 @@ components:
                 extended_paths:
                   circuit_breakers:
                   - path: path
-                    threshold_percent: 6.778324963048013
+                    threshold_percent: 2.8841621266687802
                     method: method
                     disabled: true
                     disable_half_open_state: true
-                    return_to_service_after: 1
-                    samples: 2
+                    return_to_service_after: 6
+                    samples: 1
                   - path: path
-                    threshold_percent: 6.778324963048013
+                    threshold_percent: 2.8841621266687802
                     method: method
                     disabled: true
                     disable_half_open_state: true
-                    return_to_service_after: 1
-                    samples: 2
+                    return_to_service_after: 6
+                    samples: 1
                   do_not_track_endpoints:
                   - path: path
                     method: method
@@ -13063,14 +13064,14 @@ components:
                   - schema:
                       key: ""
                     path: path
-                    error_response_code: 7
+                    error_response_code: 3
                     method: method
                     disabled: true
                     schema_b64: schema_b64
                   - schema:
                       key: ""
                     path: path
-                    error_response_code: 7
+                    error_response_code: 3
                     method: method
                     disabled: true
                     schema_b64: schema_b64
@@ -13082,7 +13083,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -13093,7 +13094,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -13102,7 +13103,7 @@ components:
                     headers:
                       key: headers
                     path: path
-                    code: 5
+                    code: 6
                     method: method
                     disabled: true
                     body: body
@@ -13110,7 +13111,7 @@ components:
                     headers:
                       key: headers
                     path: path
-                    code: 5
+                    code: 6
                     method: method
                     disabled: true
                     body: body
@@ -13127,11 +13128,11 @@ components:
                     operation: operation
                   validate_request:
                   - path: path
-                    error_response_code: 0
+                    error_response_code: 7
                     method: method
                     enabled: true
                   - path: path
-                    error_response_code: 0
+                    error_response_code: 7
                     method: method
                     enabled: true
                   go_plugin:
@@ -13170,17 +13171,17 @@ components:
                     method: method
                     disabled: true
                     cache_response_codes:
-                    - 6
-                    - 6
-                    timeout: 3
+                    - 9
+                    - 9
+                    timeout: 6
                   - cache_key_regex: cache_key_regex
                     path: path
                     method: method
                     disabled: true
                     cache_response_codes:
-                    - 6
-                    - 6
-                    timeout: 3
+                    - 9
+                    - 9
+                    timeout: 6
                   white_list:
                   - ignore_case: true
                     path: path
@@ -13189,7 +13190,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -13200,7 +13201,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -13255,7 +13256,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -13266,7 +13267,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -13292,14 +13293,14 @@ components:
                   rate_limit:
                   - path: path
                     method: method
-                    rate: 3.353193347011243
+                    rate: 6.704019297950036
                     disabled: true
-                    per: 6.704019297950036
+                    per: 5.944895607614016
                   - path: path
                     method: method
-                    rate: 3.353193347011243
+                    rate: 6.704019297950036
                     disabled: true
-                    per: 6.704019297950036
+                    per: 5.944895607614016
                   transform_response_headers:
                   - path: path
                     add_headers:
@@ -13455,7 +13456,7 @@ components:
                 expires: expires
                 override_target: override_target
                 ignore_endpoint_case: true
-                global_size_limit: 7
+                global_size_limit: 0
                 global_headers:
                   key: global_headers
                 paths:
@@ -13510,7 +13511,7 @@ components:
                 message: message
               - name: name
                 message: message
-              timeout: 6
+              timeout: 30s
               url: url
             - headers:
                 key: headers
@@ -13523,10 +13524,10 @@ components:
                 message: message
               - name: name
                 message: message
-              timeout: 6
+              timeout: 30s
               url: url
             config:
-              expire_utime_after: 8
+              expire_utime_after: 6
               service_discovery:
                 cache_disabled: true
                 parent_data_path: parent_data_path
@@ -13539,7 +13540,7 @@ components:
                 endpoint_returns_list: true
                 target_path: target_path
                 data_path: data_path
-              recheck_wait: 9
+              recheck_wait: 8
           custom_middleware_bundle_disabled: true
           domain_disabled: true
           use_basic_auth: true
@@ -13564,9 +13565,9 @@ components:
         categories:
         - categories
         - categories
-        sort_by: 0
+        sort_by: 6
         hook_references:
-        - event_timeout: 6
+        - event_timeout: 7
           hook:
             event_timeout: 0
             api_model: "{}"
@@ -13581,7 +13582,7 @@ components:
             id: 664b613f5715ec4c96cbef3e
             target_path: https://httpbin.org/expired-keys
           event_name: event_name
-        - event_timeout: 6
+        - event_timeout: 7
           hook:
             event_timeout: 0
             api_model: "{}"
@@ -13640,7 +13641,7 @@ components:
       type: object
     ApiDefinitionsResponse:
       example:
-        pages: 4
+        pages: 0
         apis:
         - is_site: true
           oas:
@@ -14571,19 +14572,19 @@ components:
                   extended_paths:
                     circuit_breakers:
                     - path: path
-                      threshold_percent: 6.778324963048013
+                      threshold_percent: 2.8841621266687802
                       method: method
                       disabled: true
                       disable_half_open_state: true
-                      return_to_service_after: 1
-                      samples: 2
+                      return_to_service_after: 6
+                      samples: 1
                     - path: path
-                      threshold_percent: 6.778324963048013
+                      threshold_percent: 2.8841621266687802
                       method: method
                       disabled: true
                       disable_half_open_state: true
-                      return_to_service_after: 1
-                      samples: 2
+                      return_to_service_after: 6
+                      samples: 1
                     do_not_track_endpoints:
                     - path: path
                       method: method
@@ -14626,14 +14627,14 @@ components:
                     - schema:
                         key: ""
                       path: path
-                      error_response_code: 7
+                      error_response_code: 3
                       method: method
                       disabled: true
                       schema_b64: schema_b64
                     - schema:
                         key: ""
                       path: path
-                      error_response_code: 7
+                      error_response_code: 3
                       method: method
                       disabled: true
                       schema_b64: schema_b64
@@ -14645,7 +14646,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -14656,7 +14657,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -14665,7 +14666,7 @@ components:
                       headers:
                         key: headers
                       path: path
-                      code: 5
+                      code: 6
                       method: method
                       disabled: true
                       body: body
@@ -14673,7 +14674,7 @@ components:
                       headers:
                         key: headers
                       path: path
-                      code: 5
+                      code: 6
                       method: method
                       disabled: true
                       body: body
@@ -14690,11 +14691,11 @@ components:
                       operation: operation
                     validate_request:
                     - path: path
-                      error_response_code: 0
+                      error_response_code: 7
                       method: method
                       enabled: true
                     - path: path
-                      error_response_code: 0
+                      error_response_code: 7
                       method: method
                       enabled: true
                     go_plugin:
@@ -14733,17 +14734,17 @@ components:
                       method: method
                       disabled: true
                       cache_response_codes:
-                      - 6
-                      - 6
-                      timeout: 3
+                      - 9
+                      - 9
+                      timeout: 6
                     - cache_key_regex: cache_key_regex
                       path: path
                       method: method
                       disabled: true
                       cache_response_codes:
-                      - 6
-                      - 6
-                      timeout: 3
+                      - 9
+                      - 9
+                      timeout: 6
                     white_list:
                     - ignore_case: true
                       path: path
@@ -14752,7 +14753,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -14763,7 +14764,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -14818,7 +14819,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -14829,7 +14830,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -14855,14 +14856,14 @@ components:
                     rate_limit:
                     - path: path
                       method: method
-                      rate: 3.353193347011243
+                      rate: 6.704019297950036
                       disabled: true
-                      per: 6.704019297950036
+                      per: 5.944895607614016
                     - path: path
                       method: method
-                      rate: 3.353193347011243
+                      rate: 6.704019297950036
                       disabled: true
-                      per: 6.704019297950036
+                      per: 5.944895607614016
                     transform_response_headers:
                     - path: path
                       add_headers:
@@ -15018,7 +15019,7 @@ components:
                   expires: expires
                   override_target: override_target
                   ignore_endpoint_case: true
-                  global_size_limit: 7
+                  global_size_limit: 0
                   global_headers:
                     key: global_headers
                   paths:
@@ -15073,7 +15074,7 @@ components:
                   message: message
                 - name: name
                   message: message
-                timeout: 6
+                timeout: 30s
                 url: url
               - headers:
                   key: headers
@@ -15086,10 +15087,10 @@ components:
                   message: message
                 - name: name
                   message: message
-                timeout: 6
+                timeout: 30s
                 url: url
               config:
-                expire_utime_after: 8
+                expire_utime_after: 6
                 service_discovery:
                   cache_disabled: true
                   parent_data_path: parent_data_path
@@ -15102,7 +15103,7 @@ components:
                   endpoint_returns_list: true
                   target_path: target_path
                   data_path: data_path
-                recheck_wait: 9
+                recheck_wait: 8
             custom_middleware_bundle_disabled: true
             domain_disabled: true
             use_basic_auth: true
@@ -15127,9 +15128,9 @@ components:
           categories:
           - categories
           - categories
-          sort_by: 0
+          sort_by: 6
           hook_references:
-          - event_timeout: 6
+          - event_timeout: 7
             hook:
               event_timeout: 0
               api_model: "{}"
@@ -15144,7 +15145,7 @@ components:
               id: 664b613f5715ec4c96cbef3e
               target_path: https://httpbin.org/expired-keys
             event_name: event_name
-          - event_timeout: 6
+          - event_timeout: 7
             hook:
               event_timeout: 0
               api_model: "{}"
@@ -16091,19 +16092,19 @@ components:
                   extended_paths:
                     circuit_breakers:
                     - path: path
-                      threshold_percent: 6.778324963048013
+                      threshold_percent: 2.8841621266687802
                       method: method
                       disabled: true
                       disable_half_open_state: true
-                      return_to_service_after: 1
-                      samples: 2
+                      return_to_service_after: 6
+                      samples: 1
                     - path: path
-                      threshold_percent: 6.778324963048013
+                      threshold_percent: 2.8841621266687802
                       method: method
                       disabled: true
                       disable_half_open_state: true
-                      return_to_service_after: 1
-                      samples: 2
+                      return_to_service_after: 6
+                      samples: 1
                     do_not_track_endpoints:
                     - path: path
                       method: method
@@ -16146,14 +16147,14 @@ components:
                     - schema:
                         key: ""
                       path: path
-                      error_response_code: 7
+                      error_response_code: 3
                       method: method
                       disabled: true
                       schema_b64: schema_b64
                     - schema:
                         key: ""
                       path: path
-                      error_response_code: 7
+                      error_response_code: 3
                       method: method
                       disabled: true
                       schema_b64: schema_b64
@@ -16165,7 +16166,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -16176,7 +16177,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -16185,7 +16186,7 @@ components:
                       headers:
                         key: headers
                       path: path
-                      code: 5
+                      code: 6
                       method: method
                       disabled: true
                       body: body
@@ -16193,7 +16194,7 @@ components:
                       headers:
                         key: headers
                       path: path
-                      code: 5
+                      code: 6
                       method: method
                       disabled: true
                       body: body
@@ -16210,11 +16211,11 @@ components:
                       operation: operation
                     validate_request:
                     - path: path
-                      error_response_code: 0
+                      error_response_code: 7
                       method: method
                       enabled: true
                     - path: path
-                      error_response_code: 0
+                      error_response_code: 7
                       method: method
                       enabled: true
                     go_plugin:
@@ -16253,17 +16254,17 @@ components:
                       method: method
                       disabled: true
                       cache_response_codes:
-                      - 6
-                      - 6
-                      timeout: 3
+                      - 9
+                      - 9
+                      timeout: 6
                     - cache_key_regex: cache_key_regex
                       path: path
                       method: method
                       disabled: true
                       cache_response_codes:
-                      - 6
-                      - 6
-                      timeout: 3
+                      - 9
+                      - 9
+                      timeout: 6
                     white_list:
                     - ignore_case: true
                       path: path
@@ -16272,7 +16273,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -16283,7 +16284,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -16338,7 +16339,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -16349,7 +16350,7 @@ components:
                         key:
                           headers:
                             key: headers
-                          code: 6
+                          code: 3
                           data: data
                           action: action
                       disabled: true
@@ -16375,14 +16376,14 @@ components:
                     rate_limit:
                     - path: path
                       method: method
-                      rate: 3.353193347011243
+                      rate: 6.704019297950036
                       disabled: true
-                      per: 6.704019297950036
+                      per: 5.944895607614016
                     - path: path
                       method: method
-                      rate: 3.353193347011243
+                      rate: 6.704019297950036
                       disabled: true
-                      per: 6.704019297950036
+                      per: 5.944895607614016
                     transform_response_headers:
                     - path: path
                       add_headers:
@@ -16538,7 +16539,7 @@ components:
                   expires: expires
                   override_target: override_target
                   ignore_endpoint_case: true
-                  global_size_limit: 7
+                  global_size_limit: 0
                   global_headers:
                     key: global_headers
                   paths:
@@ -16593,7 +16594,7 @@ components:
                   message: message
                 - name: name
                   message: message
-                timeout: 6
+                timeout: 30s
                 url: url
               - headers:
                   key: headers
@@ -16606,10 +16607,10 @@ components:
                   message: message
                 - name: name
                   message: message
-                timeout: 6
+                timeout: 30s
                 url: url
               config:
-                expire_utime_after: 8
+                expire_utime_after: 6
                 service_discovery:
                   cache_disabled: true
                   parent_data_path: parent_data_path
@@ -16622,7 +16623,7 @@ components:
                   endpoint_returns_list: true
                   target_path: target_path
                   data_path: data_path
-                recheck_wait: 9
+                recheck_wait: 8
             custom_middleware_bundle_disabled: true
             domain_disabled: true
             use_basic_auth: true
@@ -16647,9 +16648,9 @@ components:
           categories:
           - categories
           - categories
-          sort_by: 0
+          sort_by: 6
           hook_references:
-          - event_timeout: 6
+          - event_timeout: 7
             hook:
               event_timeout: 0
               api_model: "{}"
@@ -16664,7 +16665,7 @@ components:
               id: 664b613f5715ec4c96cbef3e
               target_path: https://httpbin.org/expired-keys
             event_name: event_name
-          - event_timeout: 6
+          - event_timeout: 7
             hook:
               event_timeout: 0
               api_model: "{}"
@@ -16986,7 +16987,7 @@ components:
                 headerName: headerName
                 xPathExp: xPathExp
                 formParamName: formParamName
-                regexpMatchIndex: 6
+                regexpMatchIndex: 1
               enabled: true
             functionName: functionName
             rawBodyOnly: true
@@ -17006,7 +17007,7 @@ components:
             header:
               name: name
               enabled: true
-          allowedClockSkew: 7.457744773683766
+          allowedClockSkew: 6.84685269835264
           enabled: true
         stripAuthorizationData: true
         securitySchemes:
@@ -17074,7 +17075,7 @@ components:
             headerName: headerName
             xPathExp: xPathExp
             formParamName: formParamName
-            regexpMatchIndex: 6
+            regexpMatchIndex: 1
           enabled: true
         functionName: functionName
         rawBodyOnly: true
@@ -17237,9 +17238,9 @@ components:
         method: method
         disabled: true
         cache_response_codes:
-        - 6
-        - 6
-        timeout: 3
+        - 9
+        - 9
+        timeout: 6
       properties:
         cache_key_regex:
           type: string
@@ -17609,12 +17610,12 @@ components:
     CircuitBreakerMeta:
       example:
         path: path
-        threshold_percent: 6.778324963048013
+        threshold_percent: 2.8841621266687802
         method: method
         disabled: true
         disable_half_open_state: true
-        return_to_service_after: 1
-        samples: 2
+        return_to_service_after: 6
+        samples: 1
       properties:
         disable_half_open_state:
           type: boolean
@@ -17782,7 +17783,7 @@ components:
               headerName: headerName
               xPathExp: xPathExp
               formParamName: formParamName
-              regexpMatchIndex: 6
+              regexpMatchIndex: 1
             enabled: true
           functionName: functionName
           rawBodyOnly: true
@@ -18791,19 +18792,19 @@ components:
                 extended_paths:
                   circuit_breakers:
                   - path: path
-                    threshold_percent: 6.778324963048013
+                    threshold_percent: 2.8841621266687802
                     method: method
                     disabled: true
                     disable_half_open_state: true
-                    return_to_service_after: 1
-                    samples: 2
+                    return_to_service_after: 6
+                    samples: 1
                   - path: path
-                    threshold_percent: 6.778324963048013
+                    threshold_percent: 2.8841621266687802
                     method: method
                     disabled: true
                     disable_half_open_state: true
-                    return_to_service_after: 1
-                    samples: 2
+                    return_to_service_after: 6
+                    samples: 1
                   do_not_track_endpoints:
                   - path: path
                     method: method
@@ -18846,14 +18847,14 @@ components:
                   - schema:
                       key: ""
                     path: path
-                    error_response_code: 7
+                    error_response_code: 3
                     method: method
                     disabled: true
                     schema_b64: schema_b64
                   - schema:
                       key: ""
                     path: path
-                    error_response_code: 7
+                    error_response_code: 3
                     method: method
                     disabled: true
                     schema_b64: schema_b64
@@ -18865,7 +18866,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -18876,7 +18877,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -18885,7 +18886,7 @@ components:
                     headers:
                       key: headers
                     path: path
-                    code: 5
+                    code: 6
                     method: method
                     disabled: true
                     body: body
@@ -18893,7 +18894,7 @@ components:
                     headers:
                       key: headers
                     path: path
-                    code: 5
+                    code: 6
                     method: method
                     disabled: true
                     body: body
@@ -18910,11 +18911,11 @@ components:
                     operation: operation
                   validate_request:
                   - path: path
-                    error_response_code: 0
+                    error_response_code: 7
                     method: method
                     enabled: true
                   - path: path
-                    error_response_code: 0
+                    error_response_code: 7
                     method: method
                     enabled: true
                   go_plugin:
@@ -18953,17 +18954,17 @@ components:
                     method: method
                     disabled: true
                     cache_response_codes:
-                    - 6
-                    - 6
-                    timeout: 3
+                    - 9
+                    - 9
+                    timeout: 6
                   - cache_key_regex: cache_key_regex
                     path: path
                     method: method
                     disabled: true
                     cache_response_codes:
-                    - 6
-                    - 6
-                    timeout: 3
+                    - 9
+                    - 9
+                    timeout: 6
                   white_list:
                   - ignore_case: true
                     path: path
@@ -18972,7 +18973,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -18983,7 +18984,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -19038,7 +19039,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -19049,7 +19050,7 @@ components:
                       key:
                         headers:
                           key: headers
-                        code: 6
+                        code: 3
                         data: data
                         action: action
                     disabled: true
@@ -19075,14 +19076,14 @@ components:
                   rate_limit:
                   - path: path
                     method: method
-                    rate: 3.353193347011243
+                    rate: 6.704019297950036
                     disabled: true
-                    per: 6.704019297950036
+                    per: 5.944895607614016
                   - path: path
                     method: method
-                    rate: 3.353193347011243
+                    rate: 6.704019297950036
                     disabled: true
-                    per: 6.704019297950036
+                    per: 5.944895607614016
                   transform_response_headers:
                   - path: path
                     add_headers:
@@ -19238,7 +19239,7 @@ components:
                 expires: expires
                 override_target: override_target
                 ignore_endpoint_case: true
-                global_size_limit: 7
+                global_size_limit: 0
                 global_headers:
                   key: global_headers
                 paths:
@@ -19293,7 +19294,7 @@ components:
                 message: message
               - name: name
                 message: message
-              timeout: 6
+              timeout: 30s
               url: url
             - headers:
                 key: headers
@@ -19306,10 +19307,10 @@ components:
                 message: message
               - name: name
                 message: message
-              timeout: 6
+              timeout: 30s
               url: url
             config:
-              expire_utime_after: 8
+              expire_utime_after: 6
               service_discovery:
                 cache_disabled: true
                 parent_data_path: parent_data_path
@@ -19322,7 +19323,7 @@ components:
                 endpoint_returns_list: true
                 target_path: target_path
                 data_path: data_path
-              recheck_wait: 9
+              recheck_wait: 8
           custom_middleware_bundle_disabled: true
           domain_disabled: true
           use_basic_auth: true
@@ -19556,7 +19557,7 @@ components:
                         headerName: headerName
                         xPathExp: xPathExp
                         formParamName: formParamName
-                        regexpMatchIndex: 6
+                        regexpMatchIndex: 1
                       enabled: true
                     functionName: functionName
                     rawBodyOnly: true
@@ -19576,7 +19577,7 @@ components:
                     header:
                       name: name
                       enabled: true
-                  allowedClockSkew: 7.457744773683766
+                  allowedClockSkew: 6.84685269835264
                   enabled: true
                 stripAuthorizationData: true
                 securitySchemes:
@@ -19622,15 +19623,15 @@ components:
                 enabled: true
             upstream:
               rateLimit:
-                rate: 4
-                per: 1
+                rate: 7
+                per: PT2H30M15S
                 enabled: true
               test:
                 serviceDiscovery:
                   cache:
                     enabled: true
-                    timeout: 5
-                  cacheTimeout: 9
+                    timeout: 1
+                  cacheTimeout: 4
                   queryEndpoint: queryEndpoint
                   portDataPath: portDataPath
                   endpointReturnsList: true
@@ -19661,8 +19662,8 @@ components:
               serviceDiscovery:
                 cache:
                   enabled: true
-                  timeout: 5
-                cacheTimeout: 9
+                  timeout: 1
+                cacheTimeout: 4
                 queryEndpoint: queryEndpoint
                 portDataPath: portDataPath
                 endpointReturnsList: true
@@ -19724,8 +19725,8 @@ components:
                   doNotTrackEndpoint:
                     enabled: true
                   rateLimit:
-                    rate: 1
-                    per: 7
+                    rate: 7
+                    per: PT2H30M15S
                     enabled: true
                   validateRequest:
                     errorResponseCode: 1
@@ -20028,7 +20029,7 @@ components:
           key:
             headers:
               key: headers
-            code: 6
+            code: 3
             data: data
             action: action
         disabled: true
@@ -20051,7 +20052,7 @@ components:
       example:
         headers:
           key: headers
-        code: 6
+        code: 3
         data: data
         action: action
       properties:
@@ -20261,19 +20262,19 @@ components:
       example:
         circuit_breakers:
         - path: path
-          threshold_percent: 6.778324963048013
+          threshold_percent: 2.8841621266687802
           method: method
           disabled: true
           disable_half_open_state: true
-          return_to_service_after: 1
-          samples: 2
+          return_to_service_after: 6
+          samples: 1
         - path: path
-          threshold_percent: 6.778324963048013
+          threshold_percent: 2.8841621266687802
           method: method
           disabled: true
           disable_half_open_state: true
-          return_to_service_after: 1
-          samples: 2
+          return_to_service_after: 6
+          samples: 1
         do_not_track_endpoints:
         - path: path
           method: method
@@ -20316,14 +20317,14 @@ components:
         - schema:
             key: ""
           path: path
-          error_response_code: 7
+          error_response_code: 3
           method: method
           disabled: true
           schema_b64: schema_b64
         - schema:
             key: ""
           path: path
-          error_response_code: 7
+          error_response_code: 3
           method: method
           disabled: true
           schema_b64: schema_b64
@@ -20335,7 +20336,7 @@ components:
             key:
               headers:
                 key: headers
-              code: 6
+              code: 3
               data: data
               action: action
           disabled: true
@@ -20346,7 +20347,7 @@ components:
             key:
               headers:
                 key: headers
-              code: 6
+              code: 3
               data: data
               action: action
           disabled: true
@@ -20355,7 +20356,7 @@ components:
           headers:
             key: headers
           path: path
-          code: 5
+          code: 6
           method: method
           disabled: true
           body: body
@@ -20363,7 +20364,7 @@ components:
           headers:
             key: headers
           path: path
-          code: 5
+          code: 6
           method: method
           disabled: true
           body: body
@@ -20380,11 +20381,11 @@ components:
           operation: operation
         validate_request:
         - path: path
-          error_response_code: 0
+          error_response_code: 7
           method: method
           enabled: true
         - path: path
-          error_response_code: 0
+          error_response_code: 7
           method: method
           enabled: true
         go_plugin:
@@ -20423,17 +20424,17 @@ components:
           method: method
           disabled: true
           cache_response_codes:
-          - 6
-          - 6
-          timeout: 3
+          - 9
+          - 9
+          timeout: 6
         - cache_key_regex: cache_key_regex
           path: path
           method: method
           disabled: true
           cache_response_codes:
-          - 6
-          - 6
-          timeout: 3
+          - 9
+          - 9
+          timeout: 6
         white_list:
         - ignore_case: true
           path: path
@@ -20442,7 +20443,7 @@ components:
             key:
               headers:
                 key: headers
-              code: 6
+              code: 3
               data: data
               action: action
           disabled: true
@@ -20453,7 +20454,7 @@ components:
             key:
               headers:
                 key: headers
-              code: 6
+              code: 3
               data: data
               action: action
           disabled: true
@@ -20508,7 +20509,7 @@ components:
             key:
               headers:
                 key: headers
-              code: 6
+              code: 3
               data: data
               action: action
           disabled: true
@@ -20519,7 +20520,7 @@ components:
             key:
               headers:
                 key: headers
-              code: 6
+              code: 3
               data: data
               action: action
           disabled: true
@@ -20545,14 +20546,14 @@ components:
         rate_limit:
         - path: path
           method: method
-          rate: 3.353193347011243
+          rate: 6.704019297950036
           disabled: true
-          per: 6.704019297950036
+          per: 5.944895607614016
         - path: path
           method: method
-          rate: 3.353193347011243
+          rate: 6.704019297950036
           disabled: true
-          per: 6.704019297950036
+          per: 5.944895607614016
         transform_response_headers:
         - path: path
           add_headers:
@@ -21627,7 +21628,7 @@ components:
           header:
             name: name
             enabled: true
-        allowedClockSkew: 7.457744773683766
+        allowedClockSkew: 6.84685269835264
         enabled: true
       nullable: true
       properties:
@@ -21714,7 +21715,7 @@ components:
       type: object
     HookReference:
       example:
-        event_timeout: 6
+        event_timeout: 7
         hook:
           event_timeout: 0
           api_model: "{}"
@@ -21751,7 +21752,7 @@ components:
           message: message
         - name: name
           message: message
-        timeout: 6
+        timeout: 30s
         url: url
       properties:
         body:
@@ -21773,8 +21774,9 @@ components:
         protocol:
           type: string
         timeout:
-          format: int64
-          type: integer
+          example: 30s
+          format: duration
+          type: string
         url:
           type: string
       type: object
@@ -21788,7 +21790,7 @@ components:
           headerName: headerName
           xPathExp: xPathExp
           formParamName: formParamName
-          regexpMatchIndex: 6
+          regexpMatchIndex: 1
         enabled: true
       nullable: true
       properties:
@@ -21807,7 +21809,7 @@ components:
         headerName: headerName
         xPathExp: xPathExp
         formParamName: formParamName
-        regexpMatchIndex: 6
+        regexpMatchIndex: 1
       nullable: true
       properties:
         formParamName:
@@ -22597,8 +22599,8 @@ components:
             doNotTrackEndpoint:
               enabled: true
             rateLimit:
-              rate: 1
-              per: 7
+              rate: 7
+              per: PT2H30M15S
               enabled: true
             validateRequest:
               errorResponseCode: 1
@@ -23033,7 +23035,7 @@ components:
         headers:
           key: headers
         path: path
-        code: 5
+        code: 6
         method: method
         disabled: true
         body: body
@@ -23851,8 +23853,8 @@ components:
         doNotTrackEndpoint:
           enabled: true
         rateLimit:
-          rate: 1
-          per: 7
+          rate: 7
+          per: PT2H30M15S
           enabled: true
         validateRequest:
           errorResponseCode: 1
@@ -24976,31 +24978,33 @@ components:
       x-go-package: github.com/TykTechnologies/tyk/apidef
     RateLimit:
       example:
-        rate: 4
-        per: 1
+        rate: 7
+        per: PT2H30M15S
         enabled: true
       nullable: true
       properties:
         enabled:
           type: boolean
         per:
-          format: int64
-          type: integer
+          example: PT2H30M15S
+          format: duration
+          type: string
         rate:
           type: integer
       type: object
     RateLimitEndpoint:
       example:
-        rate: 1
-        per: 7
+        rate: 7
+        per: PT2H30M15S
         enabled: true
       nullable: true
       properties:
         enabled:
           type: boolean
         per:
-          format: int64
-          type: integer
+          example: PT2H30M15S
+          format: duration
+          type: string
         rate:
           type: integer
       type: object
@@ -25008,9 +25012,9 @@ components:
       example:
         path: path
         method: method
-        rate: 3.353193347011243
+        rate: 6.704019297950036
         disabled: true
-        per: 6.704019297950036
+        per: 5.944895607614016
       properties:
         disabled:
           type: boolean
@@ -25822,7 +25826,7 @@ components:
                   headerName: headerName
                   xPathExp: xPathExp
                   formParamName: formParamName
-                  regexpMatchIndex: 6
+                  regexpMatchIndex: 1
                 enabled: true
               functionName: functionName
               rawBodyOnly: true
@@ -25842,7 +25846,7 @@ components:
               header:
                 name: name
                 enabled: true
-            allowedClockSkew: 7.457744773683766
+            allowedClockSkew: 6.84685269835264
             enabled: true
           stripAuthorizationData: true
           securitySchemes:
@@ -25953,8 +25957,8 @@ components:
       example:
         cache:
           enabled: true
-          timeout: 5
-        cacheTimeout: 9
+          timeout: 1
+        cacheTimeout: 4
         queryEndpoint: queryEndpoint
         portDataPath: portDataPath
         endpointReturnsList: true
@@ -25993,7 +25997,7 @@ components:
     ServiceDiscoveryCache:
       example:
         enabled: true
-        timeout: 5
+        timeout: 1
       nullable: true
       properties:
         enabled:
@@ -26563,8 +26567,8 @@ components:
         serviceDiscovery:
           cache:
             enabled: true
-            timeout: 5
-          cacheTimeout: 9
+            timeout: 1
+          cacheTimeout: 4
           queryEndpoint: queryEndpoint
           portDataPath: portDataPath
           endpointReturnsList: true
@@ -26580,11 +26584,13 @@ components:
           $ref: '#/components/schemas/ServiceDiscovery'
       type: object
     TimeDuration:
-      format: int64
-      type: integer
+      example: 30s
+      format: duration
+      type: string
     TimeReadableDuration:
-      format: int64
-      type: integer
+      example: PT2H30M15S
+      format: duration
+      type: string
     TrackEndpoint:
       example:
         enabled: true
@@ -26866,15 +26872,15 @@ components:
     Upstream:
       example:
         rateLimit:
-          rate: 4
-          per: 1
+          rate: 7
+          per: PT2H30M15S
           enabled: true
         test:
           serviceDiscovery:
             cache:
               enabled: true
-              timeout: 5
-            cacheTimeout: 9
+              timeout: 1
+            cacheTimeout: 4
             queryEndpoint: queryEndpoint
             portDataPath: portDataPath
             endpointReturnsList: true
@@ -26905,8 +26911,8 @@ components:
         serviceDiscovery:
           cache:
             enabled: true
-            timeout: 5
-          cacheTimeout: 9
+            timeout: 1
+          cacheTimeout: 4
           queryEndpoint: queryEndpoint
           portDataPath: portDataPath
           endpointReturnsList: true
@@ -26945,7 +26951,7 @@ components:
             message: message
           - name: name
             message: message
-          timeout: 6
+          timeout: 30s
           url: url
         - headers:
             key: headers
@@ -26958,10 +26964,10 @@ components:
             message: message
           - name: name
             message: message
-          timeout: 6
+          timeout: 30s
           url: url
         config:
-          expire_utime_after: 8
+          expire_utime_after: 6
           service_discovery:
             cache_disabled: true
             parent_data_path: parent_data_path
@@ -26974,7 +26980,7 @@ components:
             endpoint_returns_list: true
             target_path: target_path
             data_path: data_path
-          recheck_wait: 9
+          recheck_wait: 8
       properties:
         check_list:
           items:
@@ -26987,7 +26993,7 @@ components:
       x-go-package: github.com/TykTechnologies/tyk/apidef
     UptimeTestsConfig:
       example:
-        expire_utime_after: 8
+        expire_utime_after: 6
         service_discovery:
           cache_disabled: true
           parent_data_path: parent_data_path
@@ -27000,7 +27006,7 @@ components:
           endpoint_returns_list: true
           target_path: target_path
           data_path: data_path
-        recheck_wait: 9
+        recheck_wait: 8
       properties:
         expire_utime_after:
           format: int64
@@ -27220,7 +27226,7 @@ components:
         schema:
           key: ""
         path: path
-        error_response_code: 7
+        error_response_code: 3
         method: method
         disabled: true
         schema_b64: schema_b64
@@ -27255,7 +27261,7 @@ components:
     ValidateRequestMeta:
       example:
         path: path
-        error_response_code: 0
+        error_response_code: 7
         method: method
         enabled: true
       properties:
@@ -27281,19 +27287,19 @@ components:
             extended_paths:
               circuit_breakers:
               - path: path
-                threshold_percent: 6.778324963048013
+                threshold_percent: 2.8841621266687802
                 method: method
                 disabled: true
                 disable_half_open_state: true
-                return_to_service_after: 1
-                samples: 2
+                return_to_service_after: 6
+                samples: 1
               - path: path
-                threshold_percent: 6.778324963048013
+                threshold_percent: 2.8841621266687802
                 method: method
                 disabled: true
                 disable_half_open_state: true
-                return_to_service_after: 1
-                samples: 2
+                return_to_service_after: 6
+                samples: 1
               do_not_track_endpoints:
               - path: path
                 method: method
@@ -27336,14 +27342,14 @@ components:
               - schema:
                   key: ""
                 path: path
-                error_response_code: 7
+                error_response_code: 3
                 method: method
                 disabled: true
                 schema_b64: schema_b64
               - schema:
                   key: ""
                 path: path
-                error_response_code: 7
+                error_response_code: 3
                 method: method
                 disabled: true
                 schema_b64: schema_b64
@@ -27355,7 +27361,7 @@ components:
                   key:
                     headers:
                       key: headers
-                    code: 6
+                    code: 3
                     data: data
                     action: action
                 disabled: true
@@ -27366,7 +27372,7 @@ components:
                   key:
                     headers:
                       key: headers
-                    code: 6
+                    code: 3
                     data: data
                     action: action
                 disabled: true
@@ -27375,7 +27381,7 @@ components:
                 headers:
                   key: headers
                 path: path
-                code: 5
+                code: 6
                 method: method
                 disabled: true
                 body: body
@@ -27383,7 +27389,7 @@ components:
                 headers:
                   key: headers
                 path: path
-                code: 5
+                code: 6
                 method: method
                 disabled: true
                 body: body
@@ -27400,11 +27406,11 @@ components:
                 operation: operation
               validate_request:
               - path: path
-                error_response_code: 0
+                error_response_code: 7
                 method: method
                 enabled: true
               - path: path
-                error_response_code: 0
+                error_response_code: 7
                 method: method
                 enabled: true
               go_plugin:
@@ -27443,17 +27449,17 @@ components:
                 method: method
                 disabled: true
                 cache_response_codes:
-                - 6
-                - 6
-                timeout: 3
+                - 9
+                - 9
+                timeout: 6
               - cache_key_regex: cache_key_regex
                 path: path
                 method: method
                 disabled: true
                 cache_response_codes:
-                - 6
-                - 6
-                timeout: 3
+                - 9
+                - 9
+                timeout: 6
               white_list:
               - ignore_case: true
                 path: path
@@ -27462,7 +27468,7 @@ components:
                   key:
                     headers:
                       key: headers
-                    code: 6
+                    code: 3
                     data: data
                     action: action
                 disabled: true
@@ -27473,7 +27479,7 @@ components:
                   key:
                     headers:
                       key: headers
-                    code: 6
+                    code: 3
                     data: data
                     action: action
                 disabled: true
@@ -27528,7 +27534,7 @@ components:
                   key:
                     headers:
                       key: headers
-                    code: 6
+                    code: 3
                     data: data
                     action: action
                 disabled: true
@@ -27539,7 +27545,7 @@ components:
                   key:
                     headers:
                       key: headers
-                    code: 6
+                    code: 3
                     data: data
                     action: action
                 disabled: true
@@ -27565,14 +27571,14 @@ components:
               rate_limit:
               - path: path
                 method: method
-                rate: 3.353193347011243
+                rate: 6.704019297950036
                 disabled: true
-                per: 6.704019297950036
+                per: 5.944895607614016
               - path: path
                 method: method
-                rate: 3.353193347011243
+                rate: 6.704019297950036
                 disabled: true
-                per: 6.704019297950036
+                per: 5.944895607614016
               transform_response_headers:
               - path: path
                 add_headers:
@@ -27728,7 +27734,7 @@ components:
             expires: expires
             override_target: override_target
             ignore_endpoint_case: true
-            global_size_limit: 7
+            global_size_limit: 0
             global_headers:
               key: global_headers
             paths:
@@ -27811,19 +27817,19 @@ components:
         extended_paths:
           circuit_breakers:
           - path: path
-            threshold_percent: 6.778324963048013
+            threshold_percent: 2.8841621266687802
             method: method
             disabled: true
             disable_half_open_state: true
-            return_to_service_after: 1
-            samples: 2
+            return_to_service_after: 6
+            samples: 1
           - path: path
-            threshold_percent: 6.778324963048013
+            threshold_percent: 2.8841621266687802
             method: method
             disabled: true
             disable_half_open_state: true
-            return_to_service_after: 1
-            samples: 2
+            return_to_service_after: 6
+            samples: 1
           do_not_track_endpoints:
           - path: path
             method: method
@@ -27866,14 +27872,14 @@ components:
           - schema:
               key: ""
             path: path
-            error_response_code: 7
+            error_response_code: 3
             method: method
             disabled: true
             schema_b64: schema_b64
           - schema:
               key: ""
             path: path
-            error_response_code: 7
+            error_response_code: 3
             method: method
             disabled: true
             schema_b64: schema_b64
@@ -27885,7 +27891,7 @@ components:
               key:
                 headers:
                   key: headers
-                code: 6
+                code: 3
                 data: data
                 action: action
             disabled: true
@@ -27896,7 +27902,7 @@ components:
               key:
                 headers:
                   key: headers
-                code: 6
+                code: 3
                 data: data
                 action: action
             disabled: true
@@ -27905,7 +27911,7 @@ components:
             headers:
               key: headers
             path: path
-            code: 5
+            code: 6
             method: method
             disabled: true
             body: body
@@ -27913,7 +27919,7 @@ components:
             headers:
               key: headers
             path: path
-            code: 5
+            code: 6
             method: method
             disabled: true
             body: body
@@ -27930,11 +27936,11 @@ components:
             operation: operation
           validate_request:
           - path: path
-            error_response_code: 0
+            error_response_code: 7
             method: method
             enabled: true
           - path: path
-            error_response_code: 0
+            error_response_code: 7
             method: method
             enabled: true
           go_plugin:
@@ -27973,17 +27979,17 @@ components:
             method: method
             disabled: true
             cache_response_codes:
-            - 6
-            - 6
-            timeout: 3
+            - 9
+            - 9
+            timeout: 6
           - cache_key_regex: cache_key_regex
             path: path
             method: method
             disabled: true
             cache_response_codes:
-            - 6
-            - 6
-            timeout: 3
+            - 9
+            - 9
+            timeout: 6
           white_list:
           - ignore_case: true
             path: path
@@ -27992,7 +27998,7 @@ components:
               key:
                 headers:
                   key: headers
-                code: 6
+                code: 3
                 data: data
                 action: action
             disabled: true
@@ -28003,7 +28009,7 @@ components:
               key:
                 headers:
                   key: headers
-                code: 6
+                code: 3
                 data: data
                 action: action
             disabled: true
@@ -28058,7 +28064,7 @@ components:
               key:
                 headers:
                   key: headers
-                code: 6
+                code: 3
                 data: data
                 action: action
             disabled: true
@@ -28069,7 +28075,7 @@ components:
               key:
                 headers:
                   key: headers
-                code: 6
+                code: 3
                 data: data
                 action: action
             disabled: true
@@ -28095,14 +28101,14 @@ components:
           rate_limit:
           - path: path
             method: method
-            rate: 3.353193347011243
+            rate: 6.704019297950036
             disabled: true
-            per: 6.704019297950036
+            per: 5.944895607614016
           - path: path
             method: method
-            rate: 3.353193347011243
+            rate: 6.704019297950036
             disabled: true
-            per: 6.704019297950036
+            per: 5.944895607614016
           transform_response_headers:
           - path: path
             add_headers:
@@ -28258,7 +28264,7 @@ components:
         expires: expires
         override_target: override_target
         ignore_endpoint_case: true
-        global_size_limit: 7
+        global_size_limit: 0
         global_headers:
           key: global_headers
         paths:
@@ -28619,7 +28625,7 @@ components:
                     headerName: headerName
                     xPathExp: xPathExp
                     formParamName: formParamName
-                    regexpMatchIndex: 6
+                    regexpMatchIndex: 1
                   enabled: true
                 functionName: functionName
                 rawBodyOnly: true
@@ -28639,7 +28645,7 @@ components:
                 header:
                   name: name
                   enabled: true
-              allowedClockSkew: 7.457744773683766
+              allowedClockSkew: 6.84685269835264
               enabled: true
             stripAuthorizationData: true
             securitySchemes:
@@ -28685,15 +28691,15 @@ components:
             enabled: true
         upstream:
           rateLimit:
-            rate: 4
-            per: 1
+            rate: 7
+            per: PT2H30M15S
             enabled: true
           test:
             serviceDiscovery:
               cache:
                 enabled: true
-                timeout: 5
-              cacheTimeout: 9
+                timeout: 1
+              cacheTimeout: 4
               queryEndpoint: queryEndpoint
               portDataPath: portDataPath
               endpointReturnsList: true
@@ -28724,8 +28730,8 @@ components:
           serviceDiscovery:
             cache:
               enabled: true
-              timeout: 5
-            cacheTimeout: 9
+              timeout: 1
+            cacheTimeout: 4
             queryEndpoint: queryEndpoint
             portDataPath: portDataPath
             endpointReturnsList: true
@@ -28787,8 +28793,8 @@ components:
               doNotTrackEndpoint:
                 enabled: true
               rateLimit:
-                rate: 1
-                per: 7
+                rate: 7
+                per: PT2H30M15S
                 enabled: true
               validateRequest:
                 errorResponseCode: 1
@@ -29524,7 +29530,7 @@ components:
                       headerName: headerName
                       xPathExp: xPathExp
                       formParamName: formParamName
-                      regexpMatchIndex: 6
+                      regexpMatchIndex: 1
                     enabled: true
                   functionName: functionName
                   rawBodyOnly: true
@@ -29544,7 +29550,7 @@ components:
                   header:
                     name: name
                     enabled: true
-                allowedClockSkew: 7.457744773683766
+                allowedClockSkew: 6.84685269835264
                 enabled: true
               stripAuthorizationData: true
               securitySchemes:
@@ -29590,15 +29596,15 @@ components:
               enabled: true
           upstream:
             rateLimit:
-              rate: 4
-              per: 1
+              rate: 7
+              per: PT2H30M15S
               enabled: true
             test:
               serviceDiscovery:
                 cache:
                   enabled: true
-                  timeout: 5
-                cacheTimeout: 9
+                  timeout: 1
+                cacheTimeout: 4
                 queryEndpoint: queryEndpoint
                 portDataPath: portDataPath
                 endpointReturnsList: true
@@ -29629,8 +29635,8 @@ components:
             serviceDiscovery:
               cache:
                 enabled: true
-                timeout: 5
-              cacheTimeout: 9
+                timeout: 1
+              cacheTimeout: 4
               queryEndpoint: queryEndpoint
               portDataPath: portDataPath
               endpointReturnsList: true
@@ -29692,8 +29698,8 @@ components:
                 doNotTrackEndpoint:
                   enabled: true
                 rateLimit:
-                  rate: 1
-                  per: 7
+                  rate: 7
+                  per: PT2H30M15S
                   enabled: true
                 validateRequest:
                   errorResponseCode: 1
@@ -30080,7 +30086,7 @@ components:
                       headerName: headerName
                       xPathExp: xPathExp
                       formParamName: formParamName
-                      regexpMatchIndex: 6
+                      regexpMatchIndex: 1
                     enabled: true
                   functionName: functionName
                   rawBodyOnly: true
@@ -30100,7 +30106,7 @@ components:
                   header:
                     name: name
                     enabled: true
-                allowedClockSkew: 7.457744773683766
+                allowedClockSkew: 6.84685269835264
                 enabled: true
               stripAuthorizationData: true
               securitySchemes:
@@ -30146,15 +30152,15 @@ components:
               enabled: true
           upstream:
             rateLimit:
-              rate: 4
-              per: 1
+              rate: 7
+              per: PT2H30M15S
               enabled: true
             test:
               serviceDiscovery:
                 cache:
                   enabled: true
-                  timeout: 5
-                cacheTimeout: 9
+                  timeout: 1
+                cacheTimeout: 4
                 queryEndpoint: queryEndpoint
                 portDataPath: portDataPath
                 endpointReturnsList: true
@@ -30185,8 +30191,8 @@ components:
             serviceDiscovery:
               cache:
                 enabled: true
-                timeout: 5
-              cacheTimeout: 9
+                timeout: 1
+              cacheTimeout: 4
               queryEndpoint: queryEndpoint
               portDataPath: portDataPath
               endpointReturnsList: true
@@ -30248,8 +30254,8 @@ components:
                 doNotTrackEndpoint:
                   enabled: true
                 rateLimit:
-                  rate: 1
-                  per: 7
+                  rate: 7
+                  per: PT2H30M15S
                   enabled: true
                 validateRequest:
                   errorResponseCode: 1
@@ -30634,7 +30640,7 @@ components:
                       headerName: headerName
                       xPathExp: xPathExp
                       formParamName: formParamName
-                      regexpMatchIndex: 6
+                      regexpMatchIndex: 1
                     enabled: true
                   functionName: functionName
                   rawBodyOnly: true
@@ -30654,7 +30660,7 @@ components:
                   header:
                     name: name
                     enabled: true
-                allowedClockSkew: 7.457744773683766
+                allowedClockSkew: 6.84685269835264
                 enabled: true
               stripAuthorizationData: true
               securitySchemes:
@@ -30700,15 +30706,15 @@ components:
               enabled: true
           upstream:
             rateLimit:
-              rate: 4
-              per: 1
+              rate: 7
+              per: PT2H30M15S
               enabled: true
             test:
               serviceDiscovery:
                 cache:
                   enabled: true
-                  timeout: 5
-                cacheTimeout: 9
+                  timeout: 1
+                cacheTimeout: 4
                 queryEndpoint: queryEndpoint
                 portDataPath: portDataPath
                 endpointReturnsList: true
@@ -30739,8 +30745,8 @@ components:
             serviceDiscovery:
               cache:
                 enabled: true
-                timeout: 5
-              cacheTimeout: 9
+                timeout: 1
+              cacheTimeout: 4
               queryEndpoint: queryEndpoint
               portDataPath: portDataPath
               endpointReturnsList: true
@@ -30802,8 +30808,8 @@ components:
                 doNotTrackEndpoint:
                   enabled: true
                 rateLimit:
-                  rate: 1
-                  per: 7
+                  rate: 7
+                  per: PT2H30M15S
                   enabled: true
                 validateRequest:
                   errorResponseCode: 1
