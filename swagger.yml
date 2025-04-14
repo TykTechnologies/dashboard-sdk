@@ -13343,11 +13343,13 @@ components:
           $ref: '#/components/schemas/ServiceDiscovery'
       type: object
     TimeDuration:
-      format: int64
-      type: integer
+      format: duration
+      type: string
+      example: "30s"
     TimeReadableDuration:
-      format: int64
-      type: integer
+      format: duration
+      type: string
+      example: PT2H30M15S
     TrackEndpoint:
       nullable: true
       properties:
