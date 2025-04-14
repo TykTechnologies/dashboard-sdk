@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **Headers** | Pointer to **map[string]string** |  | [optional] 
 **Method** | Pointer to **string** |  | [optional] 
 **Protocol** | Pointer to **string** |  | [optional] 
-**Timeout** | Pointer to **int64** |  | [optional] 
+**Timeout** | Pointer to **string** |  | [optional] 
 **Url** | Pointer to **string** |  | [optional] 
 
 ## Methods
@@ -204,20 +204,20 @@ HasProtocol returns a boolean if a field has been set.
 
 ### GetTimeout
 
-`func (o *HostCheckObject) GetTimeout() int64`
+`func (o *HostCheckObject) GetTimeout() string`
 
 GetTimeout returns the Timeout field if non-nil, zero value otherwise.
 
 ### GetTimeoutOk
 
-`func (o *HostCheckObject) GetTimeoutOk() (*int64, bool)`
+`func (o *HostCheckObject) GetTimeoutOk() (*string, bool)`
 
 GetTimeoutOk returns a tuple with the Timeout field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTimeout
 
-`func (o *HostCheckObject) SetTimeout(v int64)`
+`func (o *HostCheckObject) SetTimeout(v string)`
 
 SetTimeout sets Timeout field to given value.
 

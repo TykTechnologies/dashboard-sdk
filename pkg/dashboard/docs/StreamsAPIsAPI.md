@@ -1,6 +1,6 @@
 # \StreamsAPIsAPI
 
-All URIs are relative to *https://localhost:8080*
+All URIs are relative to *https://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -154,7 +154,7 @@ Name | Type | Description  | Notes
 
 ## GetStreamsAPIDetails
 
-> CreateStreamsApiRequest GetStreamsAPIDetails(ctx, apiId).ContentType(contentType).Execute()
+> CreateStreamsApiRequest GetStreamsAPIDetails(ctx, apiId).Accept(accept).Execute()
 
 Get Streams API details.
 
@@ -174,11 +174,11 @@ import (
 
 func main() {
 	apiId := "4c1c0d8fc885401053ddac4e39ef676b" // string | ID of the API you want to fetch.
-	contentType := "contentType_example" // string | Content type for streams endpoints should be `application/vnd.tyk.streams.oas`
+	accept := "accept_example" // string | Accept type for streams endpoints should be `application/vnd.tyk.streams.oas`
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.StreamsAPIsAPI.GetStreamsAPIDetails(context.Background(), apiId).ContentType(contentType).Execute()
+	resp, r, err := apiClient.StreamsAPIsAPI.GetStreamsAPIDetails(context.Background(), apiId).Accept(accept).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `StreamsAPIsAPI.GetStreamsAPIDetails``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -204,7 +204,7 @@ Other parameters are passed through a pointer to a apiGetStreamsAPIDetailsReques
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **contentType** | **string** | Content type for streams endpoints should be &#x60;application/vnd.tyk.streams.oas&#x60; | 
+ **accept** | **string** | Accept type for streams endpoints should be &#x60;application/vnd.tyk.streams.oas&#x60; | 
 
 ### Return type
 

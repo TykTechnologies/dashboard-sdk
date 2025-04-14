@@ -1,5 +1,6 @@
 # Go API client for dashboard
 
+<img src=\"https://tyk.io/docs/img/swagger_dashboard_image.png\" width=\"963\" height=\"250\">
 
 ## <a name=\"introduction\"></a> Introduction
 
@@ -104,7 +105,7 @@ ctx = context.WithValue(context.Background(), dashboard.ContextOperationServerVa
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://localhost:8080*
+All URIs are relative to *https://localhost:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

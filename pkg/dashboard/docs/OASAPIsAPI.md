@@ -1,6 +1,6 @@
 # \OASAPIsAPI
 
-All URIs are relative to *https://localhost:8080*
+All URIs are relative to *https://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
